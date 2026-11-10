@@ -33,7 +33,8 @@
     transform var(--motion-duration-focus) ease-out,
     opacity var(--motion-duration-feedback) linear,
     border-radius var(--motion-duration-shape) ease-out;
-  background: var(--settings-content-focus-surface);
+  /* The content indicator is an outline above controls, never a covering fill. */
+  background: transparent;
   box-shadow: var(--settings-content-focus-shadow);
 
   &[data-motion="false"] {

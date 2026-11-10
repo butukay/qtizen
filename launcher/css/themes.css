@@ -45,7 +45,6 @@
   --settings-shadow: none;
   --settings-focus-border: var(--focus);
   --settings-sidebar-focus-surface: var(--rice-selected);
-  --settings-content-focus-surface: var(--rice-selected);
   --settings-sidebar-focus-shadow: none;
   --settings-content-focus-shadow: none;
   --choice-selected-surface: var(--rice-selected);

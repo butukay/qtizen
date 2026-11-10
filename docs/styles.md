@@ -28,6 +28,8 @@ classes and explicit state modifiers. Migrated controls use `data-focused="true"
 and `aria-pressed="true"`; never query a generated module class from runtime code
 or tests. Module selectors must not depend on `#editor`, IDs or global class aliases.
 `SettingsControl` owns the shared focus reset in its own module.
+The content focus indicator is a transparent outline above controls. Each control
+owns its background; the moving indicator must never paint over text or artwork.
 Do not override focused controls through an ID selector.
 Controls can supply `--settings-control-focus-outline` for a visible focus outline,
 as the drawer close button does.
