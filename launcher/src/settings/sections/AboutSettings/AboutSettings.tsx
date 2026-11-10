@@ -1,6 +1,5 @@
 import { useEffect } from "preact/hooks";
 
-import { FIXED_NAMES } from "../../../shared/fixedNames";
 import { useStore } from "../../../shared/hooks/useStore";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { SettingsHint } from "../../components/SettingsHint/SettingsHint";
@@ -11,7 +10,6 @@ import styles from "./AboutSettings.module.css";
 
 const updateCommand = "aerotizen update launcher";
 const projectUrl = "github.com/helalaou/AeroTizen";
-const solarTexturesUrl = "solarsystemscope.com/textures";
 
 export const AboutSettings = ({ active }: { active: boolean }) => {
   const { updates, drawer } = useSettingsEnvironment();
@@ -63,13 +61,6 @@ export const AboutSettings = ({ active }: { active: boolean }) => {
           <dd class={styles.definition}>{t("settings.about.feedbackValue")}</dd>
         </dl>
         <p class={styles.paragraph + " " + styles.community}>{t("settings.about.community")}</p>
-        <p class={styles.paragraph + " " + styles.community} data-solar-credits>
-          {FIXED_NAMES.solarTextures}
-          {" · "}
-          {FIXED_NAMES.ccBy4}
-          <br />
-          <code>{solarTexturesUrl}</code>
-        </p>
       </div>
     </SettingsSection>
   );

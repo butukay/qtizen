@@ -49,12 +49,12 @@ export const AppGrid = ({
       offset={appOffset}
       onOffsetChange={(offset) => env.state.set({ ...env.state.getSnapshot(), appOffset: offset })}
     >
-      {ids.map((id, index) => {
+      {ids.map((id) => {
         if (id === env.runtime.config.FIREPLACE_ID) {
-          return <FireplaceCard key={id} env={env} registered={shown} ordinal={index + 1} />;
+          return <FireplaceCard key={id} env={env} registered={shown} />;
         }
         const app = apps.find((app) => app.id === id) || { id, name: id, icon: "" };
-        return <AppCard key={id} env={env} app={app} active={active && shown} ordinal={index + 1} />;
+        return <AppCard key={id} env={env} app={app} active={active && shown} />;
       })}
     </HorizontalScroller>
   );

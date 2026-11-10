@@ -10,11 +10,22 @@
 .orbits {
   fill: none;
   stroke: var(--solar-orbit);
-  stroke-width: 0.75;
+  stroke-width: 0.6;
 }
 
 .sun {
-  opacity: 0.85;
+  fill: var(--solar-warm);
+}
+
+.planet {
+  fill: var(--solar-neutral);
+
+  &[data-tone="warm"] {
+    fill: var(--solar-warm);
+  }
+  &[data-tone="cool"] {
+    fill: var(--solar-cool);
+  }
 }
 
 .orbiter,
@@ -31,18 +42,10 @@
   animation-name: counterOrbit;
 }
 
-.ringBack,
-.ringFront {
+.ring {
   fill: none;
-  stroke: #a6987e;
-  stroke-width: 3;
-}
-
-.ringBack {
-  opacity: 0.4;
-}
-.ringFront {
-  opacity: 0.75;
+  stroke: var(--solar-warm);
+  stroke-width: 0.8;
 }
 
 .system[data-running="false"] {

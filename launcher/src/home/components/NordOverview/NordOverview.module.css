@@ -73,20 +73,13 @@
   margin: 18px 0 8px;
 }
 
-.sectionIndex {
-  font-family: var(--rice-mono);
-  font-size: 16px;
-  color: var(--focus);
-  margin-right: 14px;
-}
-
 .heading {
   color: var(--muted);
   font-size: 19px;
   font-weight: 400;
   line-height: 1.4;
-  text-transform: uppercase;
-  letter-spacing: 1.8px;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .rule {

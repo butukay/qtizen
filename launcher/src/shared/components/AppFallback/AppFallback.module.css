@@ -75,9 +75,9 @@
 }
 
 .rice {
-  --fallback-logo-width: 42px;
-  --fallback-logo-height: 42px;
-  --fallback-label-size: 25px;
+  --fallback-logo-width: 34px;
+  --fallback-logo-height: 34px;
+  --fallback-label-size: 24px;
   --fallback-label-line-height: 1.35;
 
   align-items: flex-start;
@@ -93,11 +93,11 @@
 
   > .label {
     text-align: left;
-    max-width: calc(100% - 36px);
+    max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-weight: 450;
+    font-weight: 400;
     letter-spacing: -0.4px;
   }
 

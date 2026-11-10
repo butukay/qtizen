@@ -51,9 +51,6 @@ export const NordOverview = ({
         </div>
       )}
       <div class={styles.section}>
-        <span class={styles.sectionIndex} aria-hidden="true">
-          01
-        </span>
         <h1 class={styles.heading}>{t(home ? "home.homeApps" : "home.allApps")}</h1>
         <span class={styles.rule} aria-hidden="true" />
         <span class={styles.count}>{String(count).padStart(2, "0")}</span>

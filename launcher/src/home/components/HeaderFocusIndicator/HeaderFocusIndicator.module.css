@@ -4,7 +4,7 @@
   top: 0;
   z-index: 0;
   pointer-events: none;
-  border: 2px solid var(--focus);
+  border: var(--header-focus-border-width, 2px) solid var(--focus);
   background: var(--header-focus-surface);
   box-shadow: var(--header-focus-shadow);
   transition:

@@ -21,14 +21,14 @@
   color: var(--focus);
 
   .flame {
-    width: 42px;
-    height: 42px;
+    width: 34px;
+    height: 34px;
   }
 }
 
 .label {
   color: var(--fg);
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 400;
   line-height: 1.35;
 }

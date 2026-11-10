@@ -31,39 +31,17 @@
 }
 
 .card[data-nord="true"] {
-  --rice-action-opacity: 0.22;
   font-family: var(--rice-font);
   border: 1px solid var(--rice-border);
-  border-radius: 17px;
+  border-radius: 4px;
   background: var(--rice-card-surface);
   transition:
     transform var(--motion-duration-focus) ease-out,
     background-color var(--motion-duration-focus) ease-out;
 
   &[data-focused="true"] {
-    --rice-action-opacity: 0.9;
     background: var(--rice-card-selected);
     border-color: var(--focus);
     transform: translateZ(0);
   }
-}
-
-.ordinal {
-  font-family: var(--rice-mono);
-  opacity: var(--rice-action-opacity);
-  position: absolute;
-  top: 26px;
-  right: 25px;
-  font-size: 16px;
-  color: var(--rice-quiet);
-}
-
-.arrow {
-  opacity: var(--rice-action-opacity);
-  position: absolute;
-  right: 24px;
-  bottom: 27px;
-  width: 25px;
-  height: 25px;
-  color: var(--focus);
 }

@@ -16,7 +16,7 @@ afterEach(() => vi.useRealTimers());
 
 test("Nord retains the app name, activation and focused card when switching away from artwork", async () => {
   const env = createCardEnvironment(`app:${app.id}`, { artwork: sources, logoPath: "M0 0" });
-  render(<AppCard env={env} app={app} active ordinal={3} />);
+  render(<AppCard env={env} app={app} active />);
   const card = screen.getByRole("button", { name: app.name });
   await act(() => env.settings.update({ nordRice: true }));
   expect(artwork(card)).toBeNull();

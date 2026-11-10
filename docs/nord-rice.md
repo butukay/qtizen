@@ -8,25 +8,25 @@ and restarts through the existing preference store.
 
 *Browser preview with sample apps and inputs, not a capture from a TV.*
 
-Nord uses a true-black background, restrained blue-grey surfaces and a soft cyan
-remote focus. Inter provides the main typography; JetBrains Mono stays on small
+Nord uses a true-black background, flat blue-grey surfaces and a thin cyan
+remote focus. Cards have small corners and no gradients or shadows. The header
+has no brand label or workspace numbers. English labels use Applications,
+Favorites and TV. Inter provides the main typography; JetBrains Mono stays on small
 workspace and section details. The existing clock, apps and HDMI positions are
 preserved. Grid and horizontal scrolling, app sizes, favourites and the app actions
 menu still work. Clock and date visibility, time format, language and numerals
 follow the existing preferences.
 
-The Solar System replaces the mountain illustration. It includes the Sun, eight
-planets, textured surfaces and Saturn's rings. Surface maps are bundled from
-[Solar System Scope / INOVE](https://www.solarsystemscope.com/textures/) under
-CC BY 4.0; attribution also appears in About. Display sizes and distances are
-compressed to fit the scene. Initial phases are composed for legibility, with
-approximate orbital-period ratios from
-[NASA Space Place](https://spaceplace.nasa.gov/years-on-other-planets/en/).
+The Solar System is a quiet schematic: a small Sun, eight muted planet dots,
+fine orbital lines and a single Saturn ring. There are no image textures, lighting
+or glow effects. Display sizes and distances are compressed to fit the scene.
+Initial phases are composed for legibility, with approximate orbital-period ratios
+from [NASA Space Place](https://spaceplace.nasa.gov/years-on-other-planets/en/).
 This decorative orrery uses one Earth year per 180 seconds.
 
 CSS orbital animation pauses when Home is inactive, while the idle presentation
 is dimmed or blank, in Performance mode, and with reduced motion enabled. No
-render loop or external texture request runs on the TV.
+render loop or texture loading runs on the TV.
 
 For OLED idle presentation, launcher and Settings fade to 18% opacity after 90
 seconds without activity and to black after 180 seconds. The first navigation key
@@ -45,8 +45,7 @@ For a browser preview, start `npm run dev` and open
 profile and does not change the normal preview profile or a TV's preferences.
 
 Fonts are bundled in `launcher/assets/fonts/`, including their complete SIL Open
-Font Licenses. Texture attribution and source links are included in
-`launcher/assets/solar-system/CREDITS.md`.
+Font Licenses.
 
 For physical testing, build the launcher and update the existing package using the
 same Samsung signing profile. Keep the `DclHome001.Home` app ID so the existing Home

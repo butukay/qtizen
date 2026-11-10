@@ -58,7 +58,11 @@ test("Nord can be selected with settings, persists and preserves the saved wallp
 test("Nord remote navigation reaches every app and input and follows the visible workspace order", async ({ page }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await prepare(page, { nordRice: true });
+  await prepare(page, { nordRice: true, language: "en" });
+  await expect(page.locator("[data-home-header]")).not.toContainText("AeroTizen");
+  await expect(page.locator("#apps-tab")).toHaveText("Applications");
+  await expect(page.locator("[data-nord-overview] h1")).toHaveText("Favorites");
+  await expect(page.locator("#inputs").getByRole("button", { name: "TV", exact: true })).toBeVisible();
   await page.locator("#home-tab").click();
   for (const id of ["apps-tab", "samsung-home-shortcut", "gear"]) {
     await page.keyboard.press("ArrowRight");
@@ -109,12 +113,12 @@ test("Nord grid sizes reveal focused rows and retain the independent time and da
   await expect(page.locator("[data-nord-date]")).toBeHidden();
 });
 
-test("the Solar System has eight textured planets and obeys reduced motion and performance mode", async ({ page }) => {
+test("the minimal Solar System has eight planets and obeys reduced motion and performance mode", async ({ page }) => {
   await prepare(page, { nordRice: true });
   const scene = page.locator("[data-solar-system]");
   await expect(scene).toBeVisible();
   await expect(scene.locator("[data-solar-planet]")).toHaveCount(8);
-  await expect(scene.locator("image")).toHaveCount(9);
+  await expect(scene.locator("image, radialGradient, linearGradient")).toHaveCount(0);
   const mercury = scene.locator('[data-solar-planet="mercury"]');
   await expect(mercury).toHaveCSS("animation-play-state", "paused");
   await page.emulateMedia({ reducedMotion: "no-preference" });

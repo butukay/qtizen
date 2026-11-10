@@ -7,7 +7,7 @@ import { createCardEnvironment } from "../../test/createCardEnvironment";
 import { InputCard } from "./InputCard";
 
 test.each([
-  { type: "TV", inputName: "Live TV", glyph: "tv" },
+  { type: "TV", inputName: "TV", glyph: "tv" },
   { type: "HDMI", inputName: "Xbox", glyph: "gamepad-2" },
   { type: "HDMI", inputName: "PC", glyph: "monitor" },
   { type: "HDMI", inputName: "Apple TV", glyph: "rectangle-ellipsis" },

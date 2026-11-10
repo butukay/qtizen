@@ -2,8 +2,6 @@
 export const FIXED_NAMES = {
   appName: "AeroTizen",
   nord: "Nord",
-  solarTextures: "Solar System Scope / INOVE",
-  ccBy4: "CC BY 4.0",
   samsung: "Samsung",
   wifi: "Wi-Fi",
   hdmi: "HDMI",
