@@ -121,7 +121,7 @@ test("malformed JSON shapes and individual values produce usable typed preferenc
   for (const saved of [null, [], true, 5, "text", { home: {}, inputNames: null }]) {
     const h = harness({ "aerotizen.settings.v1": JSON.stringify(saved) });
     assert.doesNotThrow(() => h.service.load());
-    assert.equal(h.service.getSnapshot().background, "aurora");
+    assert.equal(h.service.getSnapshot().background, "black");
     assert.deepEqual(h.service.getSnapshot().inputNames, {});
   }
   const h = harness({
@@ -141,7 +141,7 @@ test("malformed JSON shapes and individual values produce usable typed preferenc
   const state = h.service.getSnapshot();
   assert.deepEqual(state.home, ["one.app"]);
   assert.equal(state.homeCardColumns, 3);
-  assert.equal(state.showWeather, true);
+  assert.equal(state.showWeather, false);
   assert.equal(state.speed, 3);
   assert.deepEqual(state.inputNames, { "HDMI 1": "Console" });
   assert.deepEqual(state.hdmiKeepVisible, { 1: true });

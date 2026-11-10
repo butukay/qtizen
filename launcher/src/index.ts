@@ -173,7 +173,7 @@ const disposeInputPlayback = mountInputPlayback(inputPlaybackHost, {
   applyBackground: backgrounds.apply,
   suspendBackground: backgrounds.bridge.suspend,
 });
-const disposeScreenSaver = mountScreenSaverControl(window, settings);
+const disposeScreenSaver = mountScreenSaverControl(window);
 const dispose = () => {
   disposeScreenSaver();
   disposeInputPlayback();

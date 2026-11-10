@@ -17,56 +17,34 @@ const INPUT_ICONS = { tv: Tv, game: Gamepad2, pc: Monitor, box: RectangleEllipsi
   LucideIcon
 >;
 
-export const InputCard = ({
-  env,
-  source,
-  glass,
-  compact,
-  nord = false,
-}: {
-  env: HomeEnvironment;
-  source: InputSource;
-  glass: boolean;
-  compact: boolean;
-  nord?: boolean;
-}) => {
+export const InputCard = ({ env, source }: { env: HomeEnvironment; source: InputSource }) => {
   const { t } = useTranslation();
   const port = env.runtime.inputs.portName(source);
-  const label = env.runtime.inputs.label(source, source.type === "TV" ? t("inputs.liveTv") : undefined);
-  const { kind, status, statusLabel, disconnected } = getInputPresentation(source, label, {
+  const television = source.type === "TV";
+  const label = env.runtime.inputs.label(source, television ? t("inputs.liveTv") : undefined);
+  const { kind, status, disconnected } = getInputPresentation(source, label, {
     recognized: Boolean(env.runtime.inputs.hasRecognizedDevice?.(source)),
     pinned: Boolean(env.runtime.inputs.alwaysVisible?.(source)),
   });
+  const subtitle = television ? t("inputs.status.live") : port;
   return (
     <HomeControl
       env={env}
       controlKey={"input:" + source.type + ":" + source.number}
       className={styles.card}
-      dataAttributes={{
-        "data-input-card": "",
-        "data-variant": glass ? "glass" : "classic",
-        "data-status": status,
-        "data-disconnected": disconnected ? "true" : "false",
-        "data-compact": compact ? "true" : "false",
-        "data-nord": nord ? "true" : "false",
-      }}
+      dataAttributes={{ "data-input-card": "", "data-status": status, "data-disconnected": String(disconnected) }}
       title={label}
     >
       <span class={styles.icon} data-input-part="icon">
         <Icon icon={INPUT_ICONS[kind]} />
       </span>
-      {glass ? (
-        <span class={styles.status} data-input-part="status">
-          {t(statusLabel)}
-        </span>
-      ) : null}
       <div class={styles.label + " " + text.truncate} data-input-part="label">
         {label}
-        {label !== port && source.type !== "TV" ? (
-          <div class={styles.subtitle + (glass ? " " + text.truncate : "")} data-input-part="subtitle">
-            {port}
+        {(television || label !== port) && (
+          <div class={styles.subtitle} data-input-part="subtitle">
+            {subtitle}
           </div>
-        ) : null}
+        )}
       </div>
     </HomeControl>
   );

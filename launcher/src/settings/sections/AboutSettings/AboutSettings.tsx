@@ -9,7 +9,7 @@ import { useSettingsEnvironment } from "../../hooks/useSettingsEnvironment";
 import styles from "./AboutSettings.module.css";
 
 const updateCommand = "aerotizen update launcher";
-const projectUrl = "github.com/helalaou/AeroTizen";
+const projectUrl = "github.com/butukay/AeroTizen";
 
 export const AboutSettings = ({ active }: { active: boolean }) => {
   const { updates, drawer } = useSettingsEnvironment();

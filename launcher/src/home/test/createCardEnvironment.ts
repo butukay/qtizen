@@ -9,12 +9,10 @@ export const createCardEnvironment = (selected = "", presentation: Partial<AppPr
   const state = createStore<HomeState>({
     active: true,
     appOffset: 0,
-    appsEndOffset: 0,
     continueOffset: 0,
     draft: null,
     menu: null,
     moving: null,
-    page: "home",
     scroll: 0,
     selected,
   });

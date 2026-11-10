@@ -1,7 +1,8 @@
 import styles from "./HomeSectionHeading.module.css";
 
-export const HomeSectionHeading = ({ title, nord = false }: { title: string; nord?: boolean }) => (
-  <h2 class={styles.heading} data-home-section-heading data-nord={nord ? "true" : "false"}>
-    {title}
+export const HomeSectionHeading = ({ title }: { title: string }) => (
+  <h2 class={styles.heading} data-home-section-heading>
+    <span>{title}</span>
+    <span class={styles.rule} aria-hidden="true" />
   </h2>
 );

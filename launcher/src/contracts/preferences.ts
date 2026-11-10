@@ -16,15 +16,12 @@ export interface WeatherLocation {
   readonly name: string;
 }
 export interface SettingsValues {
-  aeroClockStyle: "vertical" | "horizontal" | "minimal" | "bold";
   background: string;
-  clockLayout: "classic" | "custom";
   continueWatching: boolean;
   continueWatchingApps: string[];
   customColour: string;
   customGradient: CustomGradient;
   dateFormat: DateFormat | "auto" | "weekday" | "dmy" | "mdy";
-  glassSettings: boolean;
   hdmiKeepVisible: Record<string, boolean>;
   hdmiNativeViewer: boolean;
   hideDisconnectedHdmi: boolean;
@@ -33,7 +30,6 @@ export interface SettingsValues {
   homeCardColumns: number;
   inputNames: Record<string, string>;
   language: string;
-  nordRice: boolean;
   numerals: "latn" | "arab";
   performanceMode: boolean;
   showLiveTv: boolean;

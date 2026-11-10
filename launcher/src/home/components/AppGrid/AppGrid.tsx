@@ -1,7 +1,7 @@
 import type { InstalledApp } from "../../../contracts/launcher";
 import type { SettingsSnapshot } from "../../../contracts/preferences";
 import { useStoreSelector } from "../../../shared/hooks/useStore";
-import type { HomeEnvironment, Page } from "../../types";
+import type { HomeEnvironment } from "../../types";
 import { AppCard } from "../AppCard";
 import { FireplaceCard } from "../FireplaceCard/FireplaceCard";
 import { HorizontalScroller } from "../HorizontalScroller/HorizontalScroller";
@@ -13,8 +13,6 @@ export const AppGrid = ({
   ids,
   apps,
   settings,
-  page,
-  shown,
   active,
   label,
 }: {
@@ -22,39 +20,30 @@ export const AppGrid = ({
   ids: readonly string[];
   apps: readonly InstalledApp[];
   settings: SettingsSnapshot;
-  page: Page;
-  shown: boolean;
   active: boolean;
   label: string;
 }) => {
   const appOffset = useStoreSelector(env.state, (state) => state.appOffset);
-  const scroll = page === "home" && settings.homeAppLayout === "scroll";
+  const scroll = settings.homeAppLayout === "scroll";
   return (
     <HorizontalScroller
-      id={shown ? "grid" : page + "-grid-parked"}
+      id="grid"
       label={label}
       enabled={scroll}
-      visible={shown}
+      visible
       trackClass={styles.grid}
-      trackData={{
-        "data-app-grid": "",
-        "data-columns": env.columns(settings),
-        "data-page": page,
-        "data-expanded": settings.clockLayout === "custom" ? "true" : "false",
-        "data-scroll": scroll ? "true" : "false",
-        "data-nord": settings.nordRice ? "true" : "false",
-      }}
-      trackRef={page === "home" ? env.appItems : undefined}
-      viewportRef={page === "home" ? env.appViewport : undefined}
+      trackData={{ "data-app-grid": "", "data-columns": env.columns(settings), "data-scroll": String(scroll) }}
+      trackRef={env.appItems}
+      viewportRef={env.appViewport}
       offset={appOffset}
       onOffsetChange={(offset) => env.state.set({ ...env.state.getSnapshot(), appOffset: offset })}
     >
       {ids.map((id) => {
         if (id === env.runtime.config.FIREPLACE_ID) {
-          return <FireplaceCard key={id} env={env} registered={shown} />;
+          return <FireplaceCard key={id} env={env} registered={active} />;
         }
         const app = apps.find((app) => app.id === id) || { id, name: id, icon: "" };
-        return <AppCard key={id} env={env} app={app} active={active && shown} />;
+        return <AppCard key={id} env={env} app={app} active={active} />;
       })}
     </HorizontalScroller>
   );

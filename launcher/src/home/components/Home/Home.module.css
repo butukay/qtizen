@@ -1,16 +1,12 @@
 .home {
-  --home-content-padding: 8px;
-  --home-side-padding: 64px;
+  --home-content-padding: 0px;
+  --home-side-padding: 160px;
   --home-bottom-fade: 80px;
   --home-top-fade: 112px;
 
   height: 1080px;
   display: flex;
   flex-direction: column;
-
-  &[data-expanded="true"] {
-    --home-content-padding: 24px;
-  }
 }
 
 .viewport {
@@ -28,19 +24,6 @@
     rgba(0, 0, 0, 0.1) calc(100% - 10px),
     transparent 100%
   );
-}
-
-.home[data-nord="true"] {
-  --home-side-padding: 160px;
-  --home-content-padding: 0px;
-}
-
-.page[data-nord="true"][data-docked="true"] {
-  grid-template-rows: auto auto 1fr auto;
-
-  > [data-home-section="inputs"] {
-    grid-row: 4;
-  }
 }
 
 .mask {
@@ -83,87 +66,26 @@
   transform: translate3d(0, var(--home-offset), 0);
   transition: transform var(--motion-duration-viewport) cubic-bezier(0.2, 0.72, 0.25, 1);
 
-  &[data-page="apps"],
   &[data-docked="true"] {
     height: 100%;
   }
 }
 
 .page {
-  &[data-page="home"] {
-    animation: homeReveal var(--motion-duration-page) ease-out both;
-
-    > :not([hidden]):not(:empty) ~ section:not([hidden]) {
-      margin-top: 40px;
-    }
-  }
-
-  &[data-page="apps"] {
-    animation: appsReveal var(--motion-duration-page) ease-out both;
-  }
-
+  min-width: 0;
+  width: 100%;
   &[data-docked="true"] {
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
     min-height: 100%;
     padding-bottom: calc(var(--home-bottom-fade) + 16px);
-
     > [data-home-section="inputs"] {
-      grid-row: 3;
+      grid-row: 4;
     }
   }
 }
 
-.empty {
-  font-size: 34px;
-  color: var(--muted);
-  padding: 40px 0;
-}
-
-.backToTop {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  position: absolute;
-  bottom: calc(var(--home-bottom-fade) - var(--apps-end-offset));
-  left: 50%;
-  transform: translateX(-50%);
-  border: 2px solid var(--back-to-top-border);
-  border-radius: 50%;
-  background: var(--back-to-top-surface);
-  color: var(--fg);
-  cursor: pointer;
-
-  > svg {
-    width: 32px;
-    height: 32px;
-  }
-
-  &[data-focused="true"] {
-    box-shadow: var(--back-to-top-focus-shadow);
-  }
-}
-
-@keyframes homeReveal {
-  from {
-    opacity: 0.7;
-    transform: translate3d(-12px, 0, 0);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes appsReveal {
-  from {
-    opacity: 0.7;
-    transform: translate3d(12px, 0, 0);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.favorites {
+  min-width: 0;
 }

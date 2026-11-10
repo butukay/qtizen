@@ -141,7 +141,6 @@ test("actions persist preferences and invoke only the relevant service", () => {
     ["setLocationVisible", false, "weatherShowLocation", null],
     ["setTempUnit", "F", "tempUnit", null],
     ["setDateFormat", "iso", "dateFormat", "applyClock"],
-    ["setNetworkVisible", false, "showNetwork", null],
     ["setLiveTvVisible", false, "showLiveTv"],
     ["setHomeCardColumns", 5, "homeCardColumns", "applyCardSize"],
     ["setHomeAppLayout", "scroll", "homeAppLayout", "applyCardSize"],

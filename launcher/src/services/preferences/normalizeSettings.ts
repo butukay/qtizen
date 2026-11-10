@@ -59,8 +59,6 @@ export const normalizeSettings = (
   const validHome = Array.isArray(home) ? ids(home) : defaults.home;
   return {
     home: home === null ? null : validHome,
-    glassSettings: boolean(data.glassSettings, defaults.glassSettings),
-    nordRice: boolean(data.nordRice, defaults.nordRice),
     performanceMode: boolean(data.performanceMode, defaults.performanceMode),
     homeCardColumns: typeof columns === "number" && [3, 4, 5].includes(columns) ? columns : defaults.homeCardColumns,
     homeAppLayout: choice(data.homeAppLayout, ["grid", "scroll"], defaults.homeAppLayout),
@@ -85,8 +83,6 @@ export const normalizeSettings = (
     ),
     language: text(data.language, defaults.language),
     numerals: choice(data.numerals, ["latn", "arab"], defaults.numerals),
-    clockLayout: choice(data.clockLayout, ["classic", "custom"], defaults.clockLayout),
-    aeroClockStyle: choice(data.aeroClockStyle, ["vertical", "horizontal", "minimal", "bold"], defaults.aeroClockStyle),
     timeFormat:
       data.timeFormat === "12" || data.timeFormat === "24"
         ? data.timeFormat

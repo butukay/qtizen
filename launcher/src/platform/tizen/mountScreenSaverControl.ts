@@ -1,5 +1,3 @@
-import type { SettingsSnapshot } from "../../contracts/preferences";
-
 interface AppCommon {
   AppCommonScreenSaverState: { SCREEN_SAVER_OFF: number; SCREEN_SAVER_ON: number };
   setScreenSaver(state: number, done: () => void, failed: () => void): void;
@@ -8,16 +6,12 @@ interface AppCommon {
 interface ScreenSaverHost extends Pick<Window, "addEventListener" | "removeEventListener"> {
   AeroTizen: { tizen?: unknown };
   document: Document;
+  location?: Pick<Location, "protocol">;
   webapis?: { appcommon?: AppCommon };
 }
 
-interface ScreenSaverSettings {
-  getSnapshot(): Pick<SettingsSnapshot, "nordRice">;
-  subscribe(listener: () => void): () => void;
-}
-
 // AppCommon controls this app's screen-saver request, not the panel-care settings.
-export const mountScreenSaverControl = (host: ScreenSaverHost, settings: ScreenSaverSettings) => {
+export const mountScreenSaverControl = (host: ScreenSaverHost) => {
   if (!host.AeroTizen.tizen) {
     return () => undefined;
   }
@@ -29,7 +23,7 @@ export const mountScreenSaverControl = (host: ScreenSaverHost, settings: ScreenS
   let script: HTMLScriptElement | undefined;
   const sync = () => {
     const api = host.webapis?.appcommon;
-    const suppress = !disposed && !document.hidden && settings.getSnapshot().nordRice;
+    const suppress = !disposed && !document.hidden;
     if (!api || target === suppress || (!suppress && !restoreNeeded)) {
       return;
     }
@@ -62,12 +56,11 @@ export const mountScreenSaverControl = (host: ScreenSaverHost, settings: ScreenS
     target = null;
     sync();
   };
-  const unsubscribe = settings.subscribe(sync);
   document.addEventListener("visibilitychange", sync);
   document.addEventListener("playing", resume, true);
   host.addEventListener("appcontrol", resume);
   sync();
-  if (!host.webapis?.appcommon) {
+  if (!host.webapis?.appcommon && host.location?.protocol === "file:") {
     script = document.createElement("script");
     script.src = "$WEBAPIS/webapis/webapis.js";
     script.onload = sync;
@@ -78,7 +71,6 @@ export const mountScreenSaverControl = (host: ScreenSaverHost, settings: ScreenS
       return;
     }
     disposed = true;
-    unsubscribe();
     document.removeEventListener("visibilitychange", sync);
     document.removeEventListener("playing", resume, true);
     host.removeEventListener("appcontrol", resume);

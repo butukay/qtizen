@@ -1,0 +1,39 @@
+.hero {
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--rice-font);
+  color: var(--home-text);
+}
+.clock {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.time {
+  display: flex;
+  align-items: baseline;
+  direction: ltr;
+  font-size: 136px;
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -7px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.colon {
+  color: var(--focus);
+  margin: 0 2px;
+}
+.period {
+  color: var(--home-muted);
+  font-size: 25px;
+  letter-spacing: 0;
+  margin-left: 18px;
+}
+.date {
+  color: var(--home-muted);
+  font-size: 23px;
+  line-height: 1.5;
+  margin-top: 16px;
+}

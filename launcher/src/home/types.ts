@@ -13,20 +13,17 @@ export interface Inventory {
   readonly items: readonly ContinueItem[];
   readonly ready: boolean;
 }
-export type Page = "home" | "apps";
 export interface HomeMenuChoice {
-  readonly action: "add" | "remove" | "move";
+  readonly action: "remove" | "move";
   readonly label: MessageKey;
 }
 export interface HomeState {
   readonly active: boolean;
   readonly appOffset: number;
-  readonly appsEndOffset: number;
   readonly continueOffset: number;
   readonly draft: readonly string[] | null;
   readonly menu: Readonly<{ id: string; selected: number }> | null;
   readonly moving: string | null;
-  readonly page: Page;
   readonly scroll: number;
   readonly selected: string;
 }
@@ -49,7 +46,6 @@ export interface HomeEnvironment {
   select(key: string): void;
   settings: SettingsStore;
   showMoveInstructions(): void;
-  showPage(page: Page): void;
   state: MutableStore<HomeState>;
   status: StatusStores;
   updates: LauncherUpdateNotice;

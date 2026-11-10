@@ -5,7 +5,7 @@ for (const [build, url] of [
   ["development", "http://127.0.0.1:8172/"],
 ]) {
   for (const glassSettings of [false, true]) {
-    test(`${build} ${glassSettings ? "Glass" : "Classic"} runtime overlays keep stacking, motion and icon direction`, async ({
+    test(`${build} Default migrated from ${glassSettings ? "Glass" : "Classic"} runtime overlays keep stacking, motion and icon direction`, async ({
       page,
     }) => {
       const errors = [];

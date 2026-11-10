@@ -84,8 +84,6 @@ export const createSettingsActions = (
         view.set({ ...view.getSnapshot(), colourPicker: null });
       });
     },
-    setGlassSettings: (glassSettings) => commit({ glassSettings, nordRice: false }, services.applyBackground),
-    setNordRice: (nordRice) => commit({ nordRice }, services.applyBackground),
     setPerformanceMode: (performanceMode) => commit({ performanceMode }, services.applyBackground),
     setWeatherPhoto: (weatherPhoto) => commit({ weatherPhoto }, services.applyBackground),
     setContinueWatching: (continueWatching) => commit({ continueWatching }),
@@ -99,14 +97,8 @@ export const createSettingsActions = (
     setWeatherVisible: (showWeather) => commit({ showWeather }),
     setLocationVisible: (weatherShowLocation) => commit({ weatherShowLocation }),
     setTempUnit: (tempUnit) => commit({ tempUnit }),
-    setClockLayout: (layout) =>
-      commit(
-        layout === "classic" ? { clockLayout: "classic" } : { clockLayout: "custom", aeroClockStyle: layout },
-        services.applyClock,
-      ),
     setDateFormat: (dateFormat) => commit({ dateFormat }, services.applyClock),
     setNumerals: (numerals) => commit({ numerals }, services.applyClock),
-    setNetworkVisible: (showNetwork) => commit({ showNetwork }),
     setLiveTvVisible: (showLiveTv) => commit({ showLiveTv }),
     setHomeCardColumns: (homeCardColumns) => commit({ homeCardColumns }, services.applyCardSize),
     setHomeAppLayout: (homeAppLayout) => commit({ homeAppLayout }, services.applyCardSize),

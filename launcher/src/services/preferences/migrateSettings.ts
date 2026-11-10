@@ -17,6 +17,15 @@ export const migrateSettings = (value: unknown): Record<string, unknown> => {
   } else if (saved.cardSize === "small" || saved.cardSize === "big") {
     migrated.homeCardColumns = saved.cardSize === "small" ? 5 : 3;
   }
+  // The fork now has one Default interface; migrate old wallpaper overrides once.
+  if ("nordRice" in saved || "glassSettings" in saved) {
+    migrated.background = "black";
+    migrated.weatherPhoto = false;
+  }
+  delete migrated.nordRice;
+  delete migrated.glassSettings;
+  delete migrated.clockLayout;
+  delete migrated.aeroClockStyle;
   delete migrated.favorites;
   delete migrated.cardSize;
   delete migrated.homeCardMode;

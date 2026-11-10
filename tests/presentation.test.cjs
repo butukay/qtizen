@@ -28,7 +28,7 @@ test("Live TV keeps its own artwork and status regardless of its label or capabi
   assert.deepEqual(input(source, "Xbox", { pinned: true, recognized: true }), {
     kind: "tv",
     status: "live",
-    statusLabel: "TV",
+    statusLabel: "Live",
     disconnected: false,
   });
 });

@@ -30,7 +30,6 @@ if (new URLSearchParams(location.search).get("demo") === "1" && !("tizen" in win
   config.LEGACY_STORAGE_KEYS = [];
   config.DEFAULTS = {
     continueWatching: true,
-    glassSettings: true,
     homeCardColumns: 5,
     home: ["demo0", "demo1", "demo3", "demo6"],
   };

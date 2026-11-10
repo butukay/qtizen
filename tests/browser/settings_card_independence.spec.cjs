@@ -39,7 +39,7 @@ test("Home columns never change standard Settings icons or artwork nodes", async
 });
 
 for (const glassSettings of [false, true]) {
-  test(`${glassSettings ? "Glass" : "Classic"} Settings cards retain styles without the editor ID`, async ({
+  test(`Default migrated from ${glassSettings ? "Glass" : "Classic"} Settings cards retain styles without the editor ID`, async ({
     page,
   }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });

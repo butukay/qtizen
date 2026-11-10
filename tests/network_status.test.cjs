@@ -6,7 +6,7 @@ function setup({ level, standard, online = true, settings = {}, tizen = true } =
     timers = [],
     listeners = [];
   const A = {
-    settings: createTestSettings(settings),
+    settings: createTestSettings({ showNetwork: true, ...settings }),
     tizen: tizen && {
       systeminfo: {
         getPropertyValue(key, yes, no) {

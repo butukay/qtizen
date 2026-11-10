@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 for (const glassSettings of [false, true]) {
-  test(`${glassSettings ? "Glass" : "Classic"} HDMI names remain inside their control and save correctly`, async ({
+  test(`Default migrated from ${glassSettings ? "Glass" : "Classic"} HDMI names remain inside their control and save correctly`, async ({
     page,
   }, info) => {
     await page.route("https://**/*", (r) => r.fulfill({ body: "{}" }));

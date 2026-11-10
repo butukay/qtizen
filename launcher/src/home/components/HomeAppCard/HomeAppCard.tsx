@@ -25,14 +25,12 @@ export const HomeAppCard = ({
   background?: string;
 }) => {
   const isMoving = useStoreSelector(env.state, (state) => state.moving === id);
-  const nord = useStoreSelector(env.settings, (settings) => settings.nordRice);
   return (
     <HomeControl
       env={env}
       controlKey={"app:" + id}
       dataId={id}
       moving={isMoving}
-      dataAttributes={{ "data-nord": nord ? "true" : "false" }}
       registered={registered}
       className={styles.card + " " + className}
       title={title}

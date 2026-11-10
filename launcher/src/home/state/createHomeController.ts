@@ -1,23 +1,17 @@
 import { focusControl } from "../../shared/navigation/focusControl";
 import { createStore } from "../../shared/state/createStore";
-import type { HomeEnvironment, HomeMenuChoice, HomeState, Page } from "../types";
+import type { HomeEnvironment, HomeMenuChoice, HomeState } from "../types";
 
 import { revealHorizontalItem } from "./horizontalScroll";
 
-const HEADER_KEYS = ["gear", "samsung-home-shortcut", "home-tab", "apps-tab"] as const;
-const NORD_HEADER_KEYS = ["home-tab", "apps-tab", "samsung-home-shortcut", "gear"] as const;
-// Reserve 16px for the focus outline beyond the 112px top and 80px bottom fades.
-const TOP_SCROLL_CLEARANCE = 128;
+const HEADER_KEYS = ["gear"] as const;
+// Keep focused content below the 96px header with 16px of clearance.
+const TOP_SCROLL_CLEARANCE = 112;
 const BOTTOM_SCROLL_CLEARANCE = 96;
-const APPS_END_CLEARANCE = 16;
 const HOME_MENU_CHOICES = [
   { action: "move", label: "home.move" },
   { action: "remove", label: "home.removeFromHome" },
 ] as const;
-const APP_MENU_CHOICES = {
-  add: { action: "add", label: "home.addToHome" },
-  remove: { action: "remove", label: "home.removeFromHome" },
-} as const;
 
 type Rows = readonly (readonly string[])[];
 
@@ -29,7 +23,7 @@ const getSelectedKey = (rows: Rows, selected: string, started: boolean) => {
   if (rows.some((row) => row.includes(selected))) {
     return selected;
   }
-  return first || "home-tab";
+  return first || "gear";
 };
 
 const getScrollOffset = ({
@@ -71,7 +65,6 @@ const getVerticalColumn = ({
   row,
   target,
   selected,
-  page,
   nodes,
   getViewport,
 }: {
@@ -79,17 +72,16 @@ const getVerticalColumn = ({
   row: number;
   target: number;
   selected: string;
-  page: Page;
   nodes: ReadonlyMap<string, HTMLElement>;
   getViewport(key: string): HTMLElement | null;
 }) => {
   if (target === 0) {
-    return rows[0].indexOf(page === "home" ? "home-tab" : "apps-tab");
+    return 0;
   }
   if (row === 0) {
     return 0;
   }
-  const column = row === 0 ? 0 : rows[row].indexOf(selected);
+  const column = rows[row].indexOf(selected);
   if (!getViewport(selected) && !getViewport(rows[target][0])) {
     return column;
   }
@@ -115,16 +107,11 @@ const getVerticalColumn = ({
 // Remote transactions publish state synchronously; Preact owns every rendered node.
 // No app/service commands are reimplemented here.
 export const createHomeController = (
-  env: Omit<
-    HomeEnvironment,
-    "bridge" | "state" | "select" | "activate" | "showPage" | "choose" | "dismiss" | "menuChoices"
-  >,
+  env: Omit<HomeEnvironment, "bridge" | "state" | "select" | "activate" | "choose" | "dismiss" | "menuChoices">,
   transaction: (action: () => void) => void,
 ) => {
   const { runtime, settings, inventory, nodes } = env;
   const state = createStore<HomeState>({
-    page: "home",
-    appsEndOffset: 0,
     scroll: 0,
     continueOffset: 0,
     selected: "",
@@ -160,9 +147,7 @@ export const createHomeController = (
       (id) => id === runtime.config.FIREPLACE_ID || !inventory.getSnapshot().ready || runtime.apps.byId(id),
     );
   };
-  const ids = () =>
-    state.getSnapshot().page === "home" ? homeIds() : inventory.getSnapshot().apps.map((app) => app.id);
-  const scrollApps = () => state.getSnapshot().page === "home" && settings.getSnapshot().homeAppLayout === "scroll";
+  const scrollApps = () => settings.getSnapshot().homeAppLayout === "scroll";
   const getScroller = (key: string) => {
     if (key.startsWith("continue:")) {
       return {
@@ -179,15 +164,12 @@ export const createHomeController = (
   const sourceKey = (source: { type: string; number?: number }) => "input:" + source.type + ":" + source.number;
   const rows = (): readonly (readonly string[])[] => {
     const columns = env.columns(settings.getSnapshot());
-    const all = ids();
+    const all = homeIds();
     const rowLength = scrollApps() ? Math.max(1, all.length) : columns;
     const appRows = Array.from({ length: Math.ceil(all.length / rowLength) }, (_, index) =>
       all.slice(index * rowLength, (index + 1) * rowLength).map((id) => "app:" + id),
     );
-    const appLayout = [settings.getSnapshot().nordRice ? NORD_HEADER_KEYS : HEADER_KEYS, ...appRows];
-    if (state.getSnapshot().page !== "home") {
-      return all.length ? [...appLayout, ["back-to-top"]] : appLayout;
-    }
+    const appLayout = [HEADER_KEYS, ...appRows];
     const { items, inputs } = inventory.getSnapshot();
     const continueRows =
       settings.getSnapshot().continueWatching && items.length ? [items.map((item) => "continue:" + item.key)] : [];
@@ -200,12 +182,12 @@ export const createHomeController = (
       return;
     }
     const pending = state.getSnapshot();
-    if (pending.moving && !ids().includes(pending.moving)) {
+    if (pending.moving && !homeIds().includes(pending.moving)) {
       update({ moving: null, draft: null });
       runtime.hideToast();
       cancelPress();
     }
-    if (pending.menu && !ids().includes(pending.menu.id)) {
+    if (pending.menu && !homeIds().includes(pending.menu.id)) {
       update({ menu: null });
       cancelPress();
     }
@@ -236,21 +218,11 @@ export const createHomeController = (
       update({ [scroller.offset]: offset });
     }
     // Home's header and first row always use the top position. Avoid style/layout reads for each horizontal move.
-    if (pending.page === "home" && (list[0].includes(selected) || list[1]?.includes(selected))) {
-      update({ appsEndOffset: 0, scroll: 0 });
+    if (list[0].includes(selected) || list[1]?.includes(selected)) {
+      update({ scroll: 0 });
       return;
     }
     const mainTop = main.getBoundingClientRect().top;
-    const lastAppRow = pending.page === "apps" ? list[list.length - 2] : undefined;
-    const lastApp = lastAppRow && nodes.get(lastAppRow[0]);
-    const grid = lastApp?.parentElement;
-    // The grid edge stays fixed while the last app's focus scale animates.
-    const lastRowTop = lastApp && grid ? grid.getBoundingClientRect().bottom - lastApp.offsetHeight - mainTop : 0;
-    const appsEndOffset = Math.max(0, Math.round(lastRowTop - APPS_END_CLEARANCE));
-    if (selected === "back-to-top" || (pending.scroll === pending.appsEndOffset && lastAppRow?.includes(selected))) {
-      update({ appsEndOffset, scroll: appsEndOffset });
-      return;
-    }
     const rect = node.getBoundingClientRect();
     const viewportBounds = main.parentElement?.getBoundingClientRect();
     const origin = viewportBounds?.top || 0;
@@ -263,7 +235,7 @@ export const createHomeController = (
       origin,
       limit: (viewportBounds?.bottom || document.documentElement.clientHeight) - BOTTOM_SCROLL_CLEARANCE,
     });
-    update({ appsEndOffset, scroll });
+    update({ scroll });
   };
   const select = (selected: string) => {
     if (state.getSnapshot().selected !== selected) {
@@ -284,29 +256,10 @@ export const createHomeController = (
     update({ menu: null });
     focus();
   };
-  const showPage = (page: Page) => {
-    cancelPress();
-    endMove();
-    update({ page, appsEndOffset: 0, scroll: 0, menu: null, selected: page === "home" ? "home-tab" : "apps-tab" });
-    focus();
-  };
   const activate = (key: string) => {
     if (key === "gear") {
       endMove();
       runtime.settingsUi?.open();
-    } else if (key === "samsung-home-shortcut") {
-      if (runtime.homewatch.openSamsungHome) {
-        runtime.homewatch.openSamsungHome();
-      } else {
-        runtime.homewatch.useSamsungHome();
-      }
-    } else if (key === "home-tab" || key === "apps-tab") {
-      showPage(key === "home-tab" ? "home" : "apps");
-    } else if (key === "back-to-top") {
-      const first = inventory.getSnapshot().apps[0];
-      if (first) {
-        select("app:" + first.id);
-      }
     } else if (key.startsWith("app:")) {
       const id = key.slice(4);
       const app = runtime.apps.byId(id);
@@ -328,13 +281,7 @@ export const createHomeController = (
       }
     }
   };
-  const menuChoices = (): readonly HomeMenuChoice[] => {
-    if (state.getSnapshot().page === "home") {
-      return HOME_MENU_CHOICES;
-    }
-    const selected = homeIds().includes(state.getSnapshot().menu?.id || "");
-    return [selected ? APP_MENU_CHOICES.remove : APP_MENU_CHOICES.add];
-  };
+  const menuChoices = (): readonly HomeMenuChoice[] => HOME_MENU_CHOICES;
   const choose = (index: number) => {
     const menu = state.getSnapshot().menu;
     const choice = menuChoices()[index];
@@ -347,19 +294,17 @@ export const createHomeController = (
       env.showMoveInstructions();
       return;
     }
-    const before = ids();
+    const before = homeIds();
     const at = before.indexOf(menu.id);
     const home = [...homeIds()];
     settings.update({
-      home: choice.action === "add" ? [...home, menu.id] : home.filter((id) => id !== menu.id),
+      home: home.filter((id) => id !== menu.id),
     });
-    if (state.getSnapshot().page === "home") {
-      const after = ids();
-      const nextApp = after[Math.min(Math.max(at, 0), after.length - 1)];
-      const firstInput = inventory.getSnapshot().inputs[0];
-      const fallback = firstInput ? sourceKey(firstInput) : "home-tab";
-      update({ selected: nextApp ? "app:" + nextApp : fallback });
-    }
+    const after = homeIds();
+    const nextApp = after[Math.min(Math.max(at, 0), after.length - 1)];
+    const firstInput = inventory.getSnapshot().inputs[0];
+    const fallback = firstInput ? sourceKey(firstInput) : "gear";
+    update({ selected: nextApp ? "app:" + nextApp : fallback });
     focus();
   };
   const K = runtime.config.KEY;
@@ -425,9 +370,6 @@ export const createHomeController = (
         return;
       }
       if (code === K.BACK || code === K.ESC) {
-        if (current.page !== "home") {
-          showPage("home");
-        }
         return;
       }
       const all = rows();
@@ -448,7 +390,6 @@ export const createHomeController = (
             row,
             target,
             selected: current.selected,
-            page: current.page,
             nodes,
             getViewport: (key) => getScroller(key)?.viewport || null,
           });
@@ -480,5 +421,5 @@ export const createHomeController = (
     keydown,
     keyup,
   };
-  return { ...env, state, bridge, select, activate, showPage, choose, dismiss, menuChoices };
+  return { ...env, state, bridge, select, activate, choose, dismiss, menuChoices };
 };

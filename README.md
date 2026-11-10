@@ -1,4 +1,4 @@
-# AeroTizen
+# AeroTizen — S95F fork
 
 [![CI](https://github.com/helalaou/AeroTizen/actions/workflows/ci.yml/badge.svg)](https://github.com/helalaou/AeroTizen/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -6,11 +6,20 @@
 AeroTizen is a home screen for Samsung TVs. It puts your favourite apps and HDMI
 inputs in one place. The `aerotizen` command-line tool installs it from your computer.
 
-![AeroTizen Home with favourite apps, Continue Watching and inputs](docs/screenshots/home.png)
+This personal fork uses one [Default interface](docs/default-interface.md): a flat,
+true-black Home screen with favorites, inputs and a schematic Solar System.
+The original Classic/Glass interfaces and page tabs have been removed.
+Based on [helalaou/AeroTizen](https://github.com/helalaou/AeroTizen).
+
+![Default Home with favorite apps and inputs](docs/screenshots/default.png)
 
 *Browser preview with sample apps and programmes.*
 
 ## Quick Start
+
+For this fork, build the `codex/s95f` branch with `npm ci && npm run build`, then
+install `./dist/launcher` using the existing TV signing profile. The upstream
+`install launcher` command below downloads the upstream release rather than this fork.
 
 This guide uses CLI 3.0.0 and launcher 2.7.0. You need a Samsung account and a
 computer on the same network as the TV. The CLI includes its dependencies.
@@ -94,7 +103,7 @@ and how to restore the original settings before uninstalling AeroTizen.
 
 ## Guides
 
-- [Nord rice appearance in this fork](docs/nord-rice.md)
+- [Default interface in this fork](docs/default-interface.md)
 - [TV compatibility and limits](docs/tv-compatibility.md)
 - [Use the launcher and Continue Watching](docs/launcher.md)
 - [Update or remove AeroTizen](docs/manage-installation.md)

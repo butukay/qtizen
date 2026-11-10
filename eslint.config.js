@@ -209,7 +209,7 @@ module.exports = [
   },
   {
     // Playwright callbacks run in the page; the surrounding test runs in Node.
-    files: ["tests/browser/**/*.cjs", "tests/*.browser.js"],
+    files: ["tests/browser/**/*.cjs", "tests/upstream-browser/**/*.cjs", "tests/*.browser.js"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "commonjs",

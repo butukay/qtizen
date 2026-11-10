@@ -2,46 +2,24 @@
   position: relative;
   flex: 0 0 auto;
   width: var(--app-card-size);
-  height: var(--app-card-height, var(--app-card-size));
-  border-radius: 10px;
+  height: var(--app-card-height);
+  border: 1px solid var(--rice-border);
+  border-radius: 4px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--home-app-gap, 22px);
-  background: var(--app-background, var(--card));
-  transform: translateZ(0);
-  transition: transform var(--motion-duration-focus) ease-out;
-
-  &[data-focused="true"] {
-    transform: translateZ(0) scale(1.035);
-    box-shadow: var(--home-card-focus-shadow);
-    z-index: 2;
-  }
-
-  &[data-moving="true"] {
-    overflow: visible;
-    box-shadow: var(--home-card-move-shadow);
-
-    &:not([data-focused="true"]) {
-      transform: translateZ(0) scale(1.06) translateY(-8px);
-      z-index: 3;
-    }
-  }
-}
-
-.card[data-nord="true"] {
   font-family: var(--rice-font);
-  border: 1px solid var(--rice-border);
-  border-radius: 4px;
   background: var(--rice-card-surface);
-  transition:
-    transform var(--motion-duration-focus) ease-out,
-    background-color var(--motion-duration-focus) ease-out;
-
+  transform: translateZ(0);
+  transition: background-color var(--motion-duration-focus) ease-out;
   &[data-focused="true"] {
     background: var(--rice-card-selected);
     border-color: var(--focus);
-    transform: translateZ(0);
+    z-index: 2;
+  }
+  &[data-moving="true"] {
+    overflow: visible;
+    box-shadow: var(--home-card-move-shadow);
   }
 }

@@ -1,8 +1,8 @@
 import type { Store } from "../shared/state/createStore";
 
-import type { SettingsValues, WeatherLocation } from "./preferences";
+import type { WeatherLocation } from "./preferences";
 
-export type ClockLayout = "compact" | SettingsValues["aeroClockStyle"];
+export type ClockLayout = "compact" | "vertical" | "horizontal" | "minimal" | "bold";
 
 export type SolarPhase = "" | "day" | "sunset" | "night";
 

@@ -21,7 +21,7 @@ const output = path.resolve(root, process.argv[2] || "launcher/assets/solar-loop
 const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage();
-  await page.setContent('<body class="nord-ui"><canvas width="600" height="280"></canvas></body>');
+  await page.setContent('<body><canvas width="600" height="280"></canvas></body>');
   await page.addStyleTag({ content: await readFile(path.join(root, "launcher/css/themes.css"), "utf8") });
   const encoder = spawn(
     process.env.AEROTIZEN_FFMPEG || "ffmpeg",

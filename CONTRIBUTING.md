@@ -7,7 +7,7 @@ only a handful of models have been tested so far.
 ## Development setup
 
 ```bash
-git clone https://github.com/helalaou/AeroTizen
+git clone https://github.com/butukay/AeroTizen
 cd AeroTizen
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"     # the aerotizen CLI + pytest + ruff
@@ -42,7 +42,7 @@ npm run build      # type checks, then compiled Home and Settings in dist/launch
 npm test           # launcher tests: tests/*.test.cjs, run in a Node sandbox
 npm run test:components # Preact component tests in launcher/src
 npx playwright install chromium # once per Playwright version; CI also installs OS dependencies
-npm run test:browser # compiled Settings and legacy comparison, with managed local servers
+npm run test:browser # Default interface and retained services, with managed local servers
 ```
 
 ### Mirror a physical TV for local testing
@@ -65,6 +65,13 @@ Changes limited to `README.md`, `CONTRIBUTING.md`, and `docs/` skip the test sui
 CI still checks README contributor markers and contributor guide formatting when
 those files change. Store data that tests read in `tests/fixtures/`.
 
+The active browser suite targets this fork's single Default interface and retained
+services. `tests/upstream-browser/` archives the upstream theme, tab and status-widget
+scenarios as historical reference; they are not a suite for the current UI.
+`tests/browser/default_launcher.spec.cjs` covers their surviving Home responsibilities,
+including navigation, favorites management, migration, card layouts and media lifecycle.
+Frozen legacy fixtures remain unchanged and outside the TV package.
+
 Put component tests next to the source file, for example `ChoiceOption.test.tsx`.
 Use Preact Testing Library to check what the user sees or can activate. Use
 Playwright for browser layout, remote navigation between components, and full
@@ -78,7 +85,7 @@ It compares animated/static wallpaper, hidden status widgets and Performance mod
 Use the same browser, CPU throttle and sample count for before/after builds.
 Desktop CPU throttling does not reproduce TV hardware or physical remote latency.
 On slower TVs, **Settings → Appearance → Performance mode** stops wallpaper motion
-and UI transitions. Time, date and weather visibility remain separate settings.
+and UI transitions. Time and date visibility remain separate settings.
 
 Use Node.js 22.12 or newer, or Node 20.19+ within the 20.x series, as required by Vite.
 CI uses the latest Node 20.x. The watcher tests use mock clocks and network replies to cover the Art Mode protocol, status checks,
@@ -142,8 +149,7 @@ TypeScript derives valid translation keys from the English catalogue. ESLint
 checks legacy keys and UI literals, and the Node suite checks catalogue parity
 and placeholders. Playwright checks the production HTML shell and uses a test-only
 locale that replaces copy with symbols. It scans visible text and text attributes
-for leftover words in the Home, Settings, empty, and error states it visits in
-both themes. Add coverage here for new UI paths.
+for leftover words in the states it visits. Add coverage for new UI paths in Default.
 
 ## Project layout
 
@@ -157,7 +163,7 @@ both themes. Add coverage here for new UI paths.
 | `launcher/src/app/`               | Application assembly, shared preference ownership and UI teardown                               |
 | `launcher/src/contracts/`         | Screen-independent preferences, app/input/feed types and bridge protocols                       |
 | `launcher/src/backgrounds/`       | Wallpaper scenes, background bridge and canvas animation                                        |
-| `launcher/src/status/`            | Shared status views and hooks; one Clock with compact and expanded layouts                      |
+| `launcher/src/status/`            | Shared clock formatting, status stores and hooks                                                |
 | `launcher/src/services/`          | TypeScript preferences, apps, inputs, clock, network, weather and Continue Watching services    |
 | `launcher/src/platform/tizen/`    | Typed boundary for the existing TV and browser services                                         |
 | `launcher/src/dev.ts`             | Development entry that loads the same views before boot                                         |
@@ -177,7 +183,7 @@ both themes. Add coverage here for new UI paths.
 | `dns/`, `docs/`                   | Ad/telemetry blocklists and the settings guide                                                  |
 
 The entry point creates one TypeScript preference service and passes it to Home, Settings
-and the clock. It owns defaults, saved-data validation, migration and persistence.
+and the clock service. It owns defaults, saved-data validation, migration and persistence.
 TV services use the same snapshot and update API as the UI. The service survives development
 hot reload so those services retain their subscriptions. Feature mount functions return
 bridges and disposers. Composition owns visibility handling and releases its subscriptions
@@ -199,8 +205,8 @@ Views add no polling timers or forecast requests.
 Continue Watching owns immutable feed snapshots and bounded retries. Home and Settings share
 its arrays directly; Samsung and Stremio adapters retain transport and launching. The service
 survives hot reload, and its disposer releases requests, timers and subscriptions.
-`Clock` owns time/date presentation and uses layout variants. `WeatherStatus` and
-`NetworkStatus` own their markup. Component CSS has one owner; shared theme paint
+`HomeOverview` owns the clock/date presentation and Solar System composition.
+Component CSS has one owner; shared theme paint
 is defined in `launcher/css/themes.css`. Semantic IDs remain stable for service and
 test integration. See [style rules](docs/styles.md) for the cascade and CSS checks.
 
@@ -210,7 +216,7 @@ test integration. See [style rules](docs/styles.md) for the cascade and CSS chec
   prints a network URL for another device. Vite supplies hot updates for Home and Settings
   components and serves the legacy runtime files. TV-only features use sample data.
   For README screenshots, open `?demo=1` in a clean browser context at 1920×1080.
-  It loads Glass, sample favourites and a fictional Continue Watching feed. In
+  It loads Default, sample favourites and a fictional Continue Watching feed. In
   **Settings → Appearance**, set **App size** to **Small**.
   Add a fifth favourite to Home.
 - Run `npm run build` for the compiled runtime in `dist/launcher/`.

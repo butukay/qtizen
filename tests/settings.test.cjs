@@ -30,13 +30,13 @@ function loadSettings(storage, defaults = {}) {
 
 test("defaults apply when nothing is saved", () => {
   const { settings } = loadSettings({});
-  assert.equal(settings.getSnapshot().background, "aurora");
+  assert.equal(settings.getSnapshot().background, "black");
   assert.equal(settings.getSnapshot().tempUnit, "C");
   assert.equal(settings.getSnapshot().timeFormat, "24");
   assert.equal(settings.getSnapshot().homeInitialized, false, "first launch selects default tiles");
-  assert.equal(settings.getSnapshot().showWeather, true);
+  assert.equal(settings.getSnapshot().showWeather, false);
   assert.equal(settings.getSnapshot().showTime, true);
-  assert.equal(settings.getSnapshot().showNetwork, true);
+  assert.equal(settings.getSnapshot().showNetwork, false);
   assert.equal(settings.getSnapshot().homeCardColumns, 3);
   assert.equal(settings.getSnapshot().homeAppLayout, "grid");
   assert.equal("cardSize" in settings, false);
@@ -104,14 +104,14 @@ test("browser demo defaults do not override a saved Big card choice", () => {
   assert.equal(loadSettings({}, { homeCardColumns: 5 }).settings.getSnapshot().homeCardColumns, 5);
 });
 
-test("older current and legacy saves keep all header items visible", () => {
+test("older saves use the quiet Default profile while preserving time and date settings", () => {
   for (const key of ["aerotizen.settings.v1", "hearth.home.v1", "declutter.home.v5"]) {
     const { settings } = loadSettings({
       [key]: JSON.stringify({ tempUnit: "F", dateFormat: "none" }),
     });
-    assert.equal(settings.getSnapshot().showWeather, true, key);
+    assert.equal(settings.getSnapshot().showWeather, false, key);
     assert.equal(settings.getSnapshot().showTime, true, key);
-    assert.equal(settings.getSnapshot().showNetwork, true, key);
+    assert.equal(settings.getSnapshot().showNetwork, false, key);
     assert.equal(settings.getSnapshot().dateFormat, "none", "date remains under its existing setting");
     assert.equal(settings.getSnapshot().tempUnit, "F");
   }
@@ -179,7 +179,7 @@ test("save writes only known settings under the current key", () => {
 
 test("corrupt storage falls back to defaults", () => {
   const { settings } = loadSettings({ "aerotizen.settings.v1": "{not json" });
-  assert.equal(settings.getSnapshot().background, "aurora");
+  assert.equal(settings.getSnapshot().background, "black");
 });
 
 test("settings publish updates and reloads, and unsubscribe is safe to repeat", () => {

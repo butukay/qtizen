@@ -11,8 +11,7 @@ without companion files can stay flat. Apply this structure as components are
 migrated; imports name the component file directly, without a barrel per folder.
 
 Keep theme paint in
-`launcher/css/themes.css`, which defines the default Classic values and the
-`body.glass-ui` overrides. Prefer role names such as `--settings-surface`,
+`launcher/css/themes.css`, which defines the single Default palette. Prefer role names such as `--settings-surface`,
 `--header-focus-surface` and `--menu-border` over new colour literals for shared
 surfaces, text, borders, focus and shadows. Component-specific artwork and input
 state palettes stay with their component.
@@ -72,14 +71,12 @@ owns wrapping, clipping and ellipsis. Choice labels retain their two-line defaul
 and use a nested local modifier when a single-line result is requested.
 
 Do not add extra IDs or theme selectors to beat an earlier rule. `HomeHeader` owns
-header clearance, `HeaderStatus` owns status placement, and `Clock` owns its layout
-variants. Weather receives the clock layout and weather-only state as explicit
-props. Their modules do not depend on a parent's private class or body clock mode.
-Tests use `data-home-header`, `data-header-focus`, `data-clock-part` and
-`data-weather-part`; semantic IDs remain available for integrations.
+the Settings button position. `HomeOverview` owns the time/date and Solar System
+composition. Tests use `data-home-header`, `data-home-overview`, `data-home-section-heading`
+and `data-solar-system`; semantic IDs remain available for integrations.
 
 `HomeAppCard` owns the common app/Fireplace frame, focus, moving state and reorder
-controls. `AppGrid` owns sizes, columns and compact/expanded clock clearance through
+controls. `AppGrid` owns card heights, columns and spacing through
 explicit data attributes. `AppArtwork` owns image geometry; its inherited radius
 keeps images rounded when moving cards expose their overflow.
 `HorizontalScroller` owns clipping and track movement for both
@@ -91,17 +88,15 @@ modifier with the shared `truncate` utility; other titles keep their two-line cl
 Tests use `#continue-items > [data-key]`, `data-focused` and `data-continue-part`
 hooks. Keep card focus paint and motion with the card, rather than in `base.css`.
 
-`InputDock` owns collection spacing and the compact Glass dock. `InputCard` owns
-its frame, icon, labels, status badge and focused/disconnected states. Pass the
-compact layout explicitly; child geometry must not depend on a parent's class.
-The card exposes `data-input-card`, `data-status`, `data-disconnected`, `data-variant`
-and `data-input-part` hooks. Classic and Glass keep their existing layouts.
+`InputDock` owns collection spacing. `InputCard` owns its flat frame, icon, labels,
+status badge and focused/disconnected states. The card exposes `data-input-card`,
+`data-status`, `data-disconnected` and `data-input-part` hooks. TV has a muted Live subtitle.
 Theme tokens own neutral input paint; connection-status palettes keep local
 defaults through optional named variable fallbacks. Both labels reuse the shared
 truncate utility where their layout needs it. Preserve margin-based dock spacing
 for Chromium 69, which does not support flex gaps.
 
-`Home` owns the viewport, fades, page reveals and section spacing. The inputs
+`Home` owns the viewport, fades and section spacing. The inputs
 section exposes `data-home-section="inputs"` as a layout slot. Tests use
 `data-home-viewport`, `data-home-mask`, `data-home-page`, `data-app-grid`, `data-columns`,
 `data-moving`, `data-reorder-arrow` and `data-app-actions-focus`. Use `data-id` to
@@ -167,12 +162,10 @@ and `setAttribute("class", ...)` calls.
 
 The remaining shell classes are public integration hooks, not module classes:
 
-| Hook                              | Owner                        | Purpose                                                         |
-| --------------------------------- | ---------------------------- | --------------------------------------------------------------- |
-| `body.tv`                         | `launcher/js/inputs.js`      | Hide Home while the native TVWindow is visible                  |
-| `body.glass-ui`                   | `home/index.tsx`             | Apply the existing appearance before measuring                  |
-| `body.nord-ui`                    | `home/index.tsx`             | Apply the optional Nord paint before measuring                   |
-| `body.editing`, `body.previewing` | `useSettingsPresentation.ts` | Settings and wallpaper preview visibility, with unmount cleanup |
+| Hook                              | Owner                          | Purpose                                                         |
+| --------------------------------- | ------------------------------ | --------------------------------------------------------------- |
+| `body.tv`                         | `inputs/InputPlaybackView.tsx` | Hide Home while the native TVWindow is visible                  |
+| `body.editing`, `body.previewing` | `useSettingsPresentation.ts`   | Settings and wallpaper preview visibility, with unmount cleanup |
 
 The obsolete DOM constructors, list-chunking helper and focus sweep live only in
 the comparison helper. Keep frozen fixture scripts and CSS out of the migration.
@@ -191,9 +184,10 @@ use the cascade without `!important`.
 
 `SolarSystem` exposes `[data-home-decoration]`. The page visibility owner hides it
 during native playback, Settings and wallpaper previews.
-Nord keeps component geometry in the existing owners and its shared paint in
-`themes.css`. `NordOverview` owns the breadcrumb, clock composition and decorative
-Solar System placement; it subscribes to the existing clock service. `SolarSystem`
+Default keeps component geometry in its owners and shared paint in
+`themes.css`. `HomeOverview` owns the clock/date composition and decorative Solar
+System placement; it subscribes to the existing clock service. There are no tabs,
+breadcrumbs or theme classes. Home sets `html[data-theme="default"]`. `SolarSystem`
 owns the silent local video and its schematic SVG fallback. Playback follows
 its running prop and reduced-motion preference, and pauses on teardown.
 `SolarSystemDrawing` owns the fallback SVG markup; both share the scene's module.
@@ -220,8 +214,9 @@ Keep an explicit `translateZ(0)` when a transform needs 3D compositing.
 Lightning CSS can simplify `translate3d(x, y, 0)` to a 2D transform; this can change
 SVG rasterization even when geometry stays the same.
 
-Browser tests cover both themes, all clock variants, card/input layouts, Settings
-navigation, wallpaper visibility and focus geometry. For cascade changes, compare
+Active browser tests cover Default migration, card/input layouts, Settings
+navigation, wallpaper visibility, media lifecycle and focus geometry. Old theme/tab
+scenarios are archived in `tests/upstream-browser/` as reference. For cascade changes, compare
 compiled before/after screens with fixed time, cached weather and disabled motion.
 The CSS under `tests/fixtures/legacy-launcher/css/` is a frozen comparison snapshot;
 it is neither active source nor part of the release package. Do not update that

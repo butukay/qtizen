@@ -24,8 +24,7 @@ export const mountHome = (
   // Apply the shell appearance before any Home focus geometry is measured.
   const syncShell = () => {
     const values = settings.getSnapshot();
-    document.body.classList.toggle("glass-ui", values.glassSettings && !values.nordRice);
-    document.body.classList.toggle("nord-ui", values.nordRice);
+    document.documentElement.setAttribute("data-theme", "default");
     document.documentElement.setAttribute("data-performance-mode", String(values.performanceMode));
   };
   syncShell();
@@ -61,8 +60,7 @@ export const mountHome = (
     render(null, mount);
     inventory.dispose();
     unsubscribeShell();
-    document.body.classList.remove("glass-ui");
-    document.body.classList.remove("nord-ui");
+    document.documentElement.removeAttribute("data-theme");
     document.documentElement.removeAttribute("data-performance-mode");
   };
   try {

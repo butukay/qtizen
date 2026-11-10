@@ -9,7 +9,7 @@ test("language selection uses the English fallback offline and persists through 
   await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.getByRole("navigation", { name: "App views" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Settings", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   for (let index = 0; index < 6; index++) await page.keyboard.press("ArrowDown");
   await expect(page.getByRole("button", { name: "Language", exact: true })).toBeFocused();

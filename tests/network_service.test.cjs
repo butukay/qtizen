@@ -5,7 +5,7 @@ const { createTestSettings } = require("./helpers/settings.cjs");
 const { createNetworkService } = loadTypeScript("launcher/src/services/createNetworkService.ts");
 
 const harness = () => {
-  const settings = createTestSettings();
+  const settings = createTestSettings({ showNetwork: true });
   const preferenceListeners = new Set();
   const watches = new Set();
   const intervals = new Map();
@@ -135,7 +135,7 @@ test("disposal releases timer zero, platform watches, settings and consumers; la
 });
 
 test("disposing during a synchronous result cancels its returned handle", () => {
-  const settings = createTestSettings();
+  const settings = createTestSettings({ showNetwork: true });
   let cancelled = 0;
   const service = createNetworkService({
     settings,

@@ -67,10 +67,8 @@ export interface SettingsActions {
   preview(): void;
   saveInputName(port: string, value: string): void;
   setBackground(background: string): void;
-  setClockLayout(layout: "classic" | SettingsValues["aeroClockStyle"]): void;
   setContinueWatching(enabled: boolean): void;
   setDateFormat(format: DateFormat): void;
-  setGlassSettings(enabled: boolean): void;
   setGradientStop(stop: 0 | 1): void;
   setHdmiKeepVisible(port: string, keep: boolean): void;
   setHdmiNativeViewer(enabled: boolean): void;
@@ -80,8 +78,6 @@ export interface SettingsActions {
   setLiveTvVisible(visible: boolean): void;
   setLocation(location: WeatherLocation | null): void;
   setLocationVisible(visible: boolean): void;
-  setNetworkVisible(visible: boolean): void;
-  setNordRice(enabled: boolean): void;
   setNumerals(numerals: "latn" | "arab"): void;
   setPerformanceMode(enabled: boolean): void;
   setSpeed(direction: number): void;
