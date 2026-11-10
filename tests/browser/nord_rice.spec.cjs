@@ -129,19 +129,15 @@ test("the minimal Solar System has eight planets and obeys reduced motion and pe
   await expect(mercury).toHaveCSS("animation-play-state", "paused");
 });
 
-test("OLED idle fades to true black and the first navigation key wakes without moving selection", async ({ page }) => {
+test("Nord stays visible after inactivity and the first remote key navigates normally", async ({ page }) => {
   await page.clock.install();
   await prepare(page, { nordRice: true });
   const selected = await page.locator("#grid > [data-focused=true]").getAttribute("data-id");
-  await page.clock.fastForward(90_000);
-  await expect(page.locator("body")).toHaveAttribute("data-oled-idle", "dim");
-  await expect(page.locator("#home-root")).toHaveCSS("opacity", "0.18");
-  await page.clock.fastForward(90_000);
-  await expect(page.locator("body")).toHaveAttribute("data-oled-idle", "blank");
-  await expect(page.locator("#home-root")).toHaveCSS("opacity", "0");
-  await page.keyboard.press("ArrowRight");
-  await expect(page.locator("body")).toHaveAttribute("data-oled-idle", "awake");
-  expect(await page.locator("#grid > [data-focused=true]").getAttribute("data-id")).toBe(selected);
+  for (const elapsed of [90_000, 90_000, 420_000]) {
+    await page.clock.fastForward(elapsed);
+    await expect(page.locator("#home-root")).toHaveCSS("opacity", "1");
+    await expect(page.locator("[data-nord-time]")).toBeVisible();
+  }
   await page.keyboard.press("ArrowRight");
   expect(await page.locator("#grid > [data-focused=true]").getAttribute("data-id")).not.toBe(selected);
 });

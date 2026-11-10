@@ -24,21 +24,16 @@ Initial phases are composed for legibility, with approximate orbital-period rati
 from [NASA Space Place](https://spaceplace.nasa.gov/years-on-other-planets/en/).
 This decorative orrery uses one Earth year per 180 seconds.
 
-CSS orbital animation pauses when Home is inactive, while the idle presentation
-is dimmed or blank, in Performance mode, and with reduced motion enabled. No
-render loop or texture loading runs on the TV.
+CSS orbital animation pauses when Home is inactive, in Performance mode, and
+with reduced motion enabled. No render loop or texture loading runs on the TV.
 
-For OLED idle presentation, launcher and Settings fade to 18% opacity after 90
-seconds without activity and to black after 180 seconds. The first navigation key
-wakes the UI and is consumed, including its repeat and release, so it does not
-activate an unseen app. App-control returns also wake the UI. Hidden applications,
-native input playback and the Fireplace viewer are excluded from idle handling.
-TV panel-care functions retain control of hardware protection.
+The launcher does not dim or blank itself after inactivity, and does not consume
+a wake key. TV screen-saver and panel-care settings are managed by the TV.
 
 The saved wallpaper and weather-photo preferences are preserved. Nord temporarily
 uses its own static wallpaper and suspends weather photos; switching to Classic or
 Glass restores the selected wallpaper. Native HDMI playback retains a transparent
-page and its video surface is outside the idle UI layers.
+page for its video surface.
 
 For a browser preview, start `npm run dev` and open
 `http://localhost:8019/?appearance=nord`. This uses a separate browser-only preference

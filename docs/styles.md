@@ -195,12 +195,7 @@ Nord keeps component geometry in the existing owners and its shared paint in
 `themes.css`. `NordOverview` owns the breadcrumb, clock composition and decorative
 Solar System placement; it subscribes to the existing clock service. `SolarSystem`
 owns its schematic SVG and CSS orbital motion. Its paused states use public
-performance and idle hooks plus its explicit running prop.
-
-`createOledRest`, mounted and disposed by `mountHome`, owns the `data-oled-idle`
-body attribute. `base.css` applies its opacity only to `[data-oled-ui-layer]`
-mounts for Home, Settings and toasts. Video viewers have separate mounts. The
-controller owns its two idle timers and consumes a wake key through its release.
+performance hook plus its explicit running prop.
 
 ## Checks and compatibility
 

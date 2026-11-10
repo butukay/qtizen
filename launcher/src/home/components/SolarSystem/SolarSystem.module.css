@@ -56,11 +56,7 @@
 }
 
 [data-performance-mode="true"] .orbiter,
-[data-performance-mode="true"] .upright,
-[data-oled-idle="dim"] .orbiter,
-[data-oled-idle="dim"] .upright,
-[data-oled-idle="blank"] .orbiter,
-[data-oled-idle="blank"] .upright {
+[data-performance-mode="true"] .upright {
   animation-play-state: paused;
 }
 

@@ -321,10 +321,3 @@ body.nord-ui {
   --menu-backdrop: var(--settings-overlay);
   --network-offline: #bf616a;
 }
-
-body.nord-ui[data-oled-idle="dim"] {
-  --oled-ui-opacity: 0.18;
-}
-body.nord-ui[data-oled-idle="blank"] {
-  --oled-ui-opacity: 0;
-}

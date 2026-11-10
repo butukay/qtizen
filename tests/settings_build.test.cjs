@@ -17,9 +17,9 @@ test("compiled launcher uses the production page, local scripts and the Preact l
     read(path.join(root, "launcher"), "index.html"),
     "production markup is not rewritten at build time",
   );
-  assert.match(html, /<div id="home-root" data-oled-ui-layer><\/div>/);
-  assert.match(html, /<div id="settings-root" data-oled-ui-layer><\/div>/);
-  assert.match(html, /<div id="toast-root" data-oled-ui-layer><\/div>/);
+  assert.match(html, /<div id="home-root"><\/div>/);
+  assert.match(html, /<div id="settings-root"><\/div>/);
+  assert.match(html, /<div id="toast-root"><\/div>/);
   assert.match(html, /<div id="fireplace-root"><\/div>/);
   assert.match(html, /<div id="input-playback-root"><\/div>/);
   assert.match(html, /<div id="weather-photo-root" aria-hidden="true"><\/div>/);

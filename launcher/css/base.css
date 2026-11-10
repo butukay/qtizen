@@ -14,14 +14,6 @@
   font-display: swap;
 }
 
-body.nord-ui [data-oled-ui-layer] {
-  opacity: var(--oled-ui-opacity, 1);
-  transition: opacity var(--motion-duration-oled-rest) ease;
-}
-body.nord-ui[data-oled-idle="awake"] [data-oled-ui-layer] {
-  transition-duration: var(--motion-duration-enter);
-}
-
 /* The hidden attribute must win over component display rules, including SVG status hosts. */
 [hidden] {
   display: none !important;

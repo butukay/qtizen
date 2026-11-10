@@ -11,7 +11,6 @@ import { TranslationContext } from "../shared/i18n/useTranslation";
 import { Home } from "./components/Home/Home";
 import { createHomeController } from "./state/createHomeController";
 import { createHomeInventory } from "./state/createHomeInventory";
-import { createOledRest } from "./state/createOledRest";
 
 export const mountHome = (
   runtime: LauncherRuntime,
@@ -31,19 +30,6 @@ export const mountHome = (
   };
   syncShell();
   const unsubscribeShell = settings.subscribe(syncShell);
-  const oledRest = createOledRest(
-    document,
-    settings,
-    () => runtime.inputs.getSnapshot().playback === "idle" && !document.defaultView?.Fireplace?.isOpen(),
-  );
-  let oledPlayback = runtime.inputs.getSnapshot().playback;
-  const unsubscribeOledInputs = runtime.inputs.subscribe(() => {
-    const playback = runtime.inputs.getSnapshot().playback;
-    if (playback !== oledPlayback) {
-      oledPlayback = playback;
-      oledRest.refresh();
-    }
-  });
   const inventory = createHomeInventory(runtime, settings, flushSync);
   const rows = createRef<HTMLElement>();
   const environment = createHomeController(
@@ -74,8 +60,6 @@ export const mountHome = (
     environment.bridge.blur();
     render(null, mount);
     inventory.dispose();
-    oledRest.dispose();
-    unsubscribeOledInputs();
     unsubscribeShell();
     document.body.classList.remove("glass-ui");
     document.body.classList.remove("nord-ui");
