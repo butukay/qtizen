@@ -1,4 +1,4 @@
-const { openCategory, closeSettings } = require("./drawer_helpers.cjs");
+const { openSettings, openCategory, closeSettings } = require("./drawer_helpers.cjs");
 const { test, expect } = require("@playwright/test");
 const { watcherStatus } = require("./watcher_helpers.cjs");
 const stremio = "IkWsFHtOY9.Stremio",
@@ -129,7 +129,7 @@ async function setup(page, options = {}) {
   );
   await page.goto("/");
   await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
-  await page.locator("#gear").click();
+  await openSettings(page);
   await openCategory(page, "apps");
   expect(calls).toEqual([]);
   expect(await page.evaluate(() => window.privateReads.length)).toBe(0);
@@ -171,7 +171,7 @@ test("root helper and installed Stremio enable an opt-in source; loss hides it b
   expect(h.calls.length).toBe(settled);
   h.state.root = false;
   await page.evaluate(() => document.dispatchEvent(new Event("visibilitychange")));
-  await page.locator("#gear").click();
+  await openSettings(page);
   await openCategory(page, "apps");
   await expect(option).toHaveCount(0);
   expect(await page.evaluate((id) => AeroTizen.settings.getSnapshot().continueWatchingApps.includes(id), stremio)).toBe(
@@ -182,7 +182,7 @@ test("root helper and installed Stremio enable an opt-in source; loss hides it b
   await expect(page.locator("#continue-items > [data-key]")).toContainText("Prime programme");
   h.state.root = true;
   await page.evaluate(() => document.dispatchEvent(new Event("visibilitychange")));
-  await page.locator("#gear").click();
+  await openSettings(page);
   await openCategory(page, "apps");
   await expect(option).toBeVisible();
   await expect(option).toHaveAttribute("aria-pressed", "true");

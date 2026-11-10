@@ -1,3 +1,4 @@
+const { openSettings } = require("./drawer_helpers.cjs");
 const { test, expect } = require("@playwright/test");
 const { watcherStatus } = require("./watcher_helpers.cjs");
 
@@ -63,7 +64,7 @@ for (const [build, url] of [
     });
     const cards = page.locator("#inputs > [data-input-card]");
     await expect(cards).toHaveCount(3);
-    await page.locator("#gear").click();
+    await openSettings(page);
     await page.locator('[data-key="section:sources"]').click();
     await expect(page.locator("#input-names input")).toHaveCount(2);
     const first = page.getByRole("textbox", { name: "HDMI 1 name", exact: true });

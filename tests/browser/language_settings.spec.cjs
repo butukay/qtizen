@@ -1,3 +1,4 @@
+const { openSettings } = require("./drawer_helpers.cjs");
 const { test, expect } = require("@playwright/test");
 
 test.use({ locale: "ja-JP" });
@@ -10,7 +11,7 @@ test("language selection uses the English fallback offline and persists through 
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.getByRole("button", { name: "Settings", exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await openSettings(page);
   for (let index = 0; index < 5; index++) await page.keyboard.press("ArrowDown");
   await expect(page.getByRole("button", { name: "Language", exact: true })).toBeFocused();
   await page.keyboard.press("ArrowRight");
@@ -31,7 +32,7 @@ test("language selection uses the English fallback offline and persists through 
   await expect(english).toBeFocused();
 
   await page.reload();
-  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await openSettings(page);
   await page.getByRole("button", { name: "Language", exact: true }).click();
   await expect(english).toHaveAttribute("aria-pressed", "true");
   expect(errors).toEqual([]);

@@ -1,5 +1,5 @@
 const { test, expect } = require("@playwright/test");
-const { openCategory, closeSettings } = require("./drawer_helpers.cjs");
+const { openSettings, openCategory, closeSettings } = require("./drawer_helpers.cjs");
 
 for (const [name, url] of [
   ["compiled", "http://127.0.0.1:8171/"],
@@ -41,13 +41,13 @@ for (const [name, url] of [
     expect(saved).not.toHaveProperty("favorites");
     expect(saved).not.toHaveProperty("cardSize");
 
-    await page.locator("#gear").click();
+    await openSettings(page);
     await openCategory(page, "appearance");
     await page.locator('[data-key="home-card-columns:4"]').click();
     await closeSettings(page);
     await page.reload();
     await expect(page.locator("#grid")).toHaveAttribute("data-columns", "4");
-    await page.locator("#gear").click();
+    await openSettings(page);
     await openCategory(page, "apps");
     await page.locator('[data-key="app:demo0"]').click();
     await closeSettings(page);

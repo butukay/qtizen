@@ -1,4 +1,4 @@
-const { openCategory, closeSettings } = require("./drawer_helpers.cjs");
+const { openSettings, openCategory, closeSettings } = require("./drawer_helpers.cjs");
 const { test, expect } = require("@playwright/test");
 const { watcherStatus } = require("./watcher_helpers.cjs");
 
@@ -25,7 +25,7 @@ test("Preact standby overrides persist without confusing custom labels with devi
   await page.waitForFunction(() => AeroTizen.inputs.getSnapshot().sources.length === 4);
   await expect(page.locator("#inputs")).toContainText("PC");
   await expect(page.locator("#inputs")).not.toContainText("Custom console label");
-  await page.locator("#gear").click();
+  await openSettings(page);
   await openCategory(page, "sources");
   await page.locator('[data-key="hdmi-keep:2:true"]').click();
   await closeSettings(page);
@@ -33,7 +33,7 @@ test("Preact standby overrides persist without confusing custom labels with devi
   await page.reload();
   await expect(page.locator("#inputs")).toContainText("Custom console label");
   expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().hdmiKeepVisible["2"])).toBe(true);
-  await page.locator("#gear").click();
+  await openSettings(page);
   await openCategory(page, "sources");
   await page.locator('[data-key="hdmi-keep:2:false"]').click();
   await closeSettings(page);
@@ -82,7 +82,7 @@ test("HDMI playback preference survives reload and changes how the Inputs tile o
   await expect.poll(() => page.evaluate(() => window.hdmiCalls)).toEqual(["HDMI 2", "embedded"]);
 
   await page.reload();
-  await page.locator("#gear").click();
+  await openSettings(page);
   await openCategory(page, "sources");
   await expect(page.getByRole("button", { name: "Inside AeroTizen" })).toHaveAttribute("aria-pressed", "true");
   const samsungViewer = page.getByRole("button", { name: "Samsung viewer", exact: true });
@@ -220,7 +220,7 @@ test("unplug clears ACTIVE and a stale visible tile cannot open a black input", 
   await expect(page.locator("#toast")).toHaveText("Could not show HDMI 1");
   await expect(page.locator("body")).not.toHaveClass(/\btv\b/);
   expect(await page.evaluate(() => window.inputTest.calls)).toEqual([]);
-  await page.locator("#gear").click();
+  await openSettings(page);
   await expect(page.locator("#editor")).toBeVisible();
   expect(errors).toEqual([]);
 });
@@ -256,7 +256,7 @@ test("unplug during playback returns to usable Home", async ({ page }) => {
   await expect(page.locator("body")).not.toHaveClass(/\btv\b/);
   await expect(page.locator("#toast")).toHaveText("HDMI 1 disconnected");
   await expect(page.locator("#gear")).toBeVisible();
-  await page.locator("#gear").click();
+  await openSettings(page);
   await expect(page.locator("#editor")).toBeVisible();
 });
 
@@ -269,7 +269,7 @@ for (const stage of ["setSource", "show"]) {
     await expect.poll(() => page.evaluate(() => AeroTizen.inputs.getSnapshot().playback !== "idle")).toBe(false);
     await page.evaluate(() => window.inputTest.complete());
     await expect(page.locator("body")).not.toHaveClass(/\btv\b/);
-    await page.locator("#gear").click();
+    await openSettings(page);
     await expect(page.locator("#editor")).toBeVisible();
   });
 
@@ -280,7 +280,7 @@ for (const stage of ["setSource", "show"]) {
     await page.clock.fastForward(8100);
     await expect.poll(() => page.evaluate(() => AeroTizen.inputs.getSnapshot().playback !== "idle")).toBe(false);
     await expect(page.locator("#toast")).toHaveText("Could not show HDMI 1");
-    await page.locator("#gear").click();
+    await openSettings(page);
     await expect(page.locator("#editor")).toBeVisible();
   });
 }

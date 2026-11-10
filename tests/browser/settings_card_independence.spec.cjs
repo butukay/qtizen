@@ -1,10 +1,11 @@
+const { openSettings } = require("./drawer_helpers.cjs");
 const { test, expect } = require("@playwright/test");
 test("Home columns never change Settings application row sizes or nodes", async ({ page }) => {
   await page.route("https://**/*", (r) => r.fulfill({ body: "{}" }));
   await page.route("http://127.0.0.1:47790/**", (r) => r.fulfill({ body: "{}" }));
   await page.goto("/");
   await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
-  await page.locator("#gear").click();
+  await openSettings(page);
   const category = async (id) => {
     const entry = page.locator(`[data-key="section:${id}"]`);
     if (await entry.count()) await entry.click();
@@ -56,7 +57,7 @@ for (const glassSettings of [false, true]) {
     }, glassSettings);
     await page.goto("/");
     await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
-    await page.locator("#gear").click();
+    await openSettings(page);
     await page.locator('[data-key="section:apps"]').click();
     const cards = page.locator("#all-apps > [data-application-row]");
     const inspect = () =>

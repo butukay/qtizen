@@ -1,3 +1,4 @@
+const { openSettings } = require("./drawer_helpers.cjs");
 const { readFileSync } = require("node:fs");
 const path = require("node:path");
 const { test, expect } = require("@playwright/test");
@@ -61,9 +62,9 @@ test("opening About marks a stable launcher update as seen across restarts", asy
   const notes = about.getByRole("list");
   const aboutCategory = page.locator('[data-key="section:about"]');
   const categoryDot = aboutCategory.locator("[data-settings-update-notice]");
-  await expect(homeDot).toBeVisible();
+  await expect(homeDot).toHaveCount(1);
   await expect(gear).toHaveAccessibleName(/Update available/);
-  await gear.click();
+  await openSettings(page);
   await expect(categoryDot).toBeVisible();
   for (let i = 0; i < 6; i++) await page.keyboard.press("ArrowDown");
   await expect(aboutCategory).toBeFocused();
@@ -99,7 +100,7 @@ test("opening About marks a stable launcher update as seen across restarts", asy
   expect(checks).toBe(1);
   await setHidden(page, false);
   await expect.poll(() => checks).toBe(2);
-  await gear.click();
+  await openSettings(page);
   await aboutCategory.click();
   await expect(about.getByText("Update available: " + next)).toBeVisible();
   await expect(homeDot).toHaveCount(0);
@@ -114,7 +115,7 @@ test("opening About marks a stable launcher update as seen across restarts", asy
   await expect(categoryDot).toHaveCount(0);
   await page.reload();
   await expect(gear).toHaveAccessibleName("Settings");
-  await gear.click();
+  await openSettings(page);
   await aboutCategory.click();
   await expect(notes.locator("li")).toHaveText(["Improve the Home screen"]);
   await expect(notes).toBeVisible();
@@ -136,8 +137,8 @@ test("a newer installed launcher re-arms the notice for a further release", asyn
     { installedVersion: olderInstalled, latestVersion: installed, latest: update },
   );
   await page.goto("/");
-  await expect(page.locator("#gear [data-home-update-notice]")).toBeVisible();
-  await page.locator("#gear").click();
+  await expect(page.locator("#gear [data-home-update-notice]")).toHaveCount(1);
+  await openSettings(page);
   await expect(page.locator('[data-key="section:about"] [data-settings-update-notice]')).toBeVisible();
   await page.locator('[data-key="section:about"]').click();
   await expect(page.locator("#gear [data-home-update-notice]")).toHaveCount(0);

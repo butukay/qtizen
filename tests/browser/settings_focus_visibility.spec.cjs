@@ -1,5 +1,5 @@
 const { test, expect } = require("@playwright/test");
-const { openCategory } = require("./drawer_helpers.cjs");
+const { openSettings, openCategory } = require("./drawer_helpers.cjs");
 
 // Compare the rendered interior with and without the decorative focus layer.
 // Visibility assertions alone do not catch an opaque layer painted over content.
@@ -56,7 +56,7 @@ for (const [build, url] of [
       const describe = AeroTizen.tiles.describe;
       AeroTizen.tiles.describe = (app) => ({ ...describe(app), logoPath: "M3 3h18v18H3Z" });
     });
-    await page.locator("#gear").click();
+    await openSettings(page);
     await openCategory(page, "appearance");
     await expectUncovered(page, page.locator('[data-key="home-card-columns:3"]'));
     await page.keyboard.press("ArrowRight");

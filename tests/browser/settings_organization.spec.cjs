@@ -1,5 +1,5 @@
 const { test, expect } = require("@playwright/test");
-const { openCategory, closeSettings } = require("./drawer_helpers.cjs");
+const { openSettings, openCategory, closeSettings } = require("./drawer_helpers.cjs");
 
 for (const [build, url] of [
   ["compiled", "http://127.0.0.1:8171/"],
@@ -16,7 +16,7 @@ for (const [build, url] of [
       });
       await page.goto(url);
       await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
-      await page.locator("#gear").click();
+      await openSettings(page);
     });
 
     test("category order and wallpaper buttons match the new menu; footer help is removed", async ({ page }) => {
@@ -62,7 +62,7 @@ for (const [build, url] of [
       await expect(page.locator('[data-clock-part="date"]')).toBeHidden();
       await page.reload();
       expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().accentColour)).toBe("violet");
-      await page.locator("#gear").click();
+      await openSettings(page);
       await openCategory(page, "appearance");
       await expect(page.locator('[data-key="accent:violet"]')).toHaveAttribute("aria-pressed", "true");
     });

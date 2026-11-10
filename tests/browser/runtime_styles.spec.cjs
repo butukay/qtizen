@@ -1,3 +1,4 @@
+const { openSettings } = require("./drawer_helpers.cjs");
 const { test, expect } = require("@playwright/test");
 
 for (const [build, url] of [
@@ -51,7 +52,7 @@ for (const [build, url] of [
       await expect(volume).toHaveCSS("transition-duration", "0.2s");
       await page.keyboard.press("Escape");
       await expect(tile).toBeFocused();
-      await page.locator("#gear").click();
+      await openSettings(page);
       const arrow = page.locator('[data-key="section:appearance"] .lucide-chevron-right');
       await expect(arrow).toHaveCSS("transform", "none");
       await page.evaluate(() => {

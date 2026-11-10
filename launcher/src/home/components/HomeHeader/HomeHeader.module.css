@@ -21,6 +21,9 @@
   color: var(--home-muted);
   background: transparent;
   outline: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-duration-feedback) linear;
 
   > svg {
     width: 28px;
@@ -28,6 +31,8 @@
   }
 
   &[data-focused="true"] {
+    opacity: 1;
+    pointer-events: auto;
     border-color: var(--focus);
     color: var(--fg);
     background: var(--rice-selected);

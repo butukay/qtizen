@@ -8,7 +8,9 @@ The old Classic, Glass and optional Nord interfaces are no longer shipped.
 _Browser preview with sample apps and inputs, not a capture from a TV._
 
 The screen uses true black, flat blue-grey cards, a thin cyan focus outline and
-Inter typography. The header contains only Settings at the top right. Time and
+Inter typography. Settings is hidden at the top right until remote focus reaches it. Press Up from
+the first content row to reveal the gear, then OK to open it. Closing Settings
+restores the last content selection and hides the gear again. Time and
 date sit beside a quiet Solar System. Favorites and Inputs share a label and
 thin separator; neither shows an item count. The television source reads TV
 with a muted Live subtitle. At 1920×1080 the Solar System occupies 760×355 pixels;

@@ -1,5 +1,5 @@
 const { test, expect } = require("@playwright/test");
-const { openCategory } = require("./drawer_helpers.cjs");
+const { openSettings, openCategory } = require("./drawer_helpers.cjs");
 
 const image = (page) => page.evaluate(() => getComputedStyle(document.documentElement).backgroundImage);
 const saved = (page) => page.evaluate(() => JSON.parse(localStorage.getItem("aerotizen.settings.v1")));
@@ -31,7 +31,7 @@ const openGradient = async (page) => {
   await page.goto("/");
   await expect(page).toHaveTitle("AeroTizen");
   await expect(page.locator("#grid > [data-id]")).toHaveCount(2);
-  await page.locator("#gear").click();
+  await openSettings(page);
   await openCategory(page, "wallpaper");
   await expect(page.locator('[data-key="wallpaper-categories:gradient"]')).toHaveAttribute("aria-pressed", "true");
   return errors;
@@ -106,7 +106,7 @@ const editBothColours = async (page) => {
     await page.keyboard.press("Escape");
     await page.reload();
     await expect.poll(() => image(page)).toBe(current);
-    await page.locator("#gear").click();
+    await openSettings(page);
     await openCategory(page, "wallpaper");
     await expect(tiles.first()).toHaveCSS("background-image", current);
     await tiles.first().click();

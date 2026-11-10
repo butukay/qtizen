@@ -1,5 +1,5 @@
 const { test, expect } = require("@playwright/test");
-const { openCategory, closeSettings } = require("./drawer_helpers.cjs");
+const { openSettings, openCategory, closeSettings } = require("./drawer_helpers.cjs");
 
 async function prepare(page, settings = {}) {
   await page.route("https://**/*", (route) => route.fulfill({ body: "{}" }));
@@ -38,7 +38,7 @@ test("Default is the only theme, migrates previous choices, and keeps favorites 
   const saved = await page.evaluate(() => AeroTizen.settings.getSnapshot().home);
   const values = await page.evaluate(() => AeroTizen.settings.getSnapshot());
   expect("glassSettings" in values || "nordRice" in values || "clockLayout" in values).toBe(false);
-  await page.locator("#gear").click();
+  await openSettings(page);
   await openCategory(page, "appearance");
   await expect(page.locator('[data-key^="settings-appearance:"]')).toHaveCount(0);
   await expect(page.locator("#editor")).not.toContainText(/Classic|Glass|Nord/);
@@ -79,7 +79,6 @@ test("remote navigation reaches Settings, all favorites and inputs without remov
   await page.keyboard.press("Enter");
   await expect(page.locator("#editor")).toBeVisible();
   await closeSettings(page);
-  await page.keyboard.press("ArrowDown");
   const cards = page.locator("#grid > [data-id]");
   for (let i = 0; i < (await cards.count()); i++) {
     if (i) await page.keyboard.press("ArrowRight");
@@ -94,7 +93,7 @@ test("remote navigation reaches Settings, all favorites and inputs without remov
 
 test("favorites are managed through Settings and an empty list keeps Settings reachable", async ({ page }) => {
   await prepare(page, { home: ["demo0"] });
-  await page.locator("#gear").click();
+  await openSettings(page);
   await openCategory(page, "apps");
   await page.locator('#all-apps [data-key="app:demo1"]').click();
   await closeSettings(page);
@@ -147,7 +146,7 @@ test("solar video pauses for reduced motion, Performance mode, Settings and hidd
   await expect(scene).toHaveAttribute("data-video-active", "true");
   const before = await video.evaluate((v) => v.currentTime);
   await expect.poll(() => video.evaluate((v) => v.currentTime)).toBeGreaterThan(before);
-  await page.locator("#gear").click();
+  await openSettings(page);
   await expect.poll(() => video.evaluate((v) => v.paused)).toBe(true);
   await closeSettings(page);
   await expect(scene).toHaveAttribute("data-video-active", "true");
@@ -183,4 +182,26 @@ test("the launcher has no inactivity dimming or swallowed wake key", async ({ pa
   await expect(page.locator("#home-root")).toHaveCSS("opacity", "1");
   await page.keyboard.press("ArrowRight");
   expect(await page.locator('#grid > [data-focused="true"]').getAttribute("data-id")).not.toBe(selected);
+});
+
+test("Settings stays hidden until Up and returns to the last favorite after closing", async ({ page }) => {
+  await prepare(page);
+  const gear = page.locator("#gear");
+  await expect(gear).toHaveCSS("opacity", "0");
+  await expect(gear).toHaveCSS("pointer-events", "none");
+  await page.keyboard.press("ArrowRight");
+  const favorite = await page.locator('#grid > [data-focused="true"]').getAttribute("data-id");
+  await page.keyboard.press("ArrowUp");
+  await expect(gear).toBeFocused();
+  await expect(gear).toHaveCSS("opacity", "1");
+  await expect(gear).toHaveCSS("pointer-events", "auto");
+  await page.keyboard.press("ArrowDown");
+  await expect(gear).toHaveCSS("opacity", "0");
+  // Pick a favorite again, then enter and leave Settings using the remote.
+  await page.keyboard.press("ArrowRight");
+  await openSettings(page);
+  await closeSettings(page);
+  await expect(page.locator('#grid > [data-id="' + favorite + '"]')).toBeFocused();
+  await expect(gear).toHaveCSS("opacity", "0");
+  await expect(gear).toHaveCSS("pointer-events", "none");
 });

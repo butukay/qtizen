@@ -124,6 +124,7 @@ export const createHomeController = (
   let timer: number | undefined;
   let enterDown = false;
   let started = false;
+  let contentSelection = "";
   const cancelPress = () => {
     if (timer !== undefined) {
       window.clearTimeout(timer);
@@ -200,6 +201,9 @@ export const createHomeController = (
     if (old !== selected) {
       cancelPress();
     }
+    if (selected !== "gear") {
+      contentSelection = selected;
+    }
     update({ selected, active: true });
     const node = nodes.get(selected);
     const main = env.rows.current;
@@ -259,6 +263,8 @@ export const createHomeController = (
   const activate = (key: string) => {
     if (key === "gear") {
       endMove();
+      // Return to the last content item so Settings does not leave its shortcut visible.
+      update({ selected: getSelectedKey(rows(), contentSelection, true) });
       runtime.settingsUi?.open();
     } else if (key.startsWith("app:")) {
       const id = key.slice(4);

@@ -1,3 +1,4 @@
+const { openSettings } = require("./drawer_helpers.cjs");
 const { test, expect } = require("@playwright/test");
 
 async function setup(page, version = "10.0", legacyWorks = true) {
@@ -105,7 +106,7 @@ for (const version of ["9.0", "10.0"]) {
     }
     expect(requests).toContain("/");
     expect(requests.some((path) => path.startsWith("/diagnostics/native-home"))).toBe(false);
-    await page.locator("#gear").click();
+    await openSettings(page);
     await page.locator('[data-key="section:about"]').click();
     await expect(page.getByText("Native Home tests", { exact: true })).toHaveCount(0);
     expect(errors).toEqual([]);

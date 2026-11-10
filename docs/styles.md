@@ -72,7 +72,8 @@ owns wrapping, clipping and ellipsis. Choice labels retain their two-line defaul
 and use a nested local modifier when a single-line result is requested.
 
 Do not add extra IDs or theme selectors to beat an earlier rule. `HomeHeader` owns
-the Settings button position. `HomeOverview` owns the time/date and Solar System
+the Settings button position and its focus-only opacity. Hidden controls keep
+geometry for remote navigation but do not accept pointer input. `HomeOverview` owns the time/date and Solar System
 composition. Tests use `data-home-header`, `data-home-overview`, `data-home-section-heading`
 and `data-solar-system`; semantic IDs remain available for integrations.
 

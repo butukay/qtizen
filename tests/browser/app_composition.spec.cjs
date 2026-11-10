@@ -1,3 +1,4 @@
+const { openSettings } = require("./drawer_helpers.cjs");
 const { test, expect } = require("@playwright/test");
 
 test("an unset Home list and a saved empty list preserve their distinct views and focus", async ({ page }) => {
@@ -17,7 +18,7 @@ test("an unset Home list and a saved empty list preserve their distinct views an
   });
   await expect(page.locator("#grid > [data-id]")).toHaveCount(0);
   await expect(page.locator("#inputs > [data-input-card]").first()).toHaveAttribute("data-focused", "true");
-  await page.locator("#gear").click();
+  await openSettings(page);
   await expect(page.locator("#editor")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.locator("#editor")).toBeHidden();

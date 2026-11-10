@@ -1,5 +1,5 @@
 const { test, expect } = require("@playwright/test");
-const { closeSettings, openCategory } = require("./drawer_helpers.cjs");
+const { openSettings, closeSettings, openCategory } = require("./drawer_helpers.cjs");
 
 test.beforeEach(async ({ page }) => {
   await page.route("https://**/*", (route) => route.fulfill({ body: "{}" }));
@@ -63,7 +63,7 @@ test("first-row navigation does not format the clock or measure layout", async (
     await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
     const blob = page.locator("[data-background-blob]").first();
     await expect(blob).not.toHaveCSS("animation-name", "none");
-    await page.locator("#gear").click();
+    await openSettings(page);
     await openCategory(page, "appearance");
     await page.locator('[data-key="performance-mode:true"]').click();
     await expect(page.locator("html")).toHaveAttribute("data-performance-mode", "true");
@@ -79,7 +79,7 @@ test("first-row navigation does not format the clock or measure layout", async (
     await expect(page).toHaveTitle("AeroTizen");
     await expect(page.locator("vite-error-overlay")).toHaveCount(0);
     await page.screenshot({ path: info.outputPath("performance-mode-home.png") });
-    await page.locator("#gear").click();
+    await openSettings(page);
     await openCategory(page, "appearance");
     await expect(page.locator('[data-key="performance-mode:true"]')).toHaveAttribute("aria-pressed", "true");
     await page.screenshot({ path: info.outputPath("performance-mode-settings.png") });

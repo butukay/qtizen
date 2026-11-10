@@ -1,3 +1,4 @@
+const { openSettings } = require("./drawer_helpers.cjs");
 const { test, expect } = require("@playwright/test");
 for (const glassSettings of [false, true]) {
   test(`Default migrated from ${glassSettings ? "Glass" : "Classic"} HDMI names remain inside their control and save correctly`, async ({
@@ -24,7 +25,7 @@ for (const glassSettings of [false, true]) {
     await page.waitForFunction(
       () => AeroTizen.apps.getSnapshot().ready && AeroTizen.inputs.getSnapshot().sources.length === 4,
     );
-    await page.locator("#gear").click();
+    await openSettings(page);
     await page.locator('[data-key="section:sources"]').click();
     const fields = page.locator("#input-names input");
     await expect(fields).toHaveCount(3);
