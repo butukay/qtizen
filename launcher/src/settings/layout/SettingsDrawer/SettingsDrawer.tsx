@@ -13,11 +13,10 @@ import type { Category } from "../categories";
 import { categories } from "../categories";
 import { SettingsCategory } from "../SettingsCategory/SettingsCategory";
 import { SettingsFocusIndicator } from "../SettingsFocusIndicator/SettingsFocusIndicator";
-import { SettingsHelp } from "../SettingsHelp/SettingsHelp";
 
 import styles from "./SettingsDrawer.module.css";
 
-// Categories and remote behaviour are shared by both appearance themes.
+// The drawer owns the category order and remote navigation scope.
 export const SettingsDrawer = ({ panes }: { panes: Record<Category, ComponentChildren> }) => {
   const {
     drawer,
@@ -74,7 +73,6 @@ export const SettingsDrawer = ({ panes }: { panes: Record<Category, ComponentChi
             />
           </div>
         </div>
-        <SettingsHelp />
       </aside>
       <div class={styles.main} data-settings-drawer="main" ref={categoryContent} hidden={!state.expanded}>
         <SettingsHeading

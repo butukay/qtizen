@@ -1,7 +1,11 @@
+import type { ClockFormatter } from "../../contracts/launcher";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ChoiceGroup } from "../components/ChoiceGroup";
 import { SettingsSection } from "../components/SettingsSection/SettingsSection";
 import type { SettingsSectionProps } from "../types";
+
+import { AccentSettings } from "./AccentSettings/AccentSettings";
+import { ClockSettings } from "./ClockSettings";
 
 const HOME_CARD_COLUMNS_OPTIONS = [
   { value: "5", labelKey: "appearance.small" },
@@ -19,7 +23,11 @@ const PERFORMANCE_OPTIONS = [
   { value: true, labelKey: "common.on" },
 ] as const;
 
-export const AppearanceSettings = ({ settings, actions }: SettingsSectionProps) => {
+interface Props extends SettingsSectionProps {
+  clock: ClockFormatter;
+  openedAt: number;
+}
+export const AppearanceSettings = ({ settings, actions, clock, openedAt }: Props) => {
   const { t } = useTranslation();
   return (
     <>
@@ -41,6 +49,8 @@ export const AppearanceSettings = ({ settings, actions }: SettingsSectionProps) 
           onSelect={actions.setHomeAppLayout}
         />
       </SettingsSection>
+      <AccentSettings settings={settings} actions={actions} />
+      <ClockSettings settings={settings} actions={actions} clock={clock} openedAt={openedAt} />
       <SettingsSection title={t("appearance.performanceMode")} description={t("appearance.performanceHint")}>
         <ChoiceGroup
           id="performance-mode"

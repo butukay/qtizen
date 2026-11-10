@@ -10,7 +10,6 @@ import { AppearanceSettings } from "./sections/AppearanceSettings";
 import { HomeAppsSettings } from "./sections/apps/HomeAppsSettings/HomeAppsSettings";
 import { ColourPicker } from "./sections/backgrounds/ColourPicker/ColourPicker";
 import { BackgroundSettings } from "./sections/BackgroundSettings/BackgroundSettings";
-import { ClockSettings } from "./sections/ClockSettings";
 import { ContinueWatchingSettings } from "./sections/ContinueWatchingSettings/ContinueWatchingSettings";
 import { InputSettings } from "./sections/inputs/InputSettings";
 import { LanguageSettings } from "./sections/LanguageSettings";
@@ -64,7 +63,9 @@ export const SettingsContent = ({
       <div hidden={Boolean(colourPicker)}>
         <SettingsDrawer
           panes={{
-            appearance: <AppearanceSettings settings={settings} actions={actions} />,
+            appearance: (
+              <AppearanceSettings settings={settings} actions={actions} clock={services.clock} openedAt={openedAt} />
+            ),
             apps: (
               <>
                 {homeApps}
@@ -87,7 +88,6 @@ export const SettingsContent = ({
                 webGL={webGL}
               />
             ),
-            status: <ClockSettings settings={settings} actions={actions} clock={services.clock} openedAt={openedAt} />,
             weather: <WeatherSettings settings={settings} actions={actions} active={active} />,
             sources: <InputSettings settings={settings} actions={actions} inputs={inputs} />,
             language: <LanguageSettings language={settings.language} />,

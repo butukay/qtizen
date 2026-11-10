@@ -1,14 +1,14 @@
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { FlameIcon } from "../../../../shared/icons/FlameIcon";
 import { SelectionIndicator } from "../../../components/SelectionIndicator/SelectionIndicator";
-import { SettingsAppCard } from "../SettingsAppCard/SettingsAppCard";
+import { SettingsAppRow } from "../SettingsAppRow/SettingsAppRow";
 
 import styles from "./FireplaceOption.module.css";
 
 export const FireplaceOption = ({ id, selected, onSelect }: { id: string; selected: boolean; onSelect(): void }) => {
   const { t } = useTranslation();
   return (
-    <SettingsAppCard
+    <SettingsAppRow
       class={styles.fireplace}
       selected={selected}
       focusKey={"app:" + id}
@@ -17,7 +17,7 @@ export const FireplaceOption = ({ id, selected, onSelect }: { id: string; select
     >
       <FlameIcon class={styles.icon} />
       <div class={styles.label}>{t("common.fireplace")}</div>
-      {selected ? <SelectionIndicator /> : null}
-    </SettingsAppCard>
+      {selected ? <SelectionIndicator inline /> : null}
+    </SettingsAppRow>
   );
 };

@@ -5,6 +5,7 @@ import type { SettingsStore } from "../contracts/preferences";
 import type { StatusStores } from "../contracts/status";
 import type { LauncherUpdateNotice } from "../contracts/updates";
 import type { LauncherRuntime } from "../platform/tizen/launcherRuntime";
+import { ACCENT_COLOURS } from "../shared/appearance";
 import type { Translations } from "../shared/i18n/createTranslations";
 import { TranslationContext } from "../shared/i18n/useTranslation";
 
@@ -21,9 +22,13 @@ export const mountHome = (
   updates: LauncherUpdateNotice,
 ) => {
   const document = mount.ownerDocument;
+  const previousAccent = document.documentElement.style.getPropertyValue("--focus");
+  const previousAccentPriority = document.documentElement.style.getPropertyPriority("--focus");
   // Apply the shell appearance before any Home focus geometry is measured.
   const syncShell = () => {
     const values = settings.getSnapshot();
+    const accent = ACCENT_COLOURS.find((accent) => accent.value === values.accentColour) || ACCENT_COLOURS[0];
+    document.documentElement.style.setProperty("--focus", accent.colour);
     document.documentElement.setAttribute("data-theme", "default");
     document.documentElement.setAttribute("data-performance-mode", String(values.performanceMode));
   };
@@ -60,6 +65,11 @@ export const mountHome = (
     render(null, mount);
     inventory.dispose();
     unsubscribeShell();
+    if (previousAccent) {
+      document.documentElement.style.setProperty("--focus", previousAccent, previousAccentPriority);
+    } else {
+      document.documentElement.style.removeProperty("--focus");
+    }
     document.documentElement.removeAttribute("data-theme");
     document.documentElement.removeAttribute("data-performance-mode");
   };

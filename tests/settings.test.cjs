@@ -247,3 +247,18 @@ test("custom gradients preserve both colours and direction across a restart and 
   assert.equal(invalid.customGradient.end, "#00c4d4");
   assert.equal(invalid.customGradient.angle, 135);
 });
+
+test("accent colours default, validate and persist without changing favorites", () => {
+  const key = "aerotizen.settings.v1";
+  const { settings, store } = loadSettings({ [key]: JSON.stringify({ home: ["video.app"] }) });
+  assert.equal(settings.getSnapshot().accentColour, "ice");
+  for (const colour of ["ice", "blue", "violet", "rose", "amber", "mint"]) {
+    settings.update({ accentColour: colour });
+    assert.equal(loadSettings(store).settings.getSnapshot().accentColour, colour);
+    assert.deepEqual(settings.getSnapshot().home, ["video.app"]);
+  }
+  for (const value of ["invalid", "#ff0000", null, true, {}]) {
+    const invalid = loadSettings({ [key]: JSON.stringify({ accentColour: value }) });
+    assert.equal(invalid.settings.getSnapshot().accentColour, "ice");
+  }
+});

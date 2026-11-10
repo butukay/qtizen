@@ -15,7 +15,10 @@ export interface WeatherLocation {
   readonly longitude: number;
   readonly name: string;
 }
+export type AccentColour = "ice" | "blue" | "violet" | "rose" | "amber" | "mint";
+
 export interface SettingsValues {
+  accentColour: AccentColour;
   background: string;
   continueWatching: boolean;
   continueWatchingApps: string[];

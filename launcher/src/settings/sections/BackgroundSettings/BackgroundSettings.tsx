@@ -20,10 +20,10 @@ import { WallpaperSwatch } from "../backgrounds/WallpaperSwatch/WallpaperSwatch"
 import styles from "./BackgroundSettings.module.css";
 
 const WALLPAPER_CATEGORY_OPTIONS = [
-  { value: "photo", labelKey: "wallpaper.photos" },
   { value: "solid", labelKey: "wallpaper.solid" },
   { value: "gradient", labelKey: "wallpaper.gradients" },
   { value: "animated", labelKey: "wallpaper.animated" },
+  { value: "photo", labelKey: "wallpaper.photos" },
 ] as const;
 
 const WEATHER_PHOTO_OPTIONS = [

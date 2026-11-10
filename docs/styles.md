@@ -37,8 +37,7 @@ as the drawer close button does.
 `SettingsRoot` owns the overlay and preview visibility. `SettingsDrawer` owns the
 drawer geometry, sidebar and pane layout. `SettingsPanel` owns the shared drawer
 and picker surface and font; `SettingsHeading` owns panel/section title, kicker
-and description typography. `SettingsCategory` and `SettingsHelp` own the sidebar
-rows and remote help. Expanded state uses `data-expanded` on the
+and description typography. `SettingsCategory` owns the sidebar rows; the footer has no remote help. Expanded state uses `data-expanded` on the
 frame and sidebar, while the content uses `hidden`. Tests can use the stable
 `data-settings-drawer` part names, `data-settings-help`, `data-settings-title` and
 `data-settings-update-notice` hooks instead of private classes.
@@ -110,14 +109,11 @@ easing. This keeps content geometry and the fade path unchanged and lets the
 compositor animate the fade without repainting its mask on each frame. The bottom
 fade remains fixed on the viewport.
 
-App brand data sets `--app-background` on AppCard and AppOption. The card style
-uses that value, while Settings can supply its focused surface through a normal
-state rule. Do not put state paint into an inline background style.
+App brand data supplies logo paths and native icons. Applications uses compact
+list logos instead of banner artwork. Keep state paint out of inline backgrounds.
 
-`SettingsAppCard` owns the common app-choice frame, focus, selection and disabled
-states. App, Fireplace and Store options supply their own content. `AppFallback`
-owns logo and label geometry through explicit `home`, `favourite`, `source` and
-`badge` variants. Do not size its contents through a parent's tile or logo classes.
+`SettingsAppRow` owns the full-width 76px app-choice row, focus and disabled states. App, Fireplace and Store options supply their own content. `AppFallback`
+owns logo and label geometry, including the compact `list` and `badge` variants. Do not size its contents through a parent's tile or logo classes.
 Home artwork passes the `badge` variant for Continue Watching source icons.
 
 `WallpaperSwatch`, `SpeedSlider` and `WeatherSearch` own their control styles.
@@ -226,3 +222,9 @@ snapshot just to make a changed production screen pass a comparison test.
 The browser comparison helper serves the unchanged `tests/fixtures/legacy-dom.js`
 at the legacy page's shared DOM-script URL. This retains the old focus behaviour
 without shipping it in the production widget or changing the frozen renderer.
+
+The shared accent catalogue in `shared/appearance.ts` defines six named colours.
+`AccentSettings` renders their choices; preferences validate and persist the ID.
+The Home shell applies the colour through the root `--focus` token before measuring,
+and restores the previous inline value on teardown. Clock details, focus borders
+and selection marks read that same token. It does not recolour the solar video.

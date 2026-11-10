@@ -42,7 +42,7 @@ for (const [build, url] of [
   ["compiled", "http://127.0.0.1:8171/"],
   ["development", "http://127.0.0.1:8172/"],
 ]) {
-  test(`${build} Settings keeps focused text, app artwork and wallpaper content visible`, async ({ page }) => {
+  test(`${build} Settings keeps focused text, app logos and wallpaper content visible`, async ({ page }) => {
     await page.route("https://**/*", (route) => route.fulfill({ body: "{}" }));
     await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -54,12 +54,7 @@ for (const [build, url] of [
     await page.evaluate(() => document.fonts.ready);
     await page.evaluate(() => {
       const describe = AeroTizen.tiles.describe;
-      const artwork =
-        "data:image/svg+xml," +
-        encodeURIComponent(
-          '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="160" height="160" fill="#305070"/><path d="M55 40L115 80L55 120Z" fill="#ffffff"/></svg>',
-        );
-      AeroTizen.tiles.describe = (app) => ({ ...describe(app), artwork: app.id === "demo0" ? [artwork] : [] });
+      AeroTizen.tiles.describe = (app) => ({ ...describe(app), logoPath: "M3 3h18v18H3Z" });
     });
     await page.locator("#gear").click();
     await openCategory(page, "appearance");
@@ -67,7 +62,7 @@ for (const [build, url] of [
     await page.keyboard.press("ArrowRight");
     await expectUncovered(page, page.locator('[data-key="home-card-columns:4"]'));
     await openCategory(page, "apps");
-    await expect(page.locator('#all-apps [data-key="app:demo0"] img[data-app-artwork]')).toBeVisible();
+    await expect(page.locator('#all-apps [data-key="app:demo0"] [data-app-fallback] svg')).toBeVisible();
     await expectUncovered(page, page.locator('#all-apps [data-key="app:demo0"]'));
     await expectUncovered(page, page.locator('[data-key="app:__fire"]'));
     await openCategory(page, "wallpaper");

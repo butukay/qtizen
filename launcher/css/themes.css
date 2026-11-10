@@ -21,8 +21,6 @@
   --settings-kicker: var(--focus);
   --settings-close-surface: var(--rice-surface);
   --app-label-shadow: none;
-  --settings-store-surface: linear-gradient(135deg, #2c2c30, #161618);
-  --settings-store-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.18);
   --settings-slider-surface: var(--card);
   --settings-slider-track: #3a3a40;
   --settings-slider-thumb: #fff;

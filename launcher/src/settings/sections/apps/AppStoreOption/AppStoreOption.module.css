@@ -1,30 +1,25 @@
 .store {
-  --settings-card-direction: column;
-  --settings-card-gap: 8px;
-  --settings-card-padding: 12px;
-  --settings-card-surface: var(--settings-store-surface);
-  --settings-card-shadow: var(--settings-store-shadow);
-}
-
-.icon {
-  width: 92px;
-  height: 76px;
-  flex: 0 0 76px;
-}
-
-.label {
-  font-size: 19px;
-  font-weight: 600;
   color: var(--control-text);
-  text-shadow: var(--app-label-shadow);
-  max-width: 100%;
-  line-height: 21px;
-  text-align: center;
 }
-
-.subtitle {
-  font-size: 13px;
+.icon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  margin-right: 18px;
   color: var(--muted);
-  font-weight: 400;
-  margin-top: 4px;
+  [dir="rtl"] & {
+    margin-right: 0;
+    margin-left: 18px;
+  }
+}
+.label {
+  min-width: 0;
+  font-size: 22px;
+  line-height: 26px;
+}
+.subtitle {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 18px;
+  margin-top: 2px;
 }

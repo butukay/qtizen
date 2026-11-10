@@ -274,5 +274,12 @@
   "weather.changeLocation": "Changer de lieu",
   "weather.useAutomatic": "Localisation automatique",
   "weather.automaticHint": "Utiliser un lieu approximatif à partir de votre adresse Internet.",
-  "weather.searchHelp": "Recherchez une ville ou un code postal, puis sélectionnez un résultat."
+  "weather.searchHelp": "Recherchez une ville ou un code postal, puis sélectionnez un résultat.",
+  "appearance.accent": "Couleur d’accent",
+  "accent.ice": "Glace",
+  "accent.blue": "Bleu",
+  "accent.violet": "Violet",
+  "accent.rose": "Rose",
+  "accent.amber": "Ambre",
+  "accent.mint": "Menthe"
 }

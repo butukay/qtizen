@@ -14,7 +14,7 @@ thin separator; neither shows an item count. The television source reads TV
 with a muted Live subtitle. At 1920×1080 the Solar System occupies 760×355 pixels;
 app cards are 184, 170 or 156 pixels tall for three, four or five columns.
 
-Favorites are managed in Settings → Apps or with the long-press app menu.
+Favorites are managed in Settings → Applications or with the long-press app menu.
 Grid and horizontal scrolling, app sizes, HDMI names, time/date visibility,
 language and numerals remain configurable. Existing favorites and input names
 survive migration. Old theme and clock-layout preferences are discarded once;
@@ -45,3 +45,10 @@ Run `npm run dev` and open `http://localhost:8019/` for a browser preview.
 Fonts and their SIL Open Font Licenses are bundled in `launcher/assets/fonts/`.
 Install updates with the existing signing profile and keep the `DclHome001.Home`
 identity so the TV's Home and startup assignments remain valid.
+
+Settings uses this order: Appearance, Backgrounds, Applications, Weather, Inputs,
+Language and About. Appearance includes app layout, six accent colours, time/date
+controls and Performance mode. Background choices start with Solid colors and end
+with Weather photos. Applications and Continue Watching providers use full-width
+rows with compact logos and inline selection marks. The sidebar footer has no
+remote-button help. Existing app IDs, saved favorites and input names are unchanged.

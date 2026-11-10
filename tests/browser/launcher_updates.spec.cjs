@@ -65,7 +65,7 @@ test("opening About marks a stable launcher update as seen across restarts", asy
   await expect(gear).toHaveAccessibleName(/Update available/);
   await gear.click();
   await expect(categoryDot).toBeVisible();
-  for (let i = 0; i < 7; i++) await page.keyboard.press("ArrowDown");
+  for (let i = 0; i < 6; i++) await page.keyboard.press("ArrowDown");
   await expect(aboutCategory).toBeFocused();
   await expect(aboutCategory).toHaveAttribute("data-current", "true");
   await expect(categoryDot).toBeVisible();

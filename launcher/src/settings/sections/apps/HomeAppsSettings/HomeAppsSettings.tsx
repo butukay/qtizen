@@ -21,7 +21,7 @@ export const HomeAppsSettings = ({ home, apps, actions, describeApp, fireplaceId
   const { t } = useTranslation();
   return (
     <SettingsSection title={t("apps.show")} description={t("apps.hint")}>
-      <div id="all-apps" class={styles.grid}>
+      <div id="all-apps" class={styles.list}>
         <AppStoreOption onSelect={actions.openStore} />
         <FireplaceOption
           id={fireplaceId}

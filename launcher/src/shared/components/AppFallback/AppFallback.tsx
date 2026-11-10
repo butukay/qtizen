@@ -1,10 +1,13 @@
+import { AppWindow } from "lucide-preact";
+
 import type { AppPresentation, InstalledApp } from "../../../contracts/launcher";
 import { useImageSequence } from "../../hooks/useImageSequence";
 import { AppLogoIcon } from "../../icons/AppLogoIcon";
+import { Icon } from "../../icons/Icon/Icon";
 
 import styles from "./AppFallback.module.css";
 
-export type AppFallbackVariant = "home" | "favourite" | "source" | "badge" | "rice";
+export type AppFallbackVariant = "home" | "favourite" | "source" | "badge" | "rice" | "list";
 
 export const AppFallback = ({
   app,
@@ -19,6 +22,7 @@ export const AppFallback = ({
   hidden: boolean;
   variant?: AppFallbackVariant;
 }) => {
+  const labelled = variant === "rice" || variant === "list";
   const icon = useImageSequence(brand.useAppIcon && app.icon ? [app.icon] : [], active);
   return (
     <div
@@ -29,18 +33,15 @@ export const AppFallback = ({
       hidden={hidden}
     >
       {brand.logoPath ? (
-        <AppLogoIcon
-          class={styles.logo}
-          path={brand.logoPath}
-          colour={variant === "rice" ? "currentColor" : brand.logoColour}
-        />
+        <AppLogoIcon class={styles.logo} path={brand.logoPath} colour={labelled ? "currentColor" : brand.logoColour} />
       ) : null}
       {!brand.logoPath && icon.src ? (
         <img key={icon.src} class={styles.logo} alt="" src={icon.src} onLoad={icon.onLoad} onError={icon.onError} />
       ) : null}
-      {variant === "rice" || brand.label || !brand.logoPath ? (
-        <div class={styles.label} style={variant === "rice" ? undefined : { color: brand.textColour }}>
-          {variant === "rice" ? brand.title : brand.label || brand.title}
+      {variant === "list" && !brand.logoPath && !icon.src ? <Icon icon={AppWindow} class={styles.logo} /> : null}
+      {labelled || brand.label || !brand.logoPath ? (
+        <div class={styles.label} style={labelled ? undefined : { color: brand.textColour }}>
+          {labelled ? brand.title : brand.label || brand.title}
         </div>
       ) : null}
     </div>

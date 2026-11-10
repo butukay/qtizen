@@ -1,7 +1,9 @@
 .apps {
   display: flex;
-  flex-wrap: wrap;
-  width: 1792px;
-  gap: 22px;
+  flex-direction: column;
+  width: 100%;
   margin-bottom: 32px;
+  > * + * {
+    margin-top: 10px;
+  }
 }

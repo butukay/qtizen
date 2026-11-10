@@ -1,5 +1,5 @@
 const { test, expect } = require("@playwright/test");
-test("Home columns never change standard Settings icons or artwork nodes", async ({ page }) => {
+test("Home columns never change Settings application row sizes or nodes", async ({ page }) => {
   await page.route("https://**/*", (r) => r.fulfill({ body: "{}" }));
   await page.route("http://127.0.0.1:47790/**", (r) => r.fulfill({ body: "{}" }));
   await page.goto("/");
@@ -11,11 +11,14 @@ test("Home columns never change standard Settings icons or artwork nodes", async
   };
   await category("apps");
   const before = await page
-    .locator("#all-apps > [data-settings-card]")
+    .locator("#all-apps > [data-application-row]")
     .evaluateAll((nodes) => nodes.map((n) => [n.offsetWidth, n.offsetHeight]));
-  for (const size of before) expect(size[0]).toBe(size[1]);
+  for (const size of before) {
+    expect(size[0]).toBeGreaterThan(size[1]);
+    expect(size[1]).toBe(76);
+  }
   await page.evaluate(() => {
-    window.settingsIconNodes = Array.from(document.querySelectorAll("#all-apps > [data-settings-card]"));
+    window.settingsIconNodes = Array.from(document.querySelectorAll("#all-apps > [data-application-row]"));
   });
   await category("appearance");
   await expect(page.locator("#home-card-mode, #card-sizes")).toHaveCount(0);
@@ -25,13 +28,13 @@ test("Home columns never change standard Settings icons or artwork nodes", async
     await category("apps");
     expect(
       await page
-        .locator("#all-apps > [data-settings-card]")
+        .locator("#all-apps > [data-application-row]")
         .evaluateAll((nodes) => nodes.map((n) => [n.offsetWidth, n.offsetHeight])),
     ).toEqual(before);
     expect(
       await page.evaluate(() =>
         window.settingsIconNodes.every(
-          (node, i) => node === document.querySelectorAll("#all-apps > [data-settings-card]")[i],
+          (node, i) => node === document.querySelectorAll("#all-apps > [data-application-row]")[i],
         ),
       ),
     ).toBe(true);
@@ -55,7 +58,7 @@ for (const glassSettings of [false, true]) {
     await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
     await page.locator("#gear").click();
     await page.locator('[data-key="section:apps"]').click();
-    const cards = page.locator("#all-apps > [data-settings-card]");
+    const cards = page.locator("#all-apps > [data-application-row]");
     const inspect = () =>
       cards.evaluateAll((nodes) =>
         nodes.map((node) =>

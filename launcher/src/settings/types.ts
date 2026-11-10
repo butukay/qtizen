@@ -66,6 +66,7 @@ export interface SettingsActions {
   openStore(): void;
   preview(): void;
   saveInputName(port: string, value: string): void;
+  setAccentColour(colour: SettingsValues["accentColour"]): void;
   setBackground(background: string): void;
   setContinueWatching(enabled: boolean): void;
   setDateFormat(format: DateFormat): void;

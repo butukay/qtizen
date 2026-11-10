@@ -3,6 +3,7 @@ import { DEFAULT_CUSTOM_GRADIENT } from "../../backgrounds/gradients";
 import type { SettingsDefaults } from "../../contracts/preferences";
 
 export const DEFAULT_SETTINGS: SettingsDefaults = {
+  accentColour: "ice",
   home: null, // null selects first-launch defaults; [] retains an empty Home.
   performanceMode: false,
   homeCardColumns: 3,

@@ -123,3 +123,34 @@
   text-align: center;
   overflow-wrap: break-word;
 }
+
+.list {
+  --fallback-logo-width: 34px;
+  --fallback-logo-height: 34px;
+  --fallback-label-size: 22px;
+  --fallback-label-line-height: 1.35;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+  height: auto;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 0;
+  gap: 0;
+  > .logo {
+    color: var(--muted);
+    margin-right: 18px;
+  }
+  > .label {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: start;
+    font-weight: 400;
+  }
+  [dir="rtl"] & > .logo {
+    margin-right: 0;
+    margin-left: 18px;
+  }
+}

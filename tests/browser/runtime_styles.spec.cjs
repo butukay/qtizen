@@ -59,10 +59,7 @@ for (const [build, url] of [
       });
       await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
       await expect(arrow).toHaveCSS("transform", "matrix(-1, 0, 0, 1, 0, 0)");
-      await expect(page.locator("[data-settings-help] .lucide-chevron-left")).toHaveCSS(
-        "transform",
-        "matrix(-1, 0, 0, 1, 0, 0)",
-      );
+      await expect(page.locator("[data-settings-help]")).toHaveCount(0);
       await expect(page.locator(".focused")).toHaveCount(0);
       await expect(page.locator("#editor [data-focused=true]")).toHaveCount(1);
       await expect(page.locator("vite-error-overlay")).toHaveCount(0);

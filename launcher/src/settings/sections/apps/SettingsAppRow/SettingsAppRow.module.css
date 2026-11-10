@@ -1,0 +1,22 @@
+.row {
+  position: relative;
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 100%;
+  min-height: 76px;
+  border: 1px solid var(--rice-border);
+  border-radius: var(--control-radius);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 14px 20px;
+  background: var(--rice-surface);
+  color: var(--control-text);
+  &[data-focused="true"] {
+    background: var(--settings-focused-surface);
+  }
+  &[aria-disabled="true"] {
+    opacity: 0.35;
+  }
+}

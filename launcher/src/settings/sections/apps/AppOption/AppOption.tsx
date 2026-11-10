@@ -2,13 +2,10 @@ import { useMemo } from "preact/hooks";
 
 import type { InstalledApp } from "../../../../contracts/launcher";
 import { AppFallback } from "../../../../shared/components/AppFallback/AppFallback";
-import { useImageSequence } from "../../../../shared/hooks/useImageSequence";
 import { SelectionIndicator } from "../../../components/SelectionIndicator/SelectionIndicator";
 import type { SettingsServices } from "../../../types";
-import type { SettingsAppVariant } from "../SettingsAppCard/SettingsAppCard";
-import { SettingsAppCard } from "../SettingsAppCard/SettingsAppCard";
-
-import styles from "./AppOption.module.css";
+import type { SettingsAppRowVariant } from "../SettingsAppRow/SettingsAppRow";
+import { SettingsAppRow } from "../SettingsAppRow/SettingsAppRow";
 
 interface Props {
   active: boolean;
@@ -18,7 +15,7 @@ interface Props {
   focusKey?: string;
   onSelect(): void;
   selected: boolean;
-  variant?: SettingsAppVariant;
+  variant?: SettingsAppRowVariant;
 }
 
 export const AppOption = ({
@@ -32,13 +29,11 @@ export const AppOption = ({
   disabled = false,
 }: Props) => {
   const brand = useMemo(() => describeApp(app), [app, describeApp]);
-  const artwork = useImageSequence(brand.artwork, active);
   return (
-    <SettingsAppCard
+    <SettingsAppRow
       selected={selected}
       variant={variant}
       data-app-option
-      data-artwork-loaded={artwork.loaded ? "true" : undefined}
       focusKey={focusKey || "app:" + app.id}
       aria-label={brand.title}
       title={brand.title}
@@ -48,23 +43,9 @@ export const AppOption = ({
           onSelect();
         }
       }}
-      style={{ "--app-background": artwork.loaded ? "transparent" : brand.background }}
     >
-      <AppFallback app={app} brand={brand} active={active} hidden={artwork.loaded} variant={variant} />
-      {artwork.src ? (
-        <img
-          key={artwork.src}
-          class={styles.artwork}
-          data-app-artwork
-          alt=""
-          src={artwork.src}
-          hidden={!artwork.loaded}
-          style={{ display: artwork.loaded ? undefined : "none" }}
-          onLoad={artwork.onLoad}
-          onError={artwork.onError}
-        />
-      ) : null}
-      {selected ? <SelectionIndicator /> : null}
-    </SettingsAppCard>
+      <AppFallback app={app} brand={brand} active={active} hidden={false} variant="list" />
+      {selected ? <SelectionIndicator inline /> : null}
+    </SettingsAppRow>
   );
 };

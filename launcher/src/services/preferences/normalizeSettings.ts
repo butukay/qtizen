@@ -1,6 +1,7 @@
 import { normalizeColour } from "../../backgrounds/colours";
 import { normalizeGradient } from "../../backgrounds/gradients";
 import type { SettingsDefaults, SettingsPreferences, WeatherLocation } from "../../contracts/preferences";
+import { ACCENT_COLOURS } from "../../shared/appearance";
 
 const record = (value: unknown): Record<string, unknown> =>
   value !== null && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
@@ -58,6 +59,11 @@ export const normalizeSettings = (
   const home = data.home;
   const validHome = Array.isArray(home) ? ids(home) : defaults.home;
   return {
+    accentColour: choice(
+      data.accentColour,
+      ACCENT_COLOURS.map((accent) => accent.value),
+      defaults.accentColour,
+    ),
     home: home === null ? null : validHome,
     performanceMode: boolean(data.performanceMode, defaults.performanceMode),
     homeCardColumns: typeof columns === "number" && [3, 4, 5].includes(columns) ? columns : defaults.homeCardColumns,
