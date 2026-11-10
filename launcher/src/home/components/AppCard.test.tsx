@@ -14,6 +14,21 @@ const fallback = (card: HTMLElement) => card.querySelector<HTMLElement>("[data-a
 beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
+test("Nord retains the app name, activation and focused card when switching away from artwork", async () => {
+  const env = createCardEnvironment(`app:${app.id}`, { artwork: sources, logoPath: "M0 0" });
+  render(<AppCard env={env} app={app} active ordinal={3} />);
+  const card = screen.getByRole("button", { name: app.name });
+  await act(() => env.settings.update({ nordRice: true }));
+  expect(artwork(card)).toBeNull();
+  expect(screen.getByText(app.name)).toBeTruthy();
+  expect(card.getAttribute("data-focused")).toBe("true");
+  fireEvent.click(card);
+  expect(env.activate).toHaveBeenCalledExactlyOnceWith(`app:${app.id}`);
+  await act(() => env.settings.update({ nordRice: false }));
+  expect(artwork(card)?.getAttribute("src")).toBe(sources[0]);
+  expect(screen.getByRole("button", { name: app.name })).toBe(card);
+});
+
 test("parent updates retain static artwork while focus and app data still update", async () => {
   const reads = vi.spyOn(imageSequence, "useImageSequence");
   try {

@@ -22,11 +22,13 @@ export const InputCard = ({
   source,
   glass,
   compact,
+  nord = false,
 }: {
   env: HomeEnvironment;
   source: InputSource;
   glass: boolean;
   compact: boolean;
+  nord?: boolean;
 }) => {
   const { t } = useTranslation();
   const port = env.runtime.inputs.portName(source);
@@ -46,6 +48,7 @@ export const InputCard = ({
         "data-status": status,
         "data-disconnected": disconnected ? "true" : "false",
         "data-compact": compact ? "true" : "false",
+        "data-nord": nord ? "true" : "false",
       }}
       title={label}
     >

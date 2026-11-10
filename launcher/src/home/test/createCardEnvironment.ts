@@ -1,6 +1,7 @@
 import { vi } from "vitest";
 
 import type { AppPresentation, InstalledApp } from "../../contracts/launcher";
+import { createSettingsService } from "../../services/createSettingsService";
 import { createStore } from "../../shared/state/createStore";
 import type { HomeEnvironment, HomeState } from "../types";
 
@@ -34,7 +35,17 @@ export const createCardEnvironment = (selected = "", presentation: Partial<AppPr
     },
   };
   // Isolated cards use only these Home controller fields.
-  const environment: Pick<HomeEnvironment, "state" | "nodes" | "activate" | "select" | "runtime" | "describe"> = {
+  const environment: Pick<
+    HomeEnvironment,
+    "settings" | "state" | "nodes" | "activate" | "select" | "runtime" | "describe"
+  > = {
+    settings: createSettingsService({
+      legacyStorageKeys: [],
+      locale: { timeFormat: () => "24", tempUnit: () => "C" },
+      speedRange: { MIN: 0.25, MAX: 3 },
+      storage: { getItem: () => null, setItem: () => undefined },
+      storageKey: "aerotizen.card.test",
+    }),
     state,
     nodes: new Map<string, HTMLElement>(),
     activate: vi.fn(),

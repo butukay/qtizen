@@ -4,7 +4,7 @@ import { AppLogoIcon } from "../../icons/AppLogoIcon";
 
 import styles from "./AppFallback.module.css";
 
-export type AppFallbackVariant = "home" | "favourite" | "source" | "badge";
+export type AppFallbackVariant = "home" | "favourite" | "source" | "badge" | "rice";
 
 export const AppFallback = ({
   app,
@@ -28,13 +28,19 @@ export const AppFallback = ({
       data-large-logo={brand.largeLogo ? "true" : undefined}
       hidden={hidden}
     >
-      {brand.logoPath ? <AppLogoIcon class={styles.logo} path={brand.logoPath} colour={brand.logoColour} /> : null}
+      {brand.logoPath ? (
+        <AppLogoIcon
+          class={styles.logo}
+          path={brand.logoPath}
+          colour={variant === "rice" ? "currentColor" : brand.logoColour}
+        />
+      ) : null}
       {!brand.logoPath && icon.src ? (
         <img key={icon.src} class={styles.logo} alt="" src={icon.src} onLoad={icon.onLoad} onError={icon.onError} />
       ) : null}
-      {brand.label || !brand.logoPath ? (
-        <div class={styles.label} style={{ color: brand.textColour }}>
-          {brand.label || brand.title}
+      {variant === "rice" || brand.label || !brand.logoPath ? (
+        <div class={styles.label} style={variant === "rice" ? undefined : { color: brand.textColour }}>
+          {variant === "rice" ? brand.title : brand.label || brand.title}
         </div>
       ) : null}
     </div>

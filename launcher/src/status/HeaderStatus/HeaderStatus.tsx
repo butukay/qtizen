@@ -13,15 +13,30 @@ export const HeaderStatus = ({
   settings: store,
   status,
   clock,
+  nord = false,
 }: {
   settings: SettingsStore;
   status: StatusStores;
   clock: ClockService;
+  nord?: boolean;
 }) => {
   const settings = useStore(store);
   const value = useClock(status.time, clock, settings);
   const weather = useWeather(status.weather);
   const layout = settings.clockLayout === "custom" ? settings.aeroClockStyle : "compact";
+  if (nord) {
+    return (
+      <div class={styles.status} data-header-status data-nord="true">
+        <WeatherStatus
+          layout="compact"
+          only={false}
+          weather={weather}
+          showWeather={settings.showWeather}
+          showLocation={settings.weatherShowLocation}
+        />
+      </div>
+    );
+  }
   return (
     <div class={styles.status} data-header-status data-expanded={layout !== "compact" ? "true" : "false"}>
       <Clock layout={layout} settings={settings} clock={clock} value={value}>

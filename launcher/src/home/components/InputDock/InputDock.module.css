@@ -44,3 +44,7 @@
     }
   }
 }
+
+.dock[data-nord="true"] {
+  --input-dock-spacing: 16px;
+}

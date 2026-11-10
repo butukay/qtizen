@@ -94,6 +94,7 @@ and how to restore the original settings before uninstalling AeroTizen.
 
 ## Guides
 
+- [Nord rice appearance in this fork](docs/nord-rice.md)
 - [TV compatibility and limits](docs/tv-compatibility.md)
 - [Use the launcher and Continue Watching](docs/launcher.md)
 - [Update or remove AeroTizen](docs/manage-installation.md)

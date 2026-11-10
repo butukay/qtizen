@@ -1,5 +1,6 @@
-import { House, Settings } from "lucide-preact";
+import { House, Settings, Terminal } from "lucide-preact";
 
+import { FIXED_NAMES } from "../../../shared/fixedNames";
 import { useStore, useStoreSelector } from "../../../shared/hooks/useStore";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { Icon } from "../../../shared/icons/Icon/Icon";
@@ -22,9 +23,16 @@ export const HomeHeader = ({ env }: { env: HomeEnvironment }) => {
     <header
       class={styles.header}
       data-home-header
-      data-expanded={settings.clockLayout === "custom" ? "true" : "false"}
+      data-nord={settings.nordRice ? "true" : "false"}
+      data-expanded={!settings.nordRice && settings.clockLayout === "custom" ? "true" : "false"}
       aria-hidden={!active}
     >
+      {settings.nordRice && (
+        <div class={styles.brand}>
+          <Icon icon={Terminal} />
+          <span>{FIXED_NAMES.appName}</span>
+        </div>
+      )}
       <div class={styles.shortcuts} data-header-shortcuts>
         <HeaderFocusIndicator env={env} />
         <HomeControl
@@ -59,6 +67,11 @@ export const HomeHeader = ({ env }: { env: HomeEnvironment }) => {
           title={t("home.home")}
           pressed={page === "home"}
         >
+          {settings.nordRice && (
+            <span class={styles.workspace} aria-hidden="true">
+              01
+            </span>
+          )}
           {t("home.home")}
         </HomeControl>
         <HomeControl
@@ -69,10 +82,15 @@ export const HomeHeader = ({ env }: { env: HomeEnvironment }) => {
           title={t("home.allApps")}
           pressed={page === "apps"}
         >
+          {settings.nordRice && (
+            <span class={styles.workspace} aria-hidden="true">
+              02
+            </span>
+          )}
           {t("home.allApps")}
         </HomeControl>
       </nav>
-      <HeaderStatus settings={env.settings} status={env.status} clock={env.runtime.clock} />
+      <HeaderStatus settings={env.settings} status={env.status} clock={env.runtime.clock} nord={settings.nordRice} />
     </header>
   );
 };

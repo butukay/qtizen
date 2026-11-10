@@ -18,3 +18,10 @@
     margin-right: var(--header-status-margin);
   }
 }
+
+.status[data-nord="true"] {
+  order: 2;
+  margin-left: auto;
+  font-family: var(--rice-font);
+  font-size: 21px;
+}

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../assets/fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* The hidden attribute must win over component display rules, including SVG status hosts. */
 [hidden] {
   display: none !important;
@@ -45,6 +53,11 @@ body.tv {
   background: transparent;
 }
 body.tv [data-home-content] {
+  visibility: hidden;
+}
+body.tv [data-home-decoration],
+body.previewing [data-home-decoration],
+body.editing [data-home-decoration] {
   visibility: hidden;
 }
 body.previewing [data-home-content] {

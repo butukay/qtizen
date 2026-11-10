@@ -5,6 +5,7 @@ import type { HomeEnvironment, HomeMenuChoice, HomeState, Page } from "../types"
 import { revealHorizontalItem } from "./horizontalScroll";
 
 const HEADER_KEYS = ["gear", "samsung-home-shortcut", "home-tab", "apps-tab"] as const;
+const NORD_HEADER_KEYS = ["home-tab", "apps-tab", "samsung-home-shortcut", "gear"] as const;
 // Reserve 16px for the focus outline beyond the 112px top and 80px bottom fades.
 const TOP_SCROLL_CLEARANCE = 128;
 const BOTTOM_SCROLL_CLEARANCE = 96;
@@ -183,7 +184,7 @@ export const createHomeController = (
     const appRows = Array.from({ length: Math.ceil(all.length / rowLength) }, (_, index) =>
       all.slice(index * rowLength, (index + 1) * rowLength).map((id) => "app:" + id),
     );
-    const appLayout = [HEADER_KEYS, ...appRows];
+    const appLayout = [settings.getSnapshot().nordRice ? NORD_HEADER_KEYS : HEADER_KEYS, ...appRows];
     if (state.getSnapshot().page !== "home") {
       return all.length ? [...appLayout, ["back-to-top"]] : appLayout;
     }

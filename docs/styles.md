@@ -171,6 +171,7 @@ The remaining shell classes are public integration hooks, not module classes:
 | --------------------------------- | ---------------------------- | --------------------------------------------------------------- |
 | `body.tv`                         | `launcher/js/inputs.js`      | Hide Home while the native TVWindow is visible                  |
 | `body.glass-ui`                   | `home/index.tsx`             | Apply the existing appearance before measuring                  |
+| `body.nord-ui`                    | `home/index.tsx`             | Apply the optional Nord paint before measuring                   |
 | `body.editing`, `body.previewing` | `useSettingsPresentation.ts` | Settings and wallpaper preview visibility, with unmount cleanup |
 
 The obsolete DOM constructors, list-chunking helper and focus sweep live only in
@@ -187,6 +188,12 @@ The background mount uses `data-background-host` for fixed canvas sizing.
 These shell rules do not need `!important`; only the universal hidden-attribute
 rule uses it. Normal focus, selection, theme and layout rules must
 use the cascade without `!important`.
+
+`Home` also exposes `[data-home-decoration]` for the Nord colour strip. The page
+visibility owner hides it during native playback, Settings and wallpaper previews.
+Nord keeps component geometry in the existing owners and its shared paint in
+`themes.css`. `NordOverview` owns the breadcrumb, clock composition and decorative
+landscape; it subscribes to the existing clock service rather than starting a timer.
 
 ## Checks and compatibility
 

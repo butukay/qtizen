@@ -42,18 +42,19 @@ export const AppGrid = ({
         "data-page": page,
         "data-expanded": settings.clockLayout === "custom" ? "true" : "false",
         "data-scroll": scroll ? "true" : "false",
+        "data-nord": settings.nordRice ? "true" : "false",
       }}
       trackRef={page === "home" ? env.appItems : undefined}
       viewportRef={page === "home" ? env.appViewport : undefined}
       offset={appOffset}
       onOffsetChange={(offset) => env.state.set({ ...env.state.getSnapshot(), appOffset: offset })}
     >
-      {ids.map((id) => {
+      {ids.map((id, index) => {
         if (id === env.runtime.config.FIREPLACE_ID) {
-          return <FireplaceCard key={id} env={env} registered={shown} />;
+          return <FireplaceCard key={id} env={env} registered={shown} ordinal={index + 1} />;
         }
         const app = apps.find((app) => app.id === id) || { id, name: id, icon: "" };
-        return <AppCard key={id} env={env} app={app} active={active && shown} />;
+        return <AppCard key={id} env={env} app={app} active={active && shown} ordinal={index + 1} />;
       })}
     </HorizontalScroller>
   );

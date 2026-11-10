@@ -74,6 +74,37 @@
   }
 }
 
+.rice {
+  --fallback-logo-width: 42px;
+  --fallback-logo-height: 42px;
+  --fallback-label-size: 26px;
+  --fallback-label-line-height: 1.35;
+
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 26px;
+  gap: 16px;
+
+  > .logo {
+    color: var(--focus);
+    filter: grayscale(1);
+    object-position: left center;
+  }
+
+  > .label {
+    text-align: left;
+    max-width: calc(100% - 36px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 400;
+  }
+
+  &[data-large-logo="true"] > .logo {
+    width: 92px;
+  }
+}
+
 .logo {
   flex: 0 0 auto;
   object-fit: contain;

@@ -2,7 +2,7 @@
   position: relative;
   flex: 0 0 auto;
   width: var(--app-card-size);
-  height: var(--app-card-size);
+  height: var(--app-card-height, var(--app-card-size));
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -28,4 +28,37 @@
       z-index: 3;
     }
   }
+}
+
+.card[data-nord="true"] {
+  font-family: var(--rice-font);
+  border: 1px solid var(--rice-border);
+  border-radius: 10px;
+  background: var(--card);
+  transition:
+    transform var(--motion-duration-focus) ease-out,
+    background-color var(--motion-duration-focus) ease-out;
+
+  &[data-focused="true"] {
+    background: var(--rice-selected);
+    border-color: var(--focus);
+    transform: translateZ(0);
+  }
+}
+
+.ordinal {
+  position: absolute;
+  top: 26px;
+  right: 25px;
+  font-size: 16px;
+  color: var(--rice-quiet);
+}
+
+.arrow {
+  position: absolute;
+  right: 24px;
+  bottom: 27px;
+  width: 25px;
+  height: 25px;
+  color: var(--focus);
 }

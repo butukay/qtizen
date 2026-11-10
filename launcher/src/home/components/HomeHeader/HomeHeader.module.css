@@ -41,7 +41,7 @@
   flex: 0 0 64px;
   margin-right: 18px;
   border: var(--header-gear-border) solid transparent;
-  border-radius: 50%;
+  border-radius: var(--header-shortcut-radius, 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,6 +52,96 @@
   > svg {
     width: 40px;
     height: 40px;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  margin-right: 44px;
+  font-family: var(--rice-font);
+  font-size: 22px;
+  color: var(--fg);
+
+  > svg {
+    width: 28px;
+    height: 28px;
+    color: var(--focus);
+    margin-right: 14px;
+  }
+}
+
+.workspace {
+  color: var(--focus);
+  font-size: 16px;
+  margin-right: 13px;
+}
+
+.header[data-nord="true"] {
+  height: 128px;
+  padding-left: 88px;
+  padding-right: 80px;
+  justify-content: flex-start;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 64px;
+    right: 64px;
+    top: 25px;
+    height: 76px;
+    z-index: -1;
+    border: 1px solid var(--rice-border);
+    border-radius: 12px;
+    background: var(--rice-surface);
+  }
+
+  .tabs {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    height: 56px;
+    min-height: 56px;
+    padding: 4px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    order: 1;
+  }
+
+  .tab {
+    height: 48px;
+    min-width: 160px;
+    padding: 0 20px;
+    border-radius: 7px;
+    font-family: var(--rice-font);
+    font-size: 21px;
+    font-weight: 400;
+  }
+
+  .shortcuts {
+    order: 3;
+    margin-left: 18px;
+    margin-top: 0;
+  }
+
+  .shortcut {
+    order: 2;
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+    margin-right: 8px;
+    color: var(--muted);
+  }
+
+  .shortcut > svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nativeShortcut {
+    order: 1;
   }
 }
 

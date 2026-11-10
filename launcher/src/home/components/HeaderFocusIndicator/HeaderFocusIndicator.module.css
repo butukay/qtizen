@@ -18,7 +18,7 @@
 
 .shortcuts {
   opacity: 0;
-  border-radius: 50%;
+  border-radius: var(--header-shortcut-radius, 50%);
 
   &[data-visible="true"] {
     opacity: 1;
@@ -27,7 +27,7 @@
 
 .tabs {
   border-color: transparent;
-  border-radius: 19px;
+  border-radius: var(--header-focus-radius, 19px);
 
   &[data-focused="true"] {
     border-color: var(--focus);

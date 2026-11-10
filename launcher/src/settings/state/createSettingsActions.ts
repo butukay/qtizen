@@ -84,7 +84,8 @@ export const createSettingsActions = (
         view.set({ ...view.getSnapshot(), colourPicker: null });
       });
     },
-    setGlassSettings: (glassSettings) => commit({ glassSettings }),
+    setGlassSettings: (glassSettings) => commit({ glassSettings, nordRice: false }, services.applyBackground),
+    setNordRice: (nordRice) => commit({ nordRice }, services.applyBackground),
     setPerformanceMode: (performanceMode) => commit({ performanceMode }, services.applyBackground),
     setWeatherPhoto: (weatherPhoto) => commit({ weatherPhoto }, services.applyBackground),
     setContinueWatching: (continueWatching) => commit({ continueWatching }),

@@ -9,6 +9,7 @@ import { BackgroundSceneView } from "./BackgroundSceneView/BackgroundSceneView";
 import type { BackgroundState } from "./createBackgrounds";
 import { createBackgrounds } from "./createBackgrounds";
 import { createWeatherPhoto } from "./createWeatherPhoto";
+import { NORD_BACKGROUND } from "./nord";
 import { WeatherPhotoView } from "./WeatherPhotoView/WeatherPhotoView";
 import { probeWebGL } from "./webglParticles";
 
@@ -54,6 +55,7 @@ export const mountBackgrounds = (
     weather,
     () =>
       previewBackground === null &&
+      !runtime.settings.getSnapshot().nordRice &&
       runtime.settings.getSnapshot().weatherPhoto === true &&
       runtime.inputs.getSnapshot().playback === "idle",
     window,
@@ -66,6 +68,8 @@ export const mountBackgrounds = (
         backgrounds.bridge.apply("custom", settings.speed, previewBackground.colour);
       } else if (previewBackground?.kind === "gradient") {
         backgrounds.bridge.apply("custom-gradient", settings.speed, undefined, previewBackground.gradient);
+      } else if (settings.nordRice) {
+        backgrounds.bridge.apply("custom", settings.speed, NORD_BACKGROUND);
       } else {
         backgrounds.bridge.apply(settings.background, settings.speed, settings.customColour, settings.customGradient);
       }

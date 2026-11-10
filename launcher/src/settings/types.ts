@@ -81,6 +81,7 @@ export interface SettingsActions {
   setLocation(location: WeatherLocation | null): void;
   setLocationVisible(visible: boolean): void;
   setNetworkVisible(visible: boolean): void;
+  setNordRice(enabled: boolean): void;
   setNumerals(numerals: "latn" | "arab"): void;
   setPerformanceMode(enabled: boolean): void;
   setSpeed(direction: number): void;

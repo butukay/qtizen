@@ -33,6 +33,7 @@ export interface SettingsValues {
   homeCardColumns: number;
   inputNames: Record<string, string>;
   language: string;
+  nordRice: boolean;
   numerals: "latn" | "arab";
   performanceMode: boolean;
   showLiveTv: boolean;

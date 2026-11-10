@@ -11,6 +11,7 @@ import { ContinueWatchingRow } from "../ContinueWatchingRow/ContinueWatchingRow"
 import { HomeControl } from "../HomeControl/HomeControl";
 import { HomeHeader } from "../HomeHeader/HomeHeader";
 import { InputDock } from "../InputDock/InputDock";
+import { NordOverview } from "../NordOverview/NordOverview";
 
 import styles from "./Home.module.css";
 
@@ -51,9 +52,15 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
     settings.homeAppLayout,
     settings.clockLayout,
     settings.aeroClockStyle,
+    settings.nordRice,
   ]);
   return (
-    <div class={styles.home} data-home data-expanded={settings.clockLayout === "custom" ? "true" : "false"}>
+    <div
+      class={styles.home}
+      data-home
+      data-nord={settings.nordRice ? "true" : "false"}
+      data-expanded={!settings.nordRice && settings.clockLayout === "custom" ? "true" : "false"}
+    >
       <HomeHeader env={env} />
       <div
         class={styles.viewport}
@@ -77,7 +84,16 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
               ref={env.rows}
               style={{ "--home-offset": -scroll + "px", "--apps-end-offset": appsEndOffset + "px" }}
             >
-              <div class={styles.page} data-home-page data-page={page} data-docked={dockInputs ? "true" : "false"}>
+              <div
+                class={styles.page}
+                data-home-page
+                data-nord={settings.nordRice ? "true" : "false"}
+                data-page={page}
+                data-docked={dockInputs ? "true" : "false"}
+              >
+                {settings.nordRice && (
+                  <NordOverview env={env} page={page} count={page === "home" ? visibleHome.length : apps.length} />
+                )}
                 <AppGrid
                   env={env}
                   ids={visibleHome}
@@ -102,7 +118,13 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
                   {t("home.emptyApps")}
                 </p>
                 <ContinueWatchingRow env={env} items={items} visible={showContinueWatching} />
-                <InputDock env={env} inputs={inputs} visible={page === "home"} glass={settings.glassSettings} />
+                <InputDock
+                  env={env}
+                  inputs={inputs}
+                  visible={page === "home"}
+                  glass={settings.glassSettings && !settings.nordRice}
+                  nord={settings.nordRice}
+                />
               </div>
               {page === "apps" && apps.length > 0 && (
                 <HomeControl
@@ -120,6 +142,15 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
         </div>
       </div>
       <AppActionsMenu env={env} />
+      {settings.nordRice && (
+        <div class={styles.palette} data-home-decoration aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+        </div>
+      )}
     </div>
   );
 };

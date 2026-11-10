@@ -1,3 +1,4 @@
+import { FIXED_NAMES } from "../../shared/fixedNames";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ChoiceGroup } from "../components/ChoiceGroup";
 import { SettingsSection } from "../components/SettingsSection/SettingsSection";
@@ -6,6 +7,7 @@ import type { SettingsSectionProps } from "../types";
 const APPEARANCE_OPTIONS = [
   { value: false, labelKey: "appearance.classic" },
   { value: true, labelKey: "appearance.glass" },
+  { value: "nord", label: FIXED_NAMES.nord },
 ] as const;
 
 const HOME_CARD_COLUMNS_OPTIONS = [
@@ -32,9 +34,15 @@ export const AppearanceSettings = ({ settings, actions }: SettingsSectionProps) 
         <ChoiceGroup
           id="settings-appearance"
           label={t("appearance.title")}
-          value={settings.glassSettings === true}
+          value={settings.nordRice ? "nord" : settings.glassSettings === true}
           options={APPEARANCE_OPTIONS}
-          onSelect={actions.setGlassSettings}
+          onSelect={(value) => {
+            if (value === "nord") {
+              actions.setNordRice(true);
+              return;
+            }
+            actions.setGlassSettings(value);
+          }}
         />
       </SettingsSection>
       <SettingsSection title={t("appearance.size")}>

@@ -44,3 +44,20 @@
     }
   }
 }
+
+.grid[data-nord="true"] {
+  --app-card-size: calc((1600px - (var(--app-columns) - 1) * 20px) / var(--app-columns));
+  --app-card-height: 184px;
+
+  gap: 20px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+
+  &[data-columns="3"] {
+    --app-card-height: 224px;
+  }
+
+  &[data-columns="4"] {
+    --app-card-height: 204px;
+  }
+}
