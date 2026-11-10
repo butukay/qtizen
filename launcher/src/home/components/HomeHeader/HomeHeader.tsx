@@ -1,4 +1,4 @@
-import { House, Settings, Terminal } from "lucide-preact";
+import { House, Orbit, Settings } from "lucide-preact";
 
 import { FIXED_NAMES } from "../../../shared/fixedNames";
 import { useStore, useStoreSelector } from "../../../shared/hooks/useStore";
@@ -29,7 +29,7 @@ export const HomeHeader = ({ env }: { env: HomeEnvironment }) => {
     >
       {settings.nordRice && (
         <div class={styles.brand}>
-          <Icon icon={Terminal} />
+          <Icon icon={Orbit} />
           <span>{FIXED_NAMES.appName}</span>
         </div>
       )}

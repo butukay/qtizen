@@ -1,0 +1,86 @@
+.system {
+  width: 600px;
+  height: 280px;
+  flex: 0 0 auto;
+  margin-left: 40px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.orbits {
+  fill: none;
+  stroke: var(--solar-orbit);
+  stroke-width: 0.75;
+}
+
+.sun {
+  opacity: 0.85;
+}
+
+.orbiter,
+.upright {
+  transform-origin: 0 0;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.orbiter {
+  animation-name: orbit;
+}
+.upright {
+  animation-name: counterOrbit;
+}
+
+.ringBack,
+.ringFront {
+  fill: none;
+  stroke: #a6987e;
+  stroke-width: 3;
+}
+
+.ringBack {
+  opacity: 0.4;
+}
+.ringFront {
+  opacity: 0.75;
+}
+
+.system[data-running="false"] {
+  .orbiter,
+  .upright {
+    animation-play-state: paused;
+  }
+}
+
+[data-performance-mode="true"] .orbiter,
+[data-performance-mode="true"] .upright,
+[data-oled-idle="dim"] .orbiter,
+[data-oled-idle="dim"] .upright,
+[data-oled-idle="blank"] .orbiter,
+[data-oled-idle="blank"] .upright {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbiter,
+  .upright {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes counterOrbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}

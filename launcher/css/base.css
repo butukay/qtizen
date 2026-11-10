@@ -1,9 +1,25 @@
 @font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/InterVariable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "JetBrains Mono";
   src: url("../assets/fonts/JetBrainsMono-Regular.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
+}
+
+body.nord-ui [data-oled-ui-layer] {
+  opacity: var(--oled-ui-opacity, 1);
+  transition: opacity var(--motion-duration-oled-rest) ease;
+}
+body.nord-ui[data-oled-idle="awake"] [data-oled-ui-layer] {
+  transition-duration: var(--motion-duration-enter);
 }
 
 /* The hidden attribute must win over component display rules, including SVG status hosts. */

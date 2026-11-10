@@ -92,7 +92,12 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
                 data-docked={dockInputs ? "true" : "false"}
               >
                 {settings.nordRice && (
-                  <NordOverview env={env} page={page} count={page === "home" ? visibleHome.length : apps.length} />
+                  <NordOverview
+                    env={env}
+                    page={page}
+                    count={page === "home" ? visibleHome.length : apps.length}
+                    active={active}
+                  />
                 )}
                 <AppGrid
                   env={env}
@@ -142,15 +147,6 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
         </div>
       </div>
       <AppActionsMenu env={env} />
-      {settings.nordRice && (
-        <div class={styles.palette} data-home-decoration aria-hidden="true">
-          <i />
-          <i />
-          <i />
-          <i />
-          <i />
-        </div>
-      )}
     </div>
   );
 };

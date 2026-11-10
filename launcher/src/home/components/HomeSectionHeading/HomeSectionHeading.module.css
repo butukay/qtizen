@@ -21,6 +21,7 @@
 }
 
 .index {
+  font-family: var(--rice-mono);
   margin-right: 14px;
   color: var(--focus);
   font-size: 16px;

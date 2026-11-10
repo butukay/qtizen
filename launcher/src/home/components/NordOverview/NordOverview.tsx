@@ -2,10 +2,21 @@ import { useStore } from "../../../shared/hooks/useStore";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useClock } from "../../../status/hooks/useClock";
 import type { HomeEnvironment, Page } from "../../types";
+import { SolarSystem } from "../SolarSystem/SolarSystem";
 
 import styles from "./NordOverview.module.css";
 
-export const NordOverview = ({ env, page, count }: { env: HomeEnvironment; page: Page; count: number }) => {
+export const NordOverview = ({
+  env,
+  page,
+  count,
+  active,
+}: {
+  env: HomeEnvironment;
+  page: Page;
+  count: number;
+  active: boolean;
+}) => {
   const { t } = useTranslation();
   const settings = useStore(env.settings);
   const value = useClock(env.status.time, env.runtime.clock, settings);
@@ -36,14 +47,7 @@ export const NordOverview = ({ env, page, count }: { env: HomeEnvironment; page:
               {value.date}
             </div>
           </div>
-          <svg class={styles.landscape} viewBox="0 0 600 230" aria-hidden="true" focusable="false">
-            <circle class={styles.sun} cx="450" cy="52" r="27" />
-            <path class={styles.back} d="M10 205 135 76 210 140 327 25 498 205Z" />
-            <path class={styles.front} d="M110 205 253 100 309 149 410 74 590 205Z" />
-            <path class={styles.ridge} d="m10 205 125-129 75 64L327 25l61 64m-135 11 56 49 101-75 180 131" />
-            <path class={styles.snow} d="m287 65 40-40 43 48-32-14-12 9-10-14Zm-177 38 25-27 27 23-22-5-9 9-8-9Z" />
-            <path class={styles.horizon} d="M0 205h600" />
-          </svg>
+          <SolarSystem running={active} />
         </div>
       )}
       <div class={styles.section}>

@@ -235,27 +235,24 @@ body.nord-ui {
   --network-padding: 11px;
   --weather-compact-size: 22px;
   --weather-compact-icon: 30px;
-  --rice-font: "JetBrains Mono", "Courier New", monospace;
-  --bg: #242933;
-  --fg: #eceff4;
-  --muted: #9ba8bd;
-  --card: #2e3440;
-  --focus: #88c0d0;
+  --rice-font: "Inter", "SamsungOne", Arial, sans-serif;
+  --rice-mono: "JetBrains Mono", "Courier New", monospace;
+  --solar-orbit: #26313f;
+  --rice-header-border: #10151d;
+  --rice-card-surface: linear-gradient(145deg, #10151e, #070a10);
+  --rice-card-selected: linear-gradient(135deg, #172a38, #0c141d);
+  --bg: #000000;
+  --fg: #cad2dc;
+  --muted: #8592a3;
+  --card: #0c1118;
+  --focus: #8cbbd5;
   --focus-glow: rgba(136, 192, 208, 0.12);
-  --rice-border: #434c5e;
-  --rice-quiet: #64718a;
-  --rice-surface: #292f3b;
-  --rice-selected: #354351;
-  --rice-mountain-back: #303947;
-  --rice-mountain-front: #3b485b;
-  --rice-mountain-line: #647f94;
-  --rice-palette-1: #5e81ac;
-  --rice-palette-2: #81a1c1;
-  --rice-palette-3: #88c0d0;
-  --rice-palette-4: #8fbcbb;
-  --rice-palette-5: #a3be8c;
+  --rice-border: #202b39;
+  --rice-quiet: #536176;
+  --rice-surface: #070b10;
+  --rice-selected: #142432;
   --toast-surface: var(--card);
-  --surface-control: #363e4d;
+  --surface-control: #121b26;
   --border-control: var(--rice-border);
   --settings-text: var(--fg);
   --settings-muted: var(--muted);
@@ -270,7 +267,7 @@ body.nord-ui {
   --settings-surface: var(--card);
   --settings-main-surface: var(--rice-surface);
   --settings-border: var(--rice-border);
-  --settings-radius: 12px;
+  --settings-radius: 20px;
   --settings-shadow: 0 12px 40px rgba(10, 14, 20, 0.3);
   --settings-sidebar-focus-surface: var(--rice-selected);
   --settings-content-focus-surface: var(--rice-selected);
@@ -279,7 +276,7 @@ body.nord-ui {
   --choice-focused-surface: var(--rice-selected);
   --control-text: var(--fg);
   --control-focused-text: var(--fg);
-  --control-radius: 8px;
+  --control-radius: 12px;
   --selection-surface: var(--focus);
   --selection-text: var(--bg);
   --header-tab-text: var(--muted);
@@ -287,8 +284,8 @@ body.nord-ui {
   --header-focus-shadow: none;
   --header-tab-shadow: none;
   --header-gear-border: 0px;
-  --header-shortcut-radius: 8px;
-  --header-focus-radius: 7px;
+  --header-shortcut-radius: 12px;
+  --header-focus-radius: 12px;
   --clock-text: var(--fg);
   --clock-shadow: none;
   --clock-minimal-text: var(--fg);
@@ -296,7 +293,7 @@ body.nord-ui {
   --clock-minimal-date-text: var(--muted);
   --clock-bold-text: var(--fg);
   --clock-bold-shadow: none;
-  --home-card-focus-shadow: 0 0 0 2px var(--focus);
+  --home-card-focus-shadow: 0 0 0 1px rgba(140, 187, 213, 0.45), 0 8px 32px rgba(41, 92, 128, 0.12);
   --home-card-move-shadow: 0 0 0 2px var(--focus), 0 8px 24px rgba(10, 14, 20, 0.3);
   --home-section-heading-text: var(--muted);
   --home-section-heading-shadow: none;
@@ -306,7 +303,7 @@ body.nord-ui {
   --input-text: var(--fg);
   --input-subtitle-text: var(--muted);
   --input-card-surface: var(--rice-surface);
-  --input-focus-shadow: 0 0 0 2px var(--focus);
+  --input-focus-shadow: 0 0 0 1px rgba(140, 187, 213, 0.45);
   --continue-surface: var(--card);
   --continue-shadow: none;
   --continue-focus-shadow: var(--home-card-focus-shadow);
@@ -320,4 +317,11 @@ body.nord-ui {
   --menu-option-text: var(--muted);
   --menu-backdrop: var(--settings-overlay);
   --network-offline: #bf616a;
+}
+
+body.nord-ui[data-oled-idle="dim"] {
+  --oled-ui-opacity: 0.18;
+}
+body.nord-ui[data-oled-idle="blank"] {
+  --oled-ui-opacity: 0;
 }

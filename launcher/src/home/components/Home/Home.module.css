@@ -43,36 +43,6 @@
   }
 }
 
-.palette {
-  position: fixed;
-  left: 160px;
-  bottom: 31px;
-  display: flex;
-  pointer-events: none;
-  opacity: 0.8;
-
-  > i {
-    width: 27px;
-    height: 5px;
-    margin-right: 6px;
-    border-radius: 1px;
-    background: var(--rice-palette-1);
-  }
-
-  > i:nth-child(2) {
-    background: var(--rice-palette-2);
-  }
-  > i:nth-child(3) {
-    background: var(--rice-palette-3);
-  }
-  > i:nth-child(4) {
-    background: var(--rice-palette-4);
-  }
-  > i:nth-child(5) {
-    background: var(--rice-palette-5);
-  }
-}
-
 .mask {
   width: 100%;
   height: calc(100% + var(--home-top-fade));

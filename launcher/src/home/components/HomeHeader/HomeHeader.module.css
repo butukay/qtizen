@@ -56,11 +56,13 @@
 }
 
 .brand {
+  min-width: 165px;
   display: flex;
   align-items: center;
   margin-right: 44px;
   font-family: var(--rice-font);
   font-size: 22px;
+  font-weight: 500;
   color: var(--fg);
 
   > svg {
@@ -72,6 +74,7 @@
 }
 
 .workspace {
+  font-family: var(--rice-mono);
   color: var(--focus);
   font-size: 16px;
   margin-right: 13px;
@@ -91,8 +94,8 @@
     top: 25px;
     height: 76px;
     z-index: -1;
-    border: 1px solid var(--rice-border);
-    border-radius: 12px;
+    border: 1px solid var(--rice-header-border);
+    border-radius: 22px;
     background: var(--rice-surface);
   }
 
@@ -105,7 +108,7 @@
     min-height: 56px;
     padding: 4px;
     border: 0;
-    border-radius: 8px;
+    border-radius: 14px;
     background: transparent;
     order: 1;
   }
@@ -114,10 +117,10 @@
     height: 48px;
     min-width: 160px;
     padding: 0 20px;
-    border-radius: 7px;
+    border-radius: 12px;
     font-family: var(--rice-font);
     font-size: 21px;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .shortcuts {
