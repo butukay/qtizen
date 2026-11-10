@@ -113,20 +113,49 @@ test("Nord grid sizes reveal focused rows and retain the independent time and da
   await expect(page.locator("[data-nord-date]")).toBeHidden();
 });
 
-test("the minimal Solar System has eight planets and obeys reduced motion and performance mode", async ({ page }) => {
+test("the Solar System video obeys reduced motion, performance mode and page navigation", async ({ page }) => {
   await prepare(page, { nordRice: true });
   const scene = page.locator("[data-solar-system]");
   await expect(scene).toBeVisible();
   await expect(scene.locator("[data-solar-planet]")).toHaveCount(8);
   await expect(scene.locator("image, radialGradient, linearGradient")).toHaveCount(0);
-  const mercury = scene.locator('[data-solar-planet="mercury"]');
-  await expect(mercury).toHaveCSS("animation-play-state", "paused");
+  const video = scene.locator("[data-solar-video]");
+  await expect.poll(() => video.evaluate((node) => node.paused)).toBe(true);
+  await expect(scene.locator("[data-solar-drawing]")).toBeVisible();
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await expect(mercury).toHaveCSS("animation-play-state", "running");
+  await expect(scene).toHaveAttribute("data-video-active", "true");
+  const before = await video.evaluate((node) => node.currentTime);
+  await expect.poll(() => video.evaluate((node) => node.currentTime)).toBeGreaterThan(before);
+  await page.evaluate(() => AeroTizen.settings.update({ performanceMode: true }));
+  await expect.poll(() => video.evaluate((node) => node.paused)).toBe(true);
+  await expect(scene.locator("[data-solar-drawing]")).toBeVisible();
+  await page.evaluate(() => AeroTizen.settings.update({ performanceMode: false }));
+  await expect(scene).toHaveAttribute("data-video-active", "true");
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", { configurable: true, value: true });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await expect.poll(() => video.evaluate((node) => node.paused)).toBe(true);
+  await page.evaluate(() => {
+    delete document.hidden;
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await expect(scene).toHaveAttribute("data-video-active", "true");
+  const media = await video.elementHandle();
+  await page.locator("#apps-tab").click();
+  expect(await media.evaluate((node) => node.paused)).toBe(true);
+});
+
+test("the schematic fallback stays visible if the bundled video cannot load", async ({ page }) => {
+  await page.route("**/assets/solar-loop.mp4", (route) => route.abort());
+  await prepare(page, { nordRice: true });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const scene = page.locator("[data-solar-system]");
+  await expect(scene.locator("[data-solar-drawing]")).toBeVisible();
+  await expect(scene).toHaveAttribute("data-video-active", "false");
+  const mercury = scene.locator('[data-solar-planet="mercury"]');
   const before = await mercury.evaluate((node) => getComputedStyle(node).transform);
   await expect.poll(() => mercury.evaluate((node) => getComputedStyle(node).transform)).not.toBe(before);
-  await page.evaluate(() => AeroTizen.settings.update({ performanceMode: true }));
-  await expect(mercury).toHaveCSS("animation-play-state", "paused");
 });
 
 test("Nord stays visible after inactivity and the first remote key navigates normally", async ({ page }) => {

@@ -1,10 +1,34 @@
 .system {
+  position: relative;
   width: 600px;
   height: 280px;
   flex: 0 0 auto;
   margin-left: 40px;
   overflow: visible;
   pointer-events: none;
+}
+
+.drawing,
+.video {
+  width: 100%;
+  height: 100%;
+}
+
+.video {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  object-fit: contain;
+}
+
+.system[data-video-active="true"] {
+  .video {
+    opacity: 1;
+  }
+  .drawing {
+    visibility: hidden;
+  }
 }
 
 .orbits {

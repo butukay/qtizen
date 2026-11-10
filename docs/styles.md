@@ -194,8 +194,9 @@ during native playback, Settings and wallpaper previews.
 Nord keeps component geometry in the existing owners and its shared paint in
 `themes.css`. `NordOverview` owns the breadcrumb, clock composition and decorative
 Solar System placement; it subscribes to the existing clock service. `SolarSystem`
-owns its schematic SVG and CSS orbital motion. Its paused states use public
-performance hook plus its explicit running prop.
+owns the silent local video and its schematic SVG fallback. Playback follows
+its running prop and reduced-motion preference, and pauses on teardown.
+`SolarSystemDrawing` owns the fallback SVG markup; both share the scene's module.
 
 ## Checks and compatibility
 

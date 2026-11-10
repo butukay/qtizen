@@ -64,6 +64,7 @@ export const mountScreenSaverControl = (host: ScreenSaverHost, settings: ScreenS
   };
   const unsubscribe = settings.subscribe(sync);
   document.addEventListener("visibilitychange", sync);
+  document.addEventListener("playing", resume, true);
   host.addEventListener("appcontrol", resume);
   sync();
   if (!host.webapis?.appcommon) {
@@ -79,6 +80,7 @@ export const mountScreenSaverControl = (host: ScreenSaverHost, settings: ScreenS
     disposed = true;
     unsubscribe();
     document.removeEventListener("visibilitychange", sync);
+    document.removeEventListener("playing", resume, true);
     host.removeEventListener("appcontrol", resume);
     if (script) {
       script.onload = null;

@@ -47,7 +47,7 @@ export const NordOverview = ({
               {value.date}
             </div>
           </div>
-          <SolarSystem running={active} />
+          <SolarSystem running={active && !settings.performanceMode} />
         </div>
       )}
       <div class={styles.section}>

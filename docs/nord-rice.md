@@ -20,21 +20,32 @@ follow the existing preferences.
 The Solar System is a quiet schematic: a small Sun, eight muted planet dots,
 fine orbital lines and a single Saturn ring. There are no image textures, lighting
 or glow effects. Display sizes and distances are compressed to fit the scene.
-Initial phases are composed for legibility, with approximate orbital-period ratios
-from [NASA Space Place](https://spaceplace.nasa.gov/years-on-other-planets/en/).
-This decorative orrery uses one Earth year per 180 seconds.
+Initial phases and video speeds are composed for legibility and a seamless loop,
+rather than current sky positions or a physical scale.
 
-CSS orbital animation pauses when Home is inactive, in Performance mode, and
-with reduced motion enabled. No render loop or texture loading runs on the TV.
+The moving scene is a bundled, silent 600×280 H.264 video. It uses the same flat
+artwork as the SVG fallback and loops after 120 seconds. It pauses when Home is
+inactive, in Performance mode and with reduced motion enabled. The fallback stays
+visible until playback starts, and returns if decoding fails. No remote video,
+texture download or JavaScript render loop runs on the TV.
+
+Regenerate the bundled artwork with `node tools/render-solar-loop.mjs`; this
+optional offline tool requires FFmpeg and the project's Playwright Chromium.
 
 The launcher does not dim or blank itself after inactivity, and does not consume
 a wake key. While Nord is visible, it requests `SCREEN_SAVER_OFF` through Samsung's
 [AppCommon API](https://developer.samsung.com/smarttv/develop/guides/fundamentals/setting-screensaver.html).
+Playback-start events repeat this request after the media pipeline is ready.
 Hiding the app, choosing another theme or disposing the launcher restores
 `SCREEN_SAVER_ON`. The Samsung SDK loads locally on Tizen only. Unsupported APIs
 leave the launcher usable; OLED firmware may still enforce its own protection.
 Pixel Shift, logo brightness and Pixel Refresh settings are unchanged. API request
 tests do not establish whether a particular TV suppresses its native saver.
+
+On the QE65S95FAUXCE with firmware 1301, AppCommon alone did not suppress the
+OLED dot saver even when called after full load. A live comparison with the
+solar video playing kept Home visible for more than four minutes, confirmed on
+the TV by its owner. This observation does not establish behavior on other TVs.
 
 The saved wallpaper and weather-photo preferences are preserved. Nord temporarily
 uses its own static wallpaper and suspends weather photos; switching to Classic or

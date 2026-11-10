@@ -36,11 +36,13 @@ test("only visible Nord suppresses the saver, and hiding, switching themes or di
   settings.set({ nordRice: false });
   settings.set({ nordRice: true });
   window.dispatchEvent(new Event("appcontrol"));
+  document.dispatchEvent(new Event("playing"));
   dispose();
   const calls = api.setScreenSaver.mock.calls.map(([state]) => state);
-  expect(calls).toEqual([0, 1, 0, 1, 0, 0, 1]);
+  expect(calls).toEqual([0, 1, 0, 1, 0, 0, 0, 1]);
   dispose();
   window.dispatchEvent(new Event("appcontrol"));
+  document.dispatchEvent(new Event("playing"));
   settings.set({ nordRice: false });
   expect(api.setScreenSaver).toHaveBeenCalledTimes(calls.length);
 });
