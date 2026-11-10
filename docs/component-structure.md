@@ -306,6 +306,11 @@ third-party notices.
 
 ## Background boundary
 
+`platform/tizen/mountScreenSaverControl.ts`, mounted and disposed by app composition,
+owns the foreground Nord request to Samsung AppCommon. It loads the local TV SDK
+when needed, releases its request on visibility/theme changes and teardown, and
+does not control panel-care settings. Browser previews do not load the TV SDK.
+
 App composition mounts and disposes the background views. The background bridge
 handles scene selection, the root colour, speed, and visibility. Boot, Settings
 and embedded inputs keep their existing commands and preferences.

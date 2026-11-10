@@ -28,7 +28,13 @@ CSS orbital animation pauses when Home is inactive, in Performance mode, and
 with reduced motion enabled. No render loop or texture loading runs on the TV.
 
 The launcher does not dim or blank itself after inactivity, and does not consume
-a wake key. TV screen-saver and panel-care settings are managed by the TV.
+a wake key. While Nord is visible, it requests `SCREEN_SAVER_OFF` through Samsung's
+[AppCommon API](https://developer.samsung.com/smarttv/develop/guides/fundamentals/setting-screensaver.html).
+Hiding the app, choosing another theme or disposing the launcher restores
+`SCREEN_SAVER_ON`. The Samsung SDK loads locally on Tizen only. Unsupported APIs
+leave the launcher usable; OLED firmware may still enforce its own protection.
+Pixel Shift, logo brightness and Pixel Refresh settings are unchanged. API request
+tests do not establish whether a particular TV suppresses its native saver.
 
 The saved wallpaper and weather-photo preferences are preserved. Nord temporarily
 uses its own static wallpaper and suspends weather photos; switching to Classic or

@@ -20,6 +20,7 @@ import { createInputsPlatform } from "./platform/tizen/createInputsPlatform";
 import { createNetworkPlatform } from "./platform/tizen/createNetworkPlatform";
 import { createWeatherPlatform } from "./platform/tizen/createWeatherPlatform";
 import { defaultTemperatureUnit } from "./platform/tizen/defaultTemperatureUnit";
+import { mountScreenSaverControl } from "./platform/tizen/mountScreenSaverControl";
 import { createAppsService } from "./services/createAppsService";
 import { createClockService } from "./services/createClockService";
 import { createContinueWatchingService } from "./services/createContinueWatchingService";
@@ -172,7 +173,9 @@ const disposeInputPlayback = mountInputPlayback(inputPlaybackHost, {
   applyBackground: backgrounds.apply,
   suspendBackground: backgrounds.bridge.suspend,
 });
+const disposeScreenSaver = mountScreenSaverControl(window, settings);
 const dispose = () => {
+  disposeScreenSaver();
   disposeInputPlayback();
   Object.assign(runtime, previousCommands);
   window.Fireplace = previousFireplace;
