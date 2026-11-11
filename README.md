@@ -3,48 +3,59 @@
 [![CI](https://github.com/butukay/qtizen/actions/workflows/ci.yml/badge.svg)](https://github.com/butukay/qtizen/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A minimal home screen for Samsung Tizen TVs. Your applications, sources and a
-quiet space to land — with a flat interface, dark and light palettes, and no
-recommendation feed on Home.
+**A minimal, customizable home screen for Samsung Tizen TVs.**
 
-qtizen is an independent project maintained by [butukay](https://github.com/butukay),
-built on [AeroTizen](https://github.com/helalaou/AeroTizen). It includes the launcher,
-computer-side installation tools and optional on-TV root services. The original
-history, authorship and MIT notices are retained; see [Credits](CREDITS.md).
+qtizen brings your applications and HDMI sources together on one screen. It runs
+on the TV itself and gives you control over the layout, colours, backgrounds and
+widgets, with a simple interface designed for the remote.
 
 ![qtizen Home on Samsung S95F](docs/screenshots/default.png)
 
-Actual 1920×1080 capture from Samsung QE65S95FAUXCE, with the widget disabled.
+_Captured directly from a Samsung S95F at 1920×1080, with widgets turned off._
 
-## What is included
+## Make Home your own
 
-- One Default interface with **Applications** and **Sources**, a discreet Settings
-  button, adjustable card sizes and grid or scroll layouts.
-- Light and dark appearance, full-theme accents, solid colours and animated backgrounds.
-- Solar System and Moon widgets, with a separate foreground video layer that
-  keeps the launcher active when a widget is static or disabled.
-- Clock, weather, source names, application management and Continue Watching.
-- Native Home integration on compatible TVs, with a watcher fallback.
-- App launches that request suppression of Samsung's loading overlay.
-- Optional root services for **None / Fade / Standard** application transitions and
-  HDMI-CEC wake when selecting a sleeping source, tested with Apple TV.
+- **Applications and sources.** Keep the apps you use on Home, arrange them in a
+  grid or a scrolling row, adjust card sizes and rename your HDMI sources.
+- **Light and dark themes.** Choose an accent that colours the whole interface.
+  Dark mode uses a true-black background and restrained decoration for OLED screens.
+- **Backgrounds and widgets.** Use solid colours, animated backgrounds or weather
+  photos. Add a Solar System or Moon widget, or leave the space empty.
+- **Time, weather and Continue Watching.** Choose what appears on your screen and
+  configure supported Continue Watching providers in Settings.
+- **Home on your remote.** On compatible TVs, use qtizen as the destination for
+  the Home button and at startup.
 
-The OLED-oriented design uses true black and restrained decoration. It does not
-change Samsung's panel-maintenance routines. Keeping Home visible is a user choice,
-not a guarantee against OLED image retention.
+The launcher also requests suppression of Samsung's app-loading overlay. Actual
+behaviour depends on the TV firmware; applications can still show their own loading screens.
+
+## Do I need root?
+
+**The launcher can be installed and used without root.** You need Developer Mode
+and a Samsung account to sign the app. Home-button and startup integration
+have model-specific requirements; see the [Home setup guide](docs/home-pc-flow.md).
+
+The optional [root helper](docs/root-cli.md) adds:
+
+- **App transitions:** choose None, Fade or Samsung's standard transition.
+- **HDMI-CEC wake:** wake a sleeping device when selecting its source, tested with Apple TV.
+
+Root setup is separate from installing the launcher. Automatic root reacquisition
+after a full power disconnect is not yet verified on the S95F used for development.
 
 ## Status and compatibility
 
-This is the source release of a personal project. There are no qtizen binary
-releases yet: build and install the local launcher using the instructions below.
-`install launcher` and the update checker now target **butukay/qtizen** releases.
+qtizen is under active development. **There are no prebuilt qtizen releases yet**;
+installation currently requires building from source using the steps below.
 
-The custom interface, Home, app launches, all three transition modes and Apple TV
-wake were tested on **Samsung QE65S95FAUXCE**, Tizen 9, firmware **1301.0**.
-Automatic root reacquisition after a full power disconnect is **not yet verified**
-on this TV. See the [exact-device report](docs/devices/s95f.md) for evidence and limits.
-Reports for other TVs inherited from AeroTizen are identified separately in the
-[compatibility guide](docs/tv-compatibility.md).
+Developed and tested on **Samsung QE65S95FAUXCE (S95F), Tizen 9, firmware 1301.0**,
+including Home return, app launches, transition choices and Apple TV wake.
+Other models and firmware versions need their own validation. The
+[compatibility guide](docs/tv-compatibility.md) distinguishes qtizen tests from earlier
+community reports.
+
+qtizen customizes the home screen and does not replace the TV firmware.
+Samsung's OLED panel-maintenance routines remain in place.
 
 ## Build and install
 
@@ -81,17 +92,7 @@ qtizen --tv TV_IP install ./dist/launcher
 3. Open **qtizen** from the TV's Apps screen. For the remote's Home button and startup,
    follow the [Native Home backup and setup guide](docs/home-pc-flow.md).
 
-Root is optional. Install the ordinary launcher first; advanced transition and CEC
-features use the [separate root helper](docs/root-cli.md). Follow its model checks,
-backup and recovery steps; do not infer support from a similar model name.
-
-### Updating an existing AeroTizen installation
-
-Use its original signing certificates and install the local build as above. qtizen
-retains `DclHome001`, existing settings keys, the `aerotizen` Python module and the
-legacy CLI alias so current Home assignments and saved settings remain compatible.
-The PC profile directory remains `~/.config/aerotizen`. These are compatibility
-identifiers; the public application, command and release repository are qtizen.
+For an existing installation, follow the [migration and update guide](docs/manage-installation.md).
 
 ## Development
 
@@ -99,22 +100,30 @@ identifiers; the public application, command and release repository are qtizen.
 npm run dev -- --host 0.0.0.0
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for builds, tests and component ownership.
-Please include the exact model, firmware and observed behaviour in a
-[TV report or bug report](https://github.com/butukay/qtizen/issues/new/choose).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup, tests and project
+structure. For a [bug or TV compatibility report](https://github.com/butukay/qtizen/issues/new/choose),
+include the exact model, firmware and observed behaviour.
 
 ## Guides
 
-- [Default interface](docs/default-interface.md)
-- [Launcher, widgets and Continue Watching](docs/launcher.md)
-- [Installation, updates and removal](docs/manage-installation.md)
-- [Native Home and recovery](docs/home-pc-flow.md)
-- [Optional root helper](docs/root-cli.md)
-- [S95F findings and tested boundaries](docs/devices/s95f.md)
+- [Interface and customization](docs/default-interface.md)
+- [Widgets and Continue Watching](docs/launcher.md)
+- [Updates, migration and removal](docs/manage-installation.md)
+- [Home button, startup and recovery](docs/home-pc-flow.md)
+- [Optional root features](docs/root-cli.md)
 - [Diagnostics](docs/diagnostics.md)
 - [Samsung privacy settings](docs/settings.md) and [optional DNS lists](dns/)
 
-## Contributors
+## Credits and license
+
+qtizen is maintained by [butukay](https://github.com/butukay) and builds on
+[AeroTizen](https://github.com/helalaou/AeroTizen), originally created by Hamza El Alaoui.
+The original history, authorship and MIT notices are preserved. Root acquisition
+uses [samsung-tv-root](https://github.com/chris-ritsen/samsung-tv-root).
+See [CREDITS.md](CREDITS.md) for original contributors and dependencies, and
+[LICENSE](LICENSE) for the MIT license.
+
+### qtizen contributors
 
 <!-- contributors:start -->
 <table>
@@ -123,15 +132,6 @@ Please include the exact model, firmware and observed behaviour in a
   </tr>
 </table>
 <!-- contributors:end -->
-
-The original AeroTizen contributors are listed in [CREDITS.md](CREDITS.md).
-
-## Credits and license
-
-MIT. Copyright notices for Hamza El Alaoui, Vlad Lisov and contributors are retained
-in [LICENSE](LICENSE). qtizen is derived from AeroTizen; root acquisition uses the
-separate [samsung-tv-root](https://github.com/chris-ritsen/samsung-tv-root) project.
-See [CREDITS.md](CREDITS.md) for dependencies and original contributors.
 
 This project is not affiliated with Samsung or Apple. Application artwork and
 trademarks belong to their respective owners.

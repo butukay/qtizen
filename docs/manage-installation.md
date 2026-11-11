@@ -63,6 +63,16 @@ Run `./qtizen --tv TV_IP apps` to list apps. Run `./qtizen --tv TV_IP debloat`
 to select packages and review the list before confirming removal. See
 [TV limits](tv-compatibility.md#tv-limits) for Samsung's restrictions.
 
+## Upgrade an existing AeroTizen installation
+
+Use the original signing certificates and install the local qtizen build following
+[Build and install](../README.md#build-and-install). Keep your Home backup.
+
+qtizen retains the `DclHome001` package ID, existing settings keys, the `aerotizen`
+Python module and the legacy CLI alias so Home assignments and saved settings remain
+compatible. The PC profile directory remains `~/.config/aerotizen`. Public commands
+and release downloads use qtizen and `butukay/qtizen`.
+
 ## Other installation methods
 
 - Add the extracted folder to `PATH` to run `qtizen` from any directory.
