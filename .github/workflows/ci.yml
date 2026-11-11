@@ -352,7 +352,7 @@ jobs:
       - name: Test real executable updates and recovery
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python cli/tools/test_cli_self_update.py --output "${{ runner.temp }}/cli-update-proof"
+        run: python cli/tools/test_cli_self_update.py --allow-unpublished --output "${{ runner.temp }}/cli-update-proof"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

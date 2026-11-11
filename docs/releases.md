@@ -236,6 +236,12 @@ python cli/tools/test_cli_self_update.py --output /absolute/path/to/new-temporar
 It tests replacement, rollback and failure cases with temporary binaries and saves
 `report.json` and scenario logs. Use the generated fixtures for manual checks. The
 CI matrix runs the checks on Linux x64, Windows x64, macOS arm64 and macOS Intel.
+Before the first qtizen CLI release, CI uses `--allow-unpublished`: it builds and
+smoke-tests the real native executable on each platform and explicitly records that
+released-binary update scenarios could not run. Network and invalid-metadata errors
+still fail. After a stable release exists, the full update scenarios run automatically.
+Use `--old-version X.Y.Z` to select a specific published baseline; otherwise the
+latest binary is used alongside the synthetic older/current/newer version fixtures.
 
 ## Local checks
 

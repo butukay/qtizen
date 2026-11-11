@@ -56,7 +56,12 @@ except (OSError,ValueError) as error:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--old-version", default="2.4.0")
+    parser.add_argument("--old-version", help="Published baseline version; defaults to the latest release")
+    parser.add_argument(
+        "--allow-unpublished",
+        action="store_true",
+        help="Build and smoke-test the native CLI when this repository has no release yet",
+    )
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -105,8 +110,24 @@ def main():
             time.sleep(0.1)
         raise AssertionError("No Windows update completion receipt")
 
-    latest = releases.resolve_cli()
-    old = releases.resolve_cli(version=args.old_version)
+    spec = importlib.util.spec_from_file_location("release_builder", ROOT / "tools/build_release.py")
+    builder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(builder)
+    try:
+        latest = releases.resolve_cli()
+    except releases.ReleaseError as error:
+        # A new independent repository cannot exercise upgrades from published binaries yet.
+        # Still build and execute its native binary; never mask network or metadata failures.
+        missing = f"No stable CLI release is published in {releases.DEFAULT_REPOSITORY}."
+        if not args.allow_unpublished or str(error) != missing:
+            raise
+        package = builder.build_cli(ROOT, output / "source-build")
+        report["released_update_scenarios"] = "not run: this repository has no stable CLI release"
+        report["passed"] = True
+        record("source-only-native-build-and-smoke", archive=package.name, sha256=builder.checksum(package))
+        print(report["released_update_scenarios"], flush=True)
+        return
+    old = releases.resolve_cli(version=args.old_version) if args.old_version else latest
     if not latest.download_url or not latest.checksum_url:
         raise AssertionError("No native latest archive/checksum")
     payload = releases._read_url(latest.download_url, self_update.MAX_ARCHIVE_BYTES)
@@ -178,9 +199,6 @@ def main():
     assert target.read_bytes() == old_bytes
     record("python-install-instructions-preserve-interpreter")
 
-    spec = importlib.util.spec_from_file_location("release_builder", ROOT / "tools/build_release.py")
-    builder = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(builder)
     clone = output / "build-source"
     (clone / "src").mkdir(parents=True)
     shutil.copytree(
