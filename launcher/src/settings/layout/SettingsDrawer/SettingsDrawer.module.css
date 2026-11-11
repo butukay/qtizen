@@ -40,7 +40,7 @@
   flex: 0 0 var(--settings-sidebar-width);
   min-width: 0;
   height: 100%;
-  padding: 29px 13px 25px;
+  padding: 29px 13px 0;
   background: transparent;
   border-right: 1px solid var(--border-control);
 
@@ -82,7 +82,7 @@
   flex: 1 1 auto;
   min-height: 0;
   isolation: isolate;
-  padding: 10px 4px 12px;
+  padding: 10px 4px 8px;
   overflow-y: auto;
   overflow-x: hidden;
 }
