@@ -17,6 +17,8 @@ export interface WeatherLocation {
 }
 export type AppearanceMode = "light" | "dark";
 export type AccentColour = "ice" | "blue" | "violet" | "rose" | "amber" | "mint" | "white" | "black";
+export const HOME_WIDGETS = ["solar", "moon", "off"] as const;
+export type HomeWidget = (typeof HOME_WIDGETS)[number];
 
 export interface SettingsValues {
   accentColour: AccentColour;
@@ -33,6 +35,7 @@ export interface SettingsValues {
   home: string[];
   homeAppLayout: "grid" | "scroll";
   homeCardColumns: number;
+  homeWidget: HomeWidget;
   inputNames: Record<string, string>;
   language: string;
   numerals: "latn" | "arab";

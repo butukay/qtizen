@@ -1,0 +1,19 @@
+.orbit {
+  fill: none;
+  stroke: var(--solar-orbit);
+}
+
+.disk {
+  fill: var(--solar-orbit);
+  fill-opacity: 0.28;
+  stroke: var(--solar-orbit);
+}
+
+.light {
+  fill: var(--solar-neutral);
+  fill-opacity: 0.72;
+}
+
+.marker {
+  fill: var(--solar-cool);
+}

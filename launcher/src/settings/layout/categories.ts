@@ -1,7 +1,8 @@
-import { AppWindow, Cable, CloudSun, Image, Info, Languages, LayoutDashboard } from "lucide-preact";
+import { AppWindow, Cable, CloudSun, Image, Info, Languages, LayoutDashboard, Orbit } from "lucide-preact";
 export const categories = [
   { id: "appearance", title: "settings.appearance.title", hint: "settings.appearance.hint", icon: LayoutDashboard },
   { id: "wallpaper", title: "settings.wallpaper.title", hint: "settings.wallpaper.hint", icon: Image },
+  { id: "widgets", title: "settings.widgets.title", hint: "settings.widgets.hint", icon: Orbit },
   { id: "apps", title: "settings.apps.title", hint: "settings.apps.hint", icon: AppWindow },
   { id: "weather", title: "weather.title", hint: "settings.weather.hint", icon: CloudSun },
   { id: "sources", title: "common.inputs", hint: "settings.sources.hint", icon: Cable },

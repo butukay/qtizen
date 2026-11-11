@@ -23,6 +23,7 @@ for (const [build, url] of [
       await expect(page.locator('[data-settings-drawer="menu"] [data-key^="section:"]')).toHaveText([
         /Appearance/,
         /Backgrounds/,
+        /Widgets/,
         /Applications/,
         /Weather/,
         /Inputs/,

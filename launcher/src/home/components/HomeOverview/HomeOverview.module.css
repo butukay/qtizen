@@ -10,6 +10,19 @@
   min-width: 0;
   flex: 1 1 auto;
 }
+.widget {
+  width: 760px;
+  height: 355px;
+  flex: 0 0 auto;
+  margin-inline-start: 40px;
+  pointer-events: none;
+
+  > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
 .time {
   display: flex;
   align-items: baseline;

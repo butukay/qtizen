@@ -1,0 +1,9 @@
+.video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 600px;
+  height: 280px;
+  opacity: 0;
+  pointer-events: none;
+}

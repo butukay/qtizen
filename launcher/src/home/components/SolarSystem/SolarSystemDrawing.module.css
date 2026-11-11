@@ -1,0 +1,27 @@
+.orbits {
+  fill: none;
+  stroke: var(--solar-orbit);
+  stroke-width: 0.6;
+}
+
+.sun {
+  fill: var(--solar-warm);
+}
+
+.planet {
+  fill: var(--solar-neutral);
+
+  &[data-tone="warm"] {
+    fill: var(--solar-warm);
+  }
+
+  &[data-tone="cool"] {
+    fill: var(--solar-cool);
+  }
+}
+
+.ring {
+  fill: none;
+  stroke: var(--solar-warm);
+  stroke-width: 0.8;
+}

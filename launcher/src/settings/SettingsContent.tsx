@@ -14,6 +14,7 @@ import { ContinueWatchingSettings } from "./sections/ContinueWatchingSettings/Co
 import { InputSettings } from "./sections/inputs/InputSettings";
 import { LanguageSettings } from "./sections/LanguageSettings";
 import { WeatherSettings } from "./sections/weather/WeatherSettings/WeatherSettings";
+import { WidgetSettings } from "./sections/WidgetSettings";
 
 export const SettingsContent = ({
   active,
@@ -88,6 +89,7 @@ export const SettingsContent = ({
                 webGL={webGL}
               />
             ),
+            widgets: <WidgetSettings settings={settings} actions={actions} />,
             weather: <WeatherSettings settings={settings} actions={actions} active={active} />,
             sources: <InputSettings settings={settings} actions={actions} inputs={inputs} />,
             language: <LanguageSettings language={settings.language} />,

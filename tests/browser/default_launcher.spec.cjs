@@ -174,41 +174,31 @@ for (const columns of [3, 4, 5])
     }
   });
 
-test("solar video pauses for reduced motion, Performance mode, Settings and hidden app", async ({ page }) => {
+test("Widgets switches the Home decoration and remembers Off after reload", async ({ page }) => {
   await prepare(page);
-  const scene = page.locator("[data-solar-system]"),
-    video = page.locator("[data-solar-video]");
-  await expect.poll(() => video.evaluate((v) => v.paused)).toBe(true);
-  await page.emulateMedia({ reducedMotion: "no-preference" });
-  await expect(scene).toHaveAttribute("data-video-active", "true");
-  const before = await video.evaluate((v) => v.currentTime);
-  await expect.poll(() => video.evaluate((v) => v.currentTime)).toBeGreaterThan(before);
-  await openSettings(page);
-  await expect.poll(() => video.evaluate((v) => v.paused)).toBe(true);
-  await closeSettings(page);
-  await expect(scene).toHaveAttribute("data-video-active", "true");
-  await page.evaluate(() => AeroTizen.settings.update({ performanceMode: true }));
-  await expect.poll(() => video.evaluate((v) => v.paused)).toBe(true);
-  await page.evaluate(() => AeroTizen.settings.update({ performanceMode: false }));
-  await expect(scene).toHaveAttribute("data-video-active", "true");
-  await page.evaluate(() => {
-    Object.defineProperty(document, "hidden", { configurable: true, value: true });
-    document.dispatchEvent(new Event("visibilitychange"));
-  });
-  await expect.poll(() => video.evaluate((v) => v.paused)).toBe(true);
-  await page.evaluate(() => {
-    delete document.hidden;
-    document.dispatchEvent(new Event("visibilitychange"));
-  });
-  await expect(scene).toHaveAttribute("data-video-active", "true");
-});
-
-test("SVG remains as a fallback if the local video cannot load", async ({ page }) => {
-  await page.route("**/assets/solar-loop.mp4", (r) => r.abort());
-  await prepare(page);
-  await page.emulateMedia({ reducedMotion: "no-preference" });
-  await expect(page.locator("[data-solar-drawing]")).toBeVisible();
+  await expect(page.locator("[data-solar-system]")).toBeVisible();
   await expect(page.locator("[data-solar-planet]")).toHaveCount(8);
+  await expect(page.locator("[data-screen-awake-video]")).toHaveCount(0);
+
+  await openSettings(page);
+  await openCategory(page, "widgets");
+  await expect(page.getByRole("button", { name: "Solar System", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("button", { name: "Moon phase", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await closeSettings(page);
+  await expect(page.locator("[data-moon-phase]")).toBeVisible();
+  await expect(page.locator("[data-solar-system]")).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator("[data-moon-phase]")).toBeVisible();
+
+  await openSettings(page);
+  await openCategory(page, "widgets");
+  await page.getByRole("button", { name: "Off", exact: true }).click();
+  await closeSettings(page);
+  await page.reload();
+  await expect(page.locator("[data-home-widget]")).toHaveCount(0);
+  await expect(page.locator('[data-clock-part="time"]')).toBeVisible();
 });
 
 test("the launcher has no inactivity dimming or swallowed wake key", async ({ page }) => {

@@ -9,6 +9,7 @@ import type { Translations } from "../shared/i18n/createTranslations";
 import { TranslationContext } from "../shared/i18n/useTranslation";
 
 import { Home } from "./components/Home/Home";
+import { ScreenAwakeVideo } from "./components/ScreenAwakeVideo/ScreenAwakeVideo";
 import { createHomeController } from "./state/createHomeController";
 import { createHomeInventory } from "./state/createHomeInventory";
 
@@ -71,6 +72,7 @@ export const mountHome = (
     render(
       <TranslationContext.Provider value={translations}>
         <Home env={environment} />
+        {runtime.tizen && <ScreenAwakeVideo inputs={runtime.inputs} />}
       </TranslationContext.Provider>,
       mount,
     );

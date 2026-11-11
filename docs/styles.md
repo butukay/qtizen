@@ -181,15 +181,13 @@ These shell rules do not need `!important`; only the universal hidden-attribute
 rule uses it. Normal focus, selection, theme and layout rules must
 use the cascade without `!important`.
 
-`SolarSystem` exposes `[data-home-decoration]`. The page visibility owner hides it
+`HomeOverview` exposes `[data-home-decoration]`. The page visibility owner hides it
 during native playback, Settings and wallpaper previews.
 Default keeps component geometry in its owners and shared paint in
-`themes.css`. `HomeOverview` owns the clock/date composition and decorative Solar
-System placement; it subscribes to the existing clock service. There are no tabs,
-breadcrumbs or theme classes. Home sets `html[data-theme="default"]`. `SolarSystem`
-owns the silent local video and its schematic SVG fallback. Playback follows
-its running prop and reduced-motion preference, and pauses on teardown.
-`SolarSystemDrawing` owns the fallback SVG markup; both share the scene's module.
+`themes.css`. `HomeOverview` owns the clock/date composition and the widget slot.
+The static Solar System and Moon phase drawings own their SVG markup. Home sets
+`html[data-theme="default"]`. `ScreenAwakeVideo` owns the invisible Tizen video
+element and its playback follows document visibility and embedded input playback.
 
 ## Checks and compatibility
 

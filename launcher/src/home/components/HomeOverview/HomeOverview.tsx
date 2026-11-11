@@ -1,11 +1,12 @@
 import { useStore } from "../../../shared/hooks/useStore";
 import { useClock } from "../../../status/hooks/useClock";
 import type { HomeEnvironment } from "../../types";
-import { SolarSystem } from "../SolarSystem/SolarSystem";
+import { MoonPhase } from "../MoonPhase/MoonPhase";
+import { SolarSystemDrawing } from "../SolarSystem/SolarSystemDrawing";
 
 import styles from "./HomeOverview.module.css";
 
-export const HomeOverview = ({ env, active }: { env: HomeEnvironment; active: boolean }) => {
+export const HomeOverview = ({ env }: { env: HomeEnvironment }) => {
   const settings = useStore(env.settings);
   const value = useClock(env.status.time, env.runtime.clock, settings);
   return (
@@ -23,7 +24,11 @@ export const HomeOverview = ({ env, active }: { env: HomeEnvironment; active: bo
           {value.date}
         </div>
       </div>
-      <SolarSystem running={active && !settings.performanceMode} />
+      {settings.homeWidget !== "off" && (
+        <div class={styles.widget} data-home-widget={settings.homeWidget} data-home-decoration>
+          {settings.homeWidget === "solar" ? <SolarSystemDrawing /> : <MoonPhase timestamp={value.timestamp} />}
+        </div>
+      )}
     </section>
   );
 };

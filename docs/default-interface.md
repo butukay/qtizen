@@ -23,32 +23,26 @@ survive migration. Old theme and clock-layout preferences are discarded once;
 old theme profiles start on black without weather photos. New wallpaper choices
 continue to use the shared wallpaper service.
 
-The Solar System has a small Sun, eight muted planet dots, fine orbital lines and
-one Saturn ring. Sizes, distances and phases are composed for legibility rather
-than physical scale or current sky positions. The moving artwork is a bundled,
-silent 600×280 H.264 video, scaled by its component and looping after 120 seconds.
-It pauses while Home is inactive, in Performance mode and with reduced motion.
-An SVG fallback stays visible until playback starts and returns if decoding fails.
-No remote video, texture download or JavaScript render loop runs on the TV.
-Regenerate the asset with `node tools/render-solar-loop.mjs`; this optional offline
-tool requires FFmpeg and the project's Playwright Chromium.
+Widgets offers Solar System, Moon phase and Off. The Solar System is a static
+schematic with eight muted planet dots and thin orbits. Moon phase uses the
+[US Naval Observatory's reference new moon](https://aa.usno.navy.mil/api/moon/phases/year?year=2026)
+and a mean lunar cycle to estimate the illuminated shape from the TV clock.
 
 The launcher has no inactivity dimming and does not consume a wake key. While
 visible it requests `SCREEN_SAVER_OFF` through Samsung's
 [AppCommon API](https://developer.samsung.com/smarttv/develop/guides/fundamentals/setting-screensaver.html).
 Playback-start events repeat the request after the media pipeline is ready.
-Hiding or disposing the app restores `SCREEN_SAVER_ON`. The local SDK loads only
-inside the Tizen widget. Pixel Shift, logo brightness and Pixel Refresh are unchanged.
-On the QE65S95FAUXCE with firmware 1301, the API alone did not suppress the OLED
-dot saver. Playing the solar video kept Home visible beyond four minutes, confirmed
-by its owner. Browser tests do not establish that behavior on other televisions.
+Tizen plays a local silent H.264 loop with a transparent video element while the
+launcher is visible, including when Widgets is set to Off. The loop pauses while
+an embedded TV input is opening or playing. Hiding or disposing the app restores
+`SCREEN_SAVER_ON`. The local SDK loads inside the Tizen widget.
 
 Run `npm run dev` and open `http://localhost:8019/` for a browser preview.
 Fonts and their SIL Open Font Licenses are bundled in `launcher/assets/fonts/`.
 Install updates with the existing signing profile and keep the `DclHome001.Home`
 identity so the TV's Home and startup assignments remain valid.
 
-Settings uses this order: Appearance, Backgrounds, Applications, Weather, Inputs,
+Settings uses this order: Appearance, Backgrounds, Widgets, Applications, Weather, Inputs,
 Language and About. Appearance starts with Light/Dark and Accent. Default is the
 first accent and uses white in Dark mode and black in Light mode. App layout,
 time/date controls and Performance mode follow. Background choices start with
