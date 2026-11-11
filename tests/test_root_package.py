@@ -14,8 +14,8 @@ from pathlib import Path
 
 import pytest
 
-from aerotizen import root_package as package
-from aerotizen import root_state
+from qtizen import root_package as package
+from qtizen import root_state
 from root_test_support import make_certificates
 from test_root_bridge import native_root as native_fixture
 from test_root_bridge import receipt_data
@@ -82,9 +82,9 @@ def test_corrupt_cached_release_fails_without_network(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("operation", ["install", "upgrade", "remove"])
 def test_native_setup_archive_contract(native_root, tmp_path, operation):
-    release = os.environ.get("AEROTIZEN_TEST_ROOT_RELEASE")
+    release = os.environ.get("QTIZEN_TEST_ROOT_RELEASE")
     if not release:
-        pytest.skip("Set AEROTIZEN_TEST_ROOT_RELEASE for the pinned-payload archive integration check")
+        pytest.skip("Set QTIZEN_TEST_ROOT_RELEASE for the pinned-payload archive integration check")
     values, manifest = package.setup_bundle(
         receipt_data(),
         managed(),
@@ -104,7 +104,7 @@ def test_native_setup_archive_contract(native_root, tmp_path, operation):
 
 
 def test_native_per_boot_archive_factory_matches_its_validator(native_root, tmp_path):
-    release = os.environ.get("AEROTIZEN_TEST_ROOT_RELEASE")
+    release = os.environ.get("QTIZEN_TEST_ROOT_RELEASE")
     if not release:
         pytest.skip("Pinned upstream release required for the native runtime archive check")
     values = managed()
@@ -172,7 +172,7 @@ def check_isolated_launch(source, tmp_path, shell_name, installation, nonce, ori
         f"#!{shell}\nset -eu\n"
         'test "$1" = --quiet\ntest "$2" = --scope\n'
         + 'test "$3" = '
-        + shlex.quote(f"--unit=aerotizen-root-{installation}-{nonce}.scope")
+        + shlex.quote(f"--unit=qtizen-root-{installation}-{nonce}.scope")
         + '\ntest "$4" = --\nprintf scoped > '
         + shlex.quote(str(scope_marker))
         + '\nshift 4\nexec "$@"\n'
@@ -182,7 +182,7 @@ def check_isolated_launch(source, tmp_path, shell_name, installation, nonce, ori
     stub.write_text(
         f"#!{shell}\nset -eu\nif ( : >&3 ) 2>/dev/null; then exit 70; fi\n"
         + 'test "$#" -eq 5\ntest "$1" = '
-        + shlex.quote(f"/opt/usr/apps/{root_state.APP_ID}/bin/AeroTizenRootBridge.dll")
+        + shlex.quote(f"/opt/usr/apps/{root_state.APP_ID}/bin/QtizenRootBridge.dll")
         + '\ntest "$2" = --serve\ntest "$3" = '
         + shlex.quote(installation)
         + '\ntest "$4" = '
@@ -226,7 +226,7 @@ def test_actual_native_registration_sql_is_scoped_and_transactional(native_root,
             "false",
             "false",
             f"/opt/usr/apps/{root_state.APP_ID}/bin/"
-            + ("other.dll" if wrong == "executable" else "AeroTizenRootHelper.dll"),
+            + ("other.dll" if wrong == "executable" else "QtizenRootHelper.dll"),
         )
         if wrong != "missing":
             connection.execute("INSERT INTO package_app_info VALUES (?,?,?,?,?,?,?)", own)

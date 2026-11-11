@@ -5,9 +5,9 @@ async function prepare(page, settings = {}) {
   await page.route("https://**/*", (route) => route.fulfill({ body: "{}" }));
   await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
   await page.addInitScript((settings) => {
-    if (!localStorage.getItem("aerotizen.settings.v1"))
+    if (!localStorage.getItem("qtizen.settings.v1"))
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({
           home: ["__fire", "demo0", "demo1", "demo2", "demo3", "demo4"],
           homeCardColumns: 3,
@@ -21,7 +21,7 @@ async function prepare(page, settings = {}) {
   }, settings);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+  await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
   await page.evaluate(() => document.fonts.ready);
 }
 
@@ -35,8 +35,8 @@ test("Default is the only theme, migrates previous choices, and keeps favorites 
   });
   await expect(page.locator("html")).toHaveAttribute("data-theme", "default");
   await expect(page.locator("html")).toHaveCSS("background-color", "rgb(0, 0, 0)");
-  const saved = await page.evaluate(() => AeroTizen.settings.getSnapshot().home);
-  const values = await page.evaluate(() => AeroTizen.settings.getSnapshot());
+  const saved = await page.evaluate(() => Qtizen.settings.getSnapshot().home);
+  const values = await page.evaluate(() => Qtizen.settings.getSnapshot());
   expect("glassSettings" in values || "nordRice" in values || "clockLayout" in values).toBe(false);
   await openSettings(page);
   await openCategory(page, "appearance");
@@ -45,7 +45,7 @@ test("Default is the only theme, migrates previous choices, and keeps favorites 
   await closeSettings(page);
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "default");
-  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().home)).toEqual(saved);
+  expect(await page.evaluate(() => Qtizen.settings.getSnapshot().home)).toEqual(saved);
 });
 
 test("the header has only Settings; section rules, Live caption and new sizes fit the screen", async ({ page }) => {
@@ -135,7 +135,7 @@ test("favorites are managed through Settings and an empty list keeps Settings re
   await page.locator('#all-apps [data-key="app:demo1"]').click();
   await closeSettings(page);
   await expect(page.locator('#grid > [data-id="demo1"]')).toBeVisible();
-  await page.evaluate(() => AeroTizen.settings.update({ home: [] }));
+  await page.evaluate(() => Qtizen.settings.update({ home: [] }));
   await expect(page.locator("#grid > [data-id]")).toHaveCount(0);
   await page.keyboard.press("ArrowUp");
   await expect(page.locator("#gear")).toBeFocused();
@@ -152,13 +152,13 @@ test("favorites can be reordered and removed with a long press", async ({ page }
   await page.keyboard.press("Enter");
   await page.keyboard.press("ArrowRight");
   await page.keyboard.press("Enter");
-  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().home)).toEqual(["demo1", "demo0", "demo2"]);
+  expect(await page.evaluate(() => Qtizen.settings.getSnapshot().home)).toEqual(["demo1", "demo0", "demo2"]);
   await page.keyboard.down("Enter");
   await page.waitForTimeout(650);
   await page.keyboard.up("Enter");
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("Enter");
-  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().home)).toEqual(["demo1", "demo2"]);
+  expect(await page.evaluate(() => Qtizen.settings.getSnapshot().home)).toEqual(["demo1", "demo2"]);
 });
 
 for (const columns of [3, 4, 5])
@@ -185,9 +185,9 @@ test("Widgets switches the Home decoration and remembers Off after reload", asyn
   await expect(mercury).toHaveCSS("animation-play-state", "running");
   const transform = await mercury.evaluate((node) => getComputedStyle(node).transform);
   await expect.poll(() => mercury.evaluate((node) => getComputedStyle(node).transform)).not.toBe(transform);
-  await page.evaluate(() => AeroTizen.settings.update({ performanceMode: true }));
+  await page.evaluate(() => Qtizen.settings.update({ performanceMode: true }));
   await expect(mercury).toHaveCSS("animation-play-state", "paused");
-  await page.evaluate(() => AeroTizen.settings.update({ performanceMode: false }));
+  await page.evaluate(() => Qtizen.settings.update({ performanceMode: false }));
   await expect(mercury).toHaveCSS("animation-play-state", "running");
 
   await openSettings(page);
@@ -253,7 +253,7 @@ test("Appearance transition choices support the remote and survive a reload", as
   const standard = page.locator('[data-key="app-transition:standard"]');
   await expect(none).toHaveAttribute("aria-pressed", "true");
   await fade.click();
-  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().appTransition)).toBe("fade");
+  expect(await page.evaluate(() => Qtizen.settings.getSnapshot().appTransition)).toBe("fade");
   await page.keyboard.press("ArrowRight");
   await page.keyboard.press("Enter");
   await expect(standard).toHaveAttribute("aria-pressed", "true");
@@ -262,5 +262,39 @@ test("Appearance transition choices support the remote and survive a reload", as
   await openCategory(page, "appearance");
   await expect(standard).toHaveAttribute("aria-pressed", "true");
   await none.click();
-  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().appTransition)).toBe("none");
+  expect(await page.evaluate(() => Qtizen.settings.getSnapshot().appTransition)).toBe("none");
+});
+
+test("AeroTizen preferences migrate into qtizen without overwriting existing settings", async ({ page }) => {
+  await page.route("https://**/*", (route) => route.fulfill({ body: "{}" }));
+  await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
+  await page.addInitScript(() => {
+    if (!localStorage.getItem("qtizen.settings.v1")) {
+      localStorage.setItem(
+        "aerotizen.settings.v1",
+        JSON.stringify({
+          home: ["demo1", "demo0"],
+          appearance: "dark",
+          accent: "nord",
+          homeCardColumns: 5,
+          homeAppLayout: "scroll",
+          widget: "off",
+          showWeather: false,
+          inputNames: { "HDMI:1": "My Apple TV" },
+          language: "en",
+        }),
+      );
+    }
+  });
+  await page.goto("/");
+  await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
+  const migrated = await page.evaluate(() => Qtizen.settings.getSnapshot());
+  expect(migrated.home).toEqual(["demo1", "demo0"]);
+  expect(migrated.homeCardColumns).toBe(5);
+  expect(migrated.inputNames).toEqual({ "HDMI:1": "My Apple TV" });
+  await page.evaluate(() => Qtizen.settings.update({ homeCardColumns: 4 }));
+  await page.reload();
+  await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
+  expect(await page.evaluate(() => Qtizen.settings.getSnapshot().homeCardColumns)).toBe(4);
+  expect(await page.evaluate(() => localStorage.getItem("aerotizen.settings.v1"))).not.toBeNull();
 });

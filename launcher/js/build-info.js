@@ -5,6 +5,6 @@
   if (typeof module !== "undefined" && module.exports) {
     module.exports = value;
   } else {
-    root.AeroBuildInfo = value;
+    root.QtizenBuildInfo = value;
   }
 })(typeof window !== "undefined" ? window : this);

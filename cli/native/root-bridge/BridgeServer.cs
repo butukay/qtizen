@@ -11,9 +11,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AeroTizen.UntetheredProbe;
+using Qtizen.UntetheredProbe;
 
-namespace AeroTizen.Root
+namespace Qtizen.Root
 {
     internal sealed class BridgeServer : IDisposable
     {

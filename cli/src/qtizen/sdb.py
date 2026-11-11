@@ -89,7 +89,7 @@ class Sdb:
                 f"cannot reach {self.host}:{self.port} ({e}). "
                 "Is Developer Mode on, with this computer's IP, and was the TV restarted?"
             ) from e
-        self._send(CNXN, VERSION, MAX_DATA, b"host::aerotizen\0")
+        self._send(CNXN, VERSION, MAX_DATA, b"host::qtizen\0")
         try:
             cmd, _arg0, arg1, payload = self._recv()
         except (SdbError, OSError) as e:
@@ -417,7 +417,7 @@ class Sdb:
     def install_native(self, data, name):
         import re
 
-        if not re.fullmatch(r"aerotizen-root-[a-f0-9]{32}\.tpk", name):
+        if not re.fullmatch(r"qtizen-root-[a-f0-9]{32}\.tpk", name):
             raise ValueError("Invalid native helper upload name")
         self.push(data, "/home/owner/share/tmp/sdk_tools/" + name)
         return self.shell_bounded("0 appinstall tpk " + name, timeout=30)

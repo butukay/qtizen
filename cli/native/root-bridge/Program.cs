@@ -9,9 +9,9 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
-using AeroTizen.UntetheredProbe;
+using Qtizen.UntetheredProbe;
 
-namespace AeroTizen.Root
+namespace Qtizen.Root
 {
     internal sealed class Pairing
     {
@@ -96,7 +96,7 @@ namespace AeroTizen.Root
         }
         private static void Ready(string nonce)
         {
-            string directory = Bundle.StagingRoot + "/aerotizen-probe-proof-" + RootSettings.Hex(nonce, 32);
+            string directory = Bundle.StagingRoot + "/qtizen-probe-proof-" + RootSettings.Hex(nonce, 32);
             using (var proof = File.OpenRead(directory + "/proof.json"))
             {
                 var metadata = RootPaths.Metadata(proof);
@@ -121,7 +121,7 @@ namespace AeroTizen.Root
             try
             {
                 // At most one bounded report per fixed phase and boot; never include request data.
-                string path = Bundle.StagingRoot + "/aerotizen-probe-proof-" + nonce + "/bridge-error-" + phase + ".json";
+                string path = Bundle.StagingRoot + "/qtizen-probe-proof-" + nonce + "/bridge-error-" + phase + ".json";
                 if (File.Exists(path)) return;
                 string message = error.Message;
                 if (message.Length > 512) message = message.Substring(0, 512);
@@ -246,7 +246,7 @@ namespace AeroTizen.Root
             string sql = RegistrationSql();
             var start = new ProcessStartInfo("/usr/bin/dotnet") { UseShellExecute = false, RedirectStandardInput = true,
                 RedirectStandardOutput = true, RedirectStandardError = true };
-            foreach (string argument in new[] { RootPaths.Package + "/res/setup/AeroTizenBootWriter.dll", "--run",
+            foreach (string argument in new[] { RootPaths.Package + "/res/setup/QtizenBootWriter.dll", "--run",
                 pairing.DatabaseUid.ToString(System.Globalization.CultureInfo.InvariantCulture), pairing.DatabaseGid.ToString(System.Globalization.CultureInfo.InvariantCulture) })
                 start.ArgumentList.Add(argument);
             using (var process = Process.Start(start))
@@ -268,7 +268,7 @@ namespace AeroTizen.Root
         {
             string condition = "app_id='" + RootPaths.AppId + "' AND package='" + RootPaths.AppId
                 + "' AND app_type='dotnet' AND app_component='svcapp' AND app_autorestart='false' AND app_exec='"
-                + RootPaths.Package + "/bin/AeroTizenRootHelper.dll'";
+                + RootPaths.Package + "/bin/QtizenRootHelper.dll'";
             return ".bail on\nPRAGMA busy_timeout=5000;\nBEGIN IMMEDIATE;\n"
                 + "CREATE TEMP TABLE guard (ok INTEGER NOT NULL CHECK(ok=1));\n"
                 + "INSERT INTO guard SELECT 1+COUNT(*) FROM sqlite_master WHERE type='trigger' AND tbl_name='package_app_info';\n"
@@ -288,7 +288,7 @@ namespace AeroTizen.Root
                     using (var file = File.OpenRead("/opt/dbspace/.pkgmgr_parser.db"))
                     {
                         var owner = RootPaths.Metadata(file);
-                        Console.WriteLine("AEROTIZEN_ROOT_PREFLIGHT=" + JsonSerializer.Serialize(new { schema_version = 1,
+                        Console.WriteLine("QTIZEN_ROOT_PREFLIGHT=" + JsonSerializer.Serialize(new { schema_version = 1,
                             runtime = Environment.Version.ToString(), boot_id = RootPaths.Boot(), database_uid = owner.uid, database_gid = owner.gid }));
                     }
                     return 0;
@@ -299,19 +299,19 @@ namespace AeroTizen.Root
                 {
                     RootPaths.RequireTv(false);
                     if (RootPaths.getuid() != 901 || RootPaths.geteuid() != 901) throw new IOException("Registry reader requires SDK context");
-                    Console.WriteLine("AEROTIZEN_ROOT_REGISTRY=" + JsonSerializer.Serialize(Registry())); return 0;
+                    Console.WriteLine("QTIZEN_ROOT_REGISTRY=" + JsonSerializer.Serialize(Registry())); return 0;
                 }
                 if (args.Length == 3 && args[0] == "--clean-upload")
                 {
                     RootPaths.RequireTv(false);
-                    if (RootPaths.getuid() != 901 || !Regex.IsMatch(args[1], "\\Aaerotizen-root-[a-f0-9]{32}\\.tpk\\z")) throw new IOException("Invalid upload cleanup");
+                    if (RootPaths.getuid() != 901 || !Regex.IsMatch(args[1], "\\Aqtizen-root-[a-f0-9]{32}\\.tpk\\z")) throw new IOException("Invalid upload cleanup");
                     string path = Bundle.StagingRoot + "/" + args[1];
                     if (File.Exists(path))
                     {
                         if (Bundle.Digest(Bundle.ReadBounded(path, 2 * 1024 * 1024)) != RootSettings.Hex(args[2], 64)) throw new IOException("Upload checksum differs");
                         File.Delete(path);
                     }
-                    Console.WriteLine("AEROTIZEN_ROOT_UPLOAD={\"removed\":true}"); return 0;
+                    Console.WriteLine("QTIZEN_ROOT_UPLOAD={\"removed\":true}"); return 0;
                 }
                 RootPaths.RequireTv(true);
                 if (args.Length == 1 && args[0] == "--launcher-services") return LauncherServices.Serve();
@@ -350,7 +350,7 @@ namespace AeroTizen.Root
                 }
                 return 0;
             }
-            catch (Exception error) { Console.Error.WriteLine("AEROTIZEN_ROOT_SERVICE_ERROR=" + error.GetType().Name + ": " + error.Message); return 1; }
+            catch (Exception error) { Console.Error.WriteLine("QTIZEN_ROOT_SERVICE_ERROR=" + error.GetType().Name + ": " + error.Message); return 1; }
         }
     }
 }

@@ -4,7 +4,7 @@ test("Home columns never change Settings application row sizes or nodes", async 
   await page.route("https://**/*", (r) => r.fulfill({ body: "{}" }));
   await page.route("http://127.0.0.1:47790/**", (r) => r.fulfill({ body: "{}" }));
   await page.goto("/");
-  await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+  await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
   await openSettings(page);
   const category = async (id) => {
     const entry = page.locator(`[data-key="section:${id}"]`);
@@ -51,12 +51,12 @@ for (const glassSettings of [false, true]) {
     await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
     await page.addInitScript((glassSettings) => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({ glassSettings, home: ["demo0"], background: "black", showWeather: false }),
       );
     }, glassSettings);
     await page.goto("/");
-    await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+    await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
     await openSettings(page);
     await page.locator('[data-key="section:apps"]').click();
     const cards = page.locator("#all-apps > [data-application-row]");

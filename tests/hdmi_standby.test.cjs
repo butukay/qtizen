@@ -394,10 +394,10 @@ test("Settings override controls use persisted source numbers and accept remote 
 test("HDMI per-port exceptions survive the existing official settings storage", () => {
   const store = {};
   const A = { clock: { defaultTimeFormat: () => "24" } };
-  const window = { AeroTizen: A, navigator: { language: "it-IT" } };
+  const window = { Qtizen: A, navigator: { language: "it-IT" } };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../launcher/js/config.js"), "utf8"), {
     window,
-    AeroTizen: A,
+    Qtizen: A,
   });
   const localStorage = {
     getItem: (key) => store[key] || null,

@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 from pyproject_hooks import BuildBackendHookCaller
 
-from aerotizen import __version__, build_info
+from qtizen import __version__, build_info
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -50,8 +50,8 @@ def test_root_and_cli_build_the_same_wheel(distributions):
         "cryptography>=41",
     }
     entrypoints = next(value for name, value in root.items() if name.endswith("/entry_points.txt"))
-    assert b"qtizen = aerotizen.cli:main" in entrypoints
-    assert b"aerotizen = aerotizen.cli:main" in entrypoints
+    assert b"qtizen = qtizen.cli:main" in entrypoints
+    assert b"qtizen = qtizen.cli:main" in entrypoints
     for filename in (
         "ca/vd_tizen_dev_public2.crt",
         "ca/vd_tizen_dev_author_ca.cer",
@@ -60,7 +60,7 @@ def test_root_and_cli_build_the_same_wheel(distributions):
         "helpers/root-runtime.json",
         "helpers/cli-update.ps1",
     ):
-        assert root[f"aerotizen/{filename}"] == (ROOT / "cli/src/aerotizen" / filename).read_bytes()
+        assert root[f"qtizen/{filename}"] == (ROOT / "cli/src/qtizen" / filename).read_bytes()
     assert not any(name.startswith(("launcher/", "cli/", "tools/")) for name in root)
 
 

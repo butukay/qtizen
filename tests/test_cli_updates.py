@@ -2,7 +2,7 @@
 
 import pytest
 
-from aerotizen import cli, releases, self_update
+from qtizen import cli, releases, self_update
 
 
 @pytest.fixture
@@ -10,7 +10,7 @@ def cli_check(monkeypatch):
     selected = releases.CLIRelease(
         version="2.2.0",
         release_url="https://github.com/butukay/qtizen/releases/tag/cli-v2.2.0",
-        download_url="https://github.com/butukay/qtizen/releases/download/cli-v2.2.0/aerotizen-2.2.0-macos-arm64.tar.gz",
+        download_url="https://github.com/butukay/qtizen/releases/download/cli-v2.2.0/qtizen-2.2.0-macos-arm64.tar.gz",
     )
     repositories = []
 
@@ -27,7 +27,7 @@ def cli_check(monkeypatch):
     monkeypatch.setattr(cli, "require_sdb", forbidden)
     monkeypatch.setattr(cli, "cert_dir_for", forbidden)
     monkeypatch.setattr(releases, "_read_url", forbidden)
-    monkeypatch.setattr("sys.argv", ["aerotizen", "update", "cli", "--check"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "update", "cli", "--check"])
     return selected, repositories
 
 
@@ -70,10 +70,10 @@ def test_cli_check_links_to_release_page_if_no_archive_matches(cli_check, monkey
 
 def test_cli_check_passes_an_explicit_repository(cli_check, monkeypatch):
     monkeypatch.setattr(
-        "sys.argv", ["aerotizen", "update", "cli", "--check", "--release-repo", "example/AeroTizen"]
+        "sys.argv", ["qtizen", "update", "cli", "--check", "--release-repo", "example/Qtizen"]
     )
     cli.main()
-    assert cli_check[1] == ["example/AeroTizen"]
+    assert cli_check[1] == ["example/Qtizen"]
 
 
 def test_cli_update_calls_the_executable_updater(cli_check, monkeypatch, tmp_path, capsys):
@@ -84,7 +84,7 @@ def test_cli_update_calls_the_executable_updater(cli_check, monkeypatch, tmp_pat
         return self_update.UpdateResult(tmp_path / "previous-cli")
 
     monkeypatch.setattr(self_update, "install", install)
-    monkeypatch.setattr("sys.argv", ["aerotizen", "update", "cli"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "update", "cli"])
     cli.main()
     assert calls == [(cli_check[0], releases.DEFAULT_REPOSITORY)]
     assert "Updated CLI to 2.2.0" in capsys.readouterr().out
@@ -93,7 +93,7 @@ def test_cli_update_calls_the_executable_updater(cli_check, monkeypatch, tmp_pat
 def test_cli_update_reports_windows_handoff_as_pending(cli_check, monkeypatch, tmp_path, capsys):
     result = self_update.UpdateResult(tmp_path / "previous-cli", tmp_path / "result.json")
     monkeypatch.setattr(self_update, "install", lambda *args, **kwargs: result)
-    monkeypatch.setattr("sys.argv", ["aerotizen", "update", "cli"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "update", "cli"])
     cli.main()
     output = capsys.readouterr().out
     assert "CLI update staged" in output and str(result.receipt) in output

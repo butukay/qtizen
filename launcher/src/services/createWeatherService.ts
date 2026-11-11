@@ -15,7 +15,7 @@ import {
   text,
 } from "./weather/readings";
 
-const CACHE_KEY = "aerotizen.weather.v2";
+const CACHE_KEY = "qtizen.weather.v2";
 const REFRESH_INTERVAL_MS = 20 * 60 * 1000;
 
 interface WeatherOptions {

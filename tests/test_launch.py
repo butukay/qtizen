@@ -6,7 +6,7 @@ import threading
 import pytest
 import websocket
 
-from aerotizen import cli, remote
+from qtizen import cli, remote
 
 APP = "DclHome001.Home"
 

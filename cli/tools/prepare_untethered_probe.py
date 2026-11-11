@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from aerotizen.untethered_probe import prepare_bundle
+from qtizen.untethered_probe import prepare_bundle
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -24,7 +24,7 @@ def main():
     if args.output.exists() or args.output.is_symlink():
         parser.error("Output already exists; use a new bundle directory")
     environment = {**os.environ, "DOTNET_CLI_TELEMETRY_OPTOUT": "1", "DOTNET_NOLOGO": "1"}
-    with tempfile.TemporaryDirectory(prefix="aerotizen-root-probe-build-") as directory:
+    with tempfile.TemporaryDirectory(prefix="qtizen-root-probe-build-") as directory:
         subprocess.run(
             [
                 str(args.dotnet),

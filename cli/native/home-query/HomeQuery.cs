@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using AeroTizen.Home;
+using Qtizen.Home;
 
 internal static class HomeQuery
 {
@@ -172,7 +172,7 @@ internal static class HomeQuery
                 os_release = os, main_operation = StringValue(MainOperation, true),
                 settings = settings, watcher = Watcher(), boot = Boot(), launcher = Installation.Status()
             };
-            Console.WriteLine("AEROTIZEN_HOME_QUERY=" + JsonSerializer.Serialize(result));
+            Console.WriteLine("QTIZEN_HOME_QUERY=" + JsonSerializer.Serialize(result));
             return 0;
         }
         catch (Exception error)

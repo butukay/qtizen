@@ -11,9 +11,9 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from aerotizen import catalog, remote
-from aerotizen.device import DeviceSession
-from aerotizen.root import SUPPORTED_VERSION, SamsungTvRoot
+from qtizen import catalog, remote
+from qtizen.device import DeviceSession
+from qtizen.root import SUPPORTED_VERSION, SamsungTvRoot
 
 COMMANDS = ("id", "uname -m", "cat /etc/os-release")
 

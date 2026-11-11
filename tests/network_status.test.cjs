@@ -21,7 +21,7 @@ function setup({ level, standard, online = true, settings = {}, tizen = true } =
   };
   const context = {
     window: {
-      AeroTizen: A,
+      Qtizen: A,
       webapis: {
         network: {
           getWiFiSignalStrengthLevel() {

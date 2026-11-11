@@ -10,7 +10,7 @@ const { createWeatherPhoto } = loadTypeScript("launcher/src/backgrounds/createWe
 const root = path.join(__dirname, "..");
 const { createWeatherService } = loadTypeScript("launcher/src/services/createWeatherService.ts");
 const { createWeatherPlatform } = loadTypeScript("launcher/src/platform/tizen/createWeatherPlatform.ts");
-const CACHE = "aerotizen.weather.v2";
+const CACHE = "qtizen.weather.v2";
 const NOW = 1800000000000;
 const london = {
   name: "London",
@@ -670,7 +670,7 @@ test("explicit location search remains available while off and is not canceled b
 });
 
 test("old preferences keep the default visibility; location and visibility persist on save", () => {
-  const data = new Map([["aerotizen.settings.v1", JSON.stringify({ tempUnit: "C", background: "aurora" })]]);
+  const data = new Map([["qtizen.settings.v1", JSON.stringify({ tempUnit: "C", background: "aurora" })]]);
   const context = vm.createContext({
     window: {},
     localStorage: {
@@ -678,11 +678,11 @@ test("old preferences keep the default visibility; location and visibility persi
       setItem: (key, value) => data.set(key, value),
     },
   });
-  context.AeroTizen = context.window.AeroTizen = {};
+  context.Qtizen = context.window.Qtizen = {};
   vm.runInContext(fs.readFileSync(path.join(root, "launcher/js/config.js"), "utf8"), context);
   require("./helpers/clock.cjs").installClock(context);
   require("./helpers/settings.cjs").installSettings(context);
-  const settings = context.AeroTizen.settings;
+  const settings = context.Qtizen.settings;
   settings.load();
   assert.equal(settings.getSnapshot().weatherShowLocation, true);
   assert.equal(settings.getSnapshot().weatherLocation, null);
@@ -697,11 +697,11 @@ test("old preferences keep the default visibility; location and visibility persi
 });
 
 function preferences({ locale = "en-GB", intl = Intl, saved = {}, legacy = false } = {}) {
-  const storage = new Map([[legacy ? "hearth.home.v1" : "aerotizen.settings.v1", JSON.stringify(saved)]]);
+  const storage = new Map([[legacy ? "hearth.home.v1" : "qtizen.settings.v1", JSON.stringify(saved)]]);
   const A = {};
   const context = vm.createContext({
-    AeroTizen: A,
-    window: { AeroTizen: A, navigator: { languages: [locale], language: locale }, Intl: intl },
+    Qtizen: A,
+    window: { Qtizen: A, navigator: { languages: [locale], language: locale }, Intl: intl },
     localStorage: {
       getItem: (key) => storage.get(key),
       setItem: (key, value) => storage.set(key, value),

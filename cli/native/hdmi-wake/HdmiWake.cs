@@ -8,9 +8,9 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using AeroTizen.Root;
+using Qtizen.Root;
 
-namespace AeroTizen.Hdmi
+namespace Qtizen.Hdmi
 {
     internal sealed record WakeRequest(string Id, int Port, long RequestedAt);
 
@@ -47,7 +47,7 @@ namespace AeroTizen.Hdmi
         {
             if (worker != null) return;
             RootPaths.RequireTv(true);
-            ownership = new FileStream("/run/aerotizen-hdmi-wake.lock", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            ownership = new FileStream("/run/qtizen-hdmi-wake.lock", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
             if (flock(ownership.SafeFileHandle.DangerousGetHandle().ToInt32(), 6) != 0) { ownership.Dispose(); ownership = null; return; }
             worker = Task.Run(Run);
         }

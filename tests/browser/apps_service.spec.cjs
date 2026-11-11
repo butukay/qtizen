@@ -22,11 +22,11 @@ for (const [name, url] of [
     await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ json: {} }));
     await page.addInitScript(() => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({ home: ["youtube", "video"], background: "black", showWeather: false }),
       );
       localStorage.setItem(
-        "aerotizen.apps.v1",
+        "qtizen.apps.v1",
         JSON.stringify([
           { id: "youtube", name: "Saved YouTube", icon: "" },
           { id: "video", name: "Saved Video", icon: "" },
@@ -49,59 +49,57 @@ for (const [name, url] of [
     await page.goto(url);
     await expect(page).toHaveTitle("qtizen");
     await page.waitForFunction(() => window.discoveryReplies.length === 1);
-    const cached = await page.evaluate(() => AeroTizen.apps.getSnapshot());
+    const cached = await page.evaluate(() => Qtizen.apps.getSnapshot());
     expect(cached.ready).toBe(false);
     expect(cached.all.map((app) => app.name)).toEqual(["Saved YouTube", "Saved Video"]);
     const cards = page.locator("#grid > [data-id]");
     await expect(cards).toHaveCount(2);
     await page.evaluate(() => {
-      window.appsOwner = AeroTizen.apps;
+      window.appsOwner = Qtizen.apps;
       window.discoveryReplies[0](window.installedApps);
     });
-    await expect.poll(() => page.evaluate(() => AeroTizen.apps.getSnapshot().ready)).toBe(true);
+    await expect.poll(() => page.evaluate(() => Qtizen.apps.getSnapshot().ready)).toBe(true);
     expect(
       await page.evaluate(() => {
-        const snapshot = AeroTizen.apps.getSnapshot();
+        const snapshot = Qtizen.apps.getSnapshot();
         window.appSnapshot = snapshot;
         window.appCards = [...document.querySelectorAll("#grid > [data-id]")];
         return (
           [snapshot, snapshot.all, snapshot.all[0], snapshot.inventory, snapshot.inventory[0], snapshot.realIds].every(
             Object.isFrozen,
           ) &&
-          !("all" in AeroTizen.apps) &&
-          !("ready" in AeroTizen.apps)
+          !("all" in Qtizen.apps) &&
+          !("ready" in Qtizen.apps)
         );
       }),
     ).toBe(true);
     await page.keyboard.press("ArrowRight");
     await expect(cards.nth(1)).toHaveAttribute("data-focused", "true");
-    await page.evaluate(() => AeroTizen.apps.load());
+    await page.evaluate(() => Qtizen.apps.load());
     await page.waitForFunction(() => window.discoveryReplies.length === 2);
     await page.evaluate(() => window.discoveryReplies[1](window.installedApps.map((app) => ({ ...app }))));
     expect(
       await page.evaluate(
         () =>
-          AeroTizen.apps.getSnapshot() === window.appSnapshot &&
+          Qtizen.apps.getSnapshot() === window.appSnapshot &&
           window.appCards.every((node, index) => node === document.querySelectorAll("#grid > [data-id]")[index]),
       ),
     ).toBe(true);
-    expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().home)).toEqual(["youtube", "video"]);
+    expect(await page.evaluate(() => Qtizen.settings.getSnapshot().home)).toEqual(["youtube", "video"]);
     await page.screenshot({ path: info.outputPath("apps-service.png") });
     await page.evaluate(() => {
-      AeroTizen.apps.load();
-      AeroTizen.apps.dispose();
-      AeroTizen.apps.dispose();
+      Qtizen.apps.load();
+      Qtizen.apps.dispose();
+      Qtizen.apps.dispose();
       window.discoveryReplies[2]([]);
-      AeroTizen.apps.load();
-      AeroTizen.apps.launch({ id: "youtube", name: "YouTube" });
-      AeroTizen.apps.openStore();
+      Qtizen.apps.load();
+      Qtizen.apps.launch({ id: "youtube", name: "YouTube" });
+      Qtizen.apps.openStore();
     });
     expect(await page.evaluate(() => window.discoveryReplies.length)).toBe(3);
     expect(await page.evaluate(() => window.nativeLaunches)).toEqual([]);
     expect(
-      await page.evaluate(
-        () => AeroTizen.apps === window.appsOwner && AeroTizen.apps.getSnapshot() === window.appSnapshot,
-      ),
+      await page.evaluate(() => Qtizen.apps === window.appsOwner && Qtizen.apps.getSnapshot() === window.appSnapshot),
     ).toBe(true);
     await expect(cards).toHaveCount(2);
     await expect(page.locator("vite-error-overlay")).toHaveCount(0);
@@ -147,7 +145,7 @@ for (const [name, url] of [
     });
     await page.addInitScript(() => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({
           home: ["org.tizen.primevideo"],
           background: "black",
@@ -173,7 +171,7 @@ for (const [name, url] of [
     const card = page.locator("#continue-items > [data-key]");
     await expect(card).toHaveText(/Before return/);
     await page.evaluate(() => {
-      window.savedAppSnapshot = AeroTizen.apps.getSnapshot();
+      window.savedAppSnapshot = Qtizen.apps.getSnapshot();
       window.savedFeedCard = document.querySelector("#continue-items > [data-key]");
     });
     title = "After return";
@@ -184,7 +182,7 @@ for (const [name, url] of [
     expect(
       await page.evaluate(
         () =>
-          AeroTizen.apps.getSnapshot() === window.savedAppSnapshot &&
+          Qtizen.apps.getSnapshot() === window.savedAppSnapshot &&
           document.querySelector("#continue-items > [data-key]") === window.savedFeedCard,
       ),
     ).toBe(true);

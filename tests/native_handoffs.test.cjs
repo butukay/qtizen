@@ -162,8 +162,8 @@ function harness(options = {}) {
     applyBackground: () => backgrounds.push("restored"),
   };
   const window = {
-    AeroTizen: A,
-    AeroDiagnostics: log,
+    Qtizen: A,
+    QtizenDiagnostics: log,
     addEventListener(name, handler) {
       listeners[name] = handler;
     },
@@ -216,7 +216,7 @@ function routingStorage() {
     reads,
     filesystem: {
       resolve(filePath, success, failure, mode) {
-        assert.equal(filePath, "wgt-private/aerotizen-home-routing-v1.json");
+        assert.equal(filePath, "wgt-private/qtizen-home-routing-v1.json");
         assert.equal(mode, "r");
         reads.push((routing) => {
           if (routing === undefined) {
@@ -308,7 +308,7 @@ test("YouTube/Cobalt waits for a confirmed /leave before starting", () => {
     ["youtube.app"],
   );
   assert.equal(h.watch.length, 0);
-  assert.equal(h.resume.length, 0, "watcher stays paused until return to AeroTizen");
+  assert.equal(h.resume.length, 0, "watcher stays paused until return to Qtizen");
 });
 
 test("Tizen 10 watches YouTube like other apps instead of pausing the watcher", () => {
@@ -669,10 +669,10 @@ test("Live TV acceptance remains separate from unconfirmed visibility", () => {
 });
 
 test("app store opens com.samsung.tv.store before the org.volt.apps alias", () => {
-  const config = { window: { AeroTizen: {} } };
-  config.AeroTizen = config.window.AeroTizen;
+  const config = { window: { Qtizen: {} } };
+  config.Qtizen = config.window.Qtizen;
   vm.runInNewContext(get("js/config.js"), config, { filename: "config.js" });
-  const storeIds = Array.from(config.AeroTizen.config.STORE_APP_IDS);
+  const storeIds = Array.from(config.Qtizen.config.STORE_APP_IDS);
   assert.deepEqual(storeIds, ["com.samsung.tv.store", "org.volt.apps"]);
 
   const h = harness({ storeIds });

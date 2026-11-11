@@ -62,8 +62,7 @@ Private geometry buffers and DOM ref registries remain local to navigation.
 
 `services/createSettingsService.ts` owns preferences, immutable snapshots and persistence.
 Defaults, saved-data migration and validation live in `services/preferences/`. The service uses
-injected storage and locale defaults, with no Preact or TV API dependency. It keeps the
-existing storage keys. `migrateSettings.ts` converts older favourites/card sizes and removes obsolete theme/layout keys only
+injected storage and locale defaults, with no Preact or TV API dependency. It migrates earlier storage keys into the qtizen namespace. `migrateSettings.ts` converts older favourites/card sizes and removes obsolete theme/layout keys only
 when loading, before current-schema validation. Updates use only the current schema.
 First-launch `home: null` remains distinct from an intentionally empty `home: []`.
 

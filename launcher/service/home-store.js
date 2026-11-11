@@ -18,7 +18,8 @@ module.exports = function (tz, ready) {
             throw new Error("Private storage URI unavailable");
           }
           var folder = decodeURIComponent(uri.slice(7)).replace(/\/$/, "");
-          var path = folder + "/aerotizen-home-routing-v1.json";
+          var path = folder + "/qtizen-home-routing-v1.json";
+          var legacy = folder + "/aerotizen-home-routing-v1.json";
           var store = {
             exists: function () {
               try {
@@ -73,6 +74,12 @@ module.exports = function (tz, ready) {
               }
             },
           };
+          if (!fs.existsSync(path) && fs.existsSync(legacy)) {
+            if (fs.statSync(legacy).size > 4096) {
+              throw new Error("Legacy Home mode file too large");
+            }
+            store.setValue("qtizen.home-routing.v1", fs.readFileSync(legacy, "utf8"));
+          }
           ready(store, false);
         } catch (e) {
           ready(null, true);

@@ -12,9 +12,9 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from aerotizen import releases, remote
-from aerotizen.device import DeviceSessionError
-from aerotizen.root import SUPPORTED_VERSION
+from qtizen import releases, remote
+from qtizen.device import DeviceSessionError
+from qtizen.root import SUPPORTED_VERSION
 
 OPERATION = "http://tizen.org/appcontrol/operation/main"
 HOME_KEY = "db/appfw/home_appid"
@@ -27,9 +27,9 @@ SETTINGS = {
     AUTOSTART_KEY: "int",
 }
 PAYLOAD_PATH = Path(__file__).parent / "helpers/home-query.json"
-HELPER_FILES = ("AeroTizenHomeQuery.dll", "AeroTizenHomeQuery.runtimeconfig.json")
-QUERY_PREFIX = "AEROTIZEN_HOME_QUERY="
-CLEANUP_MARKER = "AEROTIZEN_HOME_QUERY_CLEANED"
+HELPER_FILES = ("QtizenHomeQuery.dll", "QtizenHomeQuery.runtimeconfig.json")
+QUERY_PREFIX = "QTIZEN_HOME_QUERY="
+CLEANUP_MARKER = "QTIZEN_HOME_QUERY_CLEANED"
 
 
 class HomeError(DeviceSessionError):
@@ -61,14 +61,14 @@ def load_helper(*, path=None, names=HELPER_FILES):
 
 
 def query_script(files):
-    directory = f"/tmp/aerotizen-home-read-{secrets.token_hex(12)}"
+    directory = f"/tmp/qtizen-home-read-{secrets.token_hex(12)}"
     lines = [
         "set -eu",
         f"work={shlex.quote(directory)}",
         'mkdir -m 700 "$work"',
         "cleanup() {",
         "  result=$?; trap - EXIT",
-        '  rm -f "$work/AeroTizenHomeQuery.dll" "$work/AeroTizenHomeQuery.runtimeconfig.json" || exit 90',
+        '  rm -f "$work/QtizenHomeQuery.dll" "$work/QtizenHomeQuery.runtimeconfig.json" || exit 90',
         '  rmdir "$work" || exit 91',
         f"  printf '\\n%s\\n' {CLEANUP_MARKER}",
         '  exit "$result"',
@@ -85,7 +85,7 @@ def query_script(files):
                 f"printf '%s  %s\\n' {digest} \"$work/{name}\" | sha256sum -c - >/dev/null",
             ]
         )
-    lines.append('/usr/bin/dotnet "$work/AeroTizenHomeQuery.dll"')
+    lines.append('/usr/bin/dotnet "$work/QtizenHomeQuery.dll"')
     return "\n".join(lines)
 
 
@@ -204,7 +204,7 @@ def device_info(session, host, *, backup=None, state_dir=None):
         return {
             "modelName": saved["device"]["model"],
             "model": saved["device"]["platform"],
-            "_aerotizen_metadata_source": "identity-bound original backup; HTTP metadata unavailable",
+            "_qtizen_metadata_source": "identity-bound original backup; HTTP metadata unavailable",
         }
 
 
@@ -215,7 +215,7 @@ def read_status(session, provider, info):
         raise HomeError("The TV did not return a device identity.")
     capabilities = session.capability()
     if provider is None:
-        from aerotizen import sdk
+        from qtizen import sdk
 
         result = sdk.run(session, files, HELPER_FILES[0])
         if result["exit_code"] != 0:
@@ -267,7 +267,7 @@ def read_status(session, provider, info):
         "complete": all(item["status"] == "ok" for item in [main, *settings.values()]),
         "evidence": {
             **provenance,
-            "model_metadata_source": info.get("_aerotizen_metadata_source", "live HTTP metadata"),
+            "model_metadata_source": info.get("_qtizen_metadata_source", "live HTTP metadata"),
             "helper_sha256": hashlib.sha256(files[HELPER_FILES[0]]).hexdigest(),
         },
     }
@@ -279,7 +279,7 @@ def baseline_from_status(status):
     home = status["home"]
     baseline = {
         "schema_version": 1,
-        "kind": "aerotizen.home-baseline",
+        "kind": "qtizen.home-baseline",
         "captured_at": status["queried_at"],
         "device": status["device"],
         "home": {
@@ -301,7 +301,7 @@ def validate_backup(document, identity):
         if (
             type(document["schema_version"]) is not int
             or document["schema_version"] != 1
-            or document["kind"] != "aerotizen.home-baseline"
+            or document["kind"] != "qtizen.home-baseline"
             or document["device"]["identity_sha256"] != identity
             or len(identity) != 64
             or any(c not in "0123456789abcdef" for c in identity)

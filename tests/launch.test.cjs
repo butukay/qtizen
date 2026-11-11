@@ -53,7 +53,7 @@ function appHarness(metadata, options = {}) {
   if (options.noControl === "constructor") delete A.tizen.ApplicationControl;
   if (options.noControl === "data") delete A.tizen.ApplicationControlData;
   if (options.noControl === "launch") delete application.launchAppControl;
-  const context = vm.createContext({ window: { AeroTizen: A }, AeroTizen: A });
+  const context = vm.createContext({ window: { Qtizen: A }, Qtizen: A });
   for (const file of ["config.js", "app-catalog.js", "app-lookup.js"]) {
     vm.runInContext(fs.readFileSync(path.join(launcher, "js", file), "utf8"), context);
   }

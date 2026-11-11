@@ -4,14 +4,12 @@ const runSettingsFocus = async (page) => {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.route("https://**/*", (route) => route.fulfill({ contentType: "application/json", body: "{}" }));
   await page.reload();
-  await page.waitForFunction(
-    () => (AeroTizen.apps.getSnapshot ? AeroTizen.apps.getSnapshot() : AeroTizen.apps).all.length > 0,
-  );
+  await page.waitForFunction(() => (Qtizen.apps.getSnapshot ? Qtizen.apps.getSnapshot() : Qtizen.apps).all.length > 0);
   await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   await page.evaluate(() => {
-    AeroTizen.settings.update({ background: "aurora" });
+    Qtizen.settings.update({ background: "aurora" });
 
-    AeroTizen.settingsUi.open();
+    Qtizen.settingsUi.open();
   });
   await page.locator('[data-key="section:wallpaper"]').click();
   await page.locator('[data-key="bg:aurora"]').click();
@@ -30,7 +28,7 @@ const runSettingsFocus = async (page) => {
   await page.keyboard.press("Enter");
   await page.waitForFunction(
     () =>
-      AeroTizen.settings.getSnapshot().inputNames["HDMI 1"] === "React draft" &&
+      Qtizen.settings.getSnapshot().inputNames["HDMI 1"] === "React draft" &&
       document.activeElement?.getAttribute("data-key") === "name:HDMI 1",
   );
   const focused = await page.evaluate(() => {
@@ -45,7 +43,7 @@ const runSettingsFocus = async (page) => {
   });
   await page.keyboard.press("Escape");
   await page.keyboard.press("Escape");
-  await page.waitForFunction(() => !AeroTizen.settingsUi.isOpen() && document.querySelector("#editor").hidden);
+  await page.waitForFunction(() => !Qtizen.settingsUi.isOpen() && document.querySelector("#editor").hidden);
   if (await page.evaluate(() => document.querySelector("#editor").contains(document.activeElement))) {
     throw new Error("Closed Settings retained browser focus");
   }

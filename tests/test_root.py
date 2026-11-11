@@ -7,8 +7,8 @@ import sys
 
 import pytest
 
-from aerotizen import root
-from aerotizen.root import RootError, SamsungTvRoot
+from qtizen import root
+from qtizen.root import RootError, SamsungTvRoot
 
 
 def evidence():

@@ -58,4 +58,4 @@
   catalog.preloadedStoreId = function (appId) {
     return preloaded[appId] || null;
   };
-})(window.AeroTizen);
+})(window.Qtizen);

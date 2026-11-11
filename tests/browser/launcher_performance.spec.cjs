@@ -5,9 +5,9 @@ test.beforeEach(async ({ page }) => {
   await page.route("https://**/*", (route) => route.fulfill({ body: "{}" }));
   await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
   await page.addInitScript(() => {
-    if (!localStorage.getItem("aerotizen.settings.v1")) {
+    if (!localStorage.getItem("qtizen.settings.v1")) {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({
           home: ["demo0", "demo1", "demo2"],
           background: "aurora",
@@ -21,15 +21,15 @@ test.beforeEach(async ({ page }) => {
 test("first-row navigation does not format the clock or measure layout", async ({ page }) => {
   await page.goto("/");
   await page.waitForFunction(
-    () => AeroTizen.apps.getSnapshot().ready && document.querySelector("#grid [data-focused=true]"),
+    () => Qtizen.apps.getSnapshot().ready && document.querySelector("#grid [data-focused=true]"),
   );
   const result = await page.evaluate(() => {
     const calls = { format: 0, rect: 0 };
     const originals = new Map();
     for (const name of ["formatTime", "formatTimeParts", "formatDate", "measureTime", "defaultTimeFormat"]) {
-      const original = AeroTizen.clock[name];
+      const original = Qtizen.clock[name];
       originals.set(name, original);
-      AeroTizen.clock[name] = (...args) => {
+      Qtizen.clock[name] = (...args) => {
         calls.format++;
         return original(...args);
       };
@@ -42,12 +42,12 @@ test("first-row navigation does not format the clock or measure layout", async (
     const keys = [];
     try {
       for (let i = 0; i < 30; i++) {
-        AeroTizen.homeScreen.keydown(i % 2 ? 37 : 39, { preventDefault() {} });
+        Qtizen.homeScreen.keydown(i % 2 ? 37 : 39, { preventDefault() {} });
         keys.push(document.querySelector("#grid [data-focused=true]").getAttribute("data-id"));
       }
     } finally {
       Element.prototype.getBoundingClientRect = rect;
-      for (const [name, original] of originals) AeroTizen.clock[name] = original;
+      for (const [name, original] of originals) Qtizen.clock[name] = original;
     }
     return { calls, keys: [...new Set(keys)] };
   });
@@ -60,7 +60,7 @@ test("first-row navigation does not format the clock or measure layout", async (
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/");
-    await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+    await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
     const blob = page.locator("[data-background-blob]").first();
     await expect(blob).not.toHaveCSS("animation-name", "none");
     await openSettings(page);
@@ -86,8 +86,8 @@ test("first-row navigation does not format the clock or measure layout", async (
     // All animated wallpaper families must stop work, including WebGL loops.
     for (const background of ["waves", "stars", "nebula", "rain"]) {
       await page.evaluate((background) => {
-        AeroTizen.settings.update({ background });
-        AeroTizen.applyBackground();
+        Qtizen.settings.update({ background });
+        Qtizen.applyBackground();
       }, background);
       await expect(page.locator("[data-background-host] canvas")).toHaveCount(0);
       expect(
@@ -95,8 +95,8 @@ test("first-row navigation does not format the clock or measure layout", async (
       ).toBe(0);
     }
     await page.evaluate(() => {
-      AeroTizen.settings.update({ background: "aurora" });
-      AeroTizen.applyBackground();
+      Qtizen.settings.update({ background: "aurora" });
+      Qtizen.applyBackground();
     });
     await page.locator('[data-key="performance-mode:false"]').click();
     await expect(blob).not.toHaveCSS("animation-name", "none");

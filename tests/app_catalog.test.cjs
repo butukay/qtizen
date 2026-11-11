@@ -10,7 +10,7 @@ const script = (name) => fs.readFileSync(path.join(launcher, "js", name), "utf8"
 
 function runtime(entries) {
   const A = {},
-    context = vm.createContext({ window: { AeroTizen: A } });
+    context = vm.createContext({ window: { Qtizen: A } });
   vm.runInContext(script("app-catalog.js"), context);
   if (entries) A.catalog.apps = entries;
   vm.runInContext(script("app-lookup.js"), context);
@@ -174,7 +174,7 @@ test("preloaded Apple TV passes discovery and uses its store ID in the watcher i
       },
     },
   };
-  const context = vm.createContext({ window: { AeroTizen: A }, AeroTizen: A });
+  const context = vm.createContext({ window: { Qtizen: A }, Qtizen: A });
   vm.runInContext(script("config.js"), context);
   installApps(context);
   assert.equal(A.config.STORE_PACKAGE.test(appleTV.packageId), false);
@@ -205,8 +205,8 @@ test("watcher requests keep the preloaded store IDs from the shared catalogue", 
     send() {}
   }
   const context = vm.createContext({
-    window: { AeroTizen: A },
-    AeroTizen: A,
+    window: { Qtizen: A },
+    Qtizen: A,
     XMLHttpRequest: Request,
     document: { addEventListener() {} },
   });

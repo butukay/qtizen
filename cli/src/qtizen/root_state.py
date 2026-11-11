@@ -8,9 +8,9 @@ import re
 import secrets
 from pathlib import Path
 
-from aerotizen import __version__, remote
+from qtizen import __version__, remote
 
-APP_ID = "org.aerotizen.roothelper"
+APP_ID = "org.qtizen.roothelper"
 # The pairing format stays compatible while the signed TV package is upgraded.
 VERSION = "0.1.0"
 RUNTIME_VERSION = __version__

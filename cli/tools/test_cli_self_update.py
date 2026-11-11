@@ -15,12 +15,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from aerotizen import releases, self_update  # noqa: E402
+from qtizen import releases, self_update  # noqa: E402
 
 DRIVER = """import dataclasses,json,sys
 from pathlib import Path
 sys.path.insert(0, sys.argv[1])
-from aerotizen import releases,self_update
+from qtizen import releases,self_update
 plan=json.loads(Path(sys.argv[2]).read_text())
 release=releases.CLIRelease(**plan['release'])
 data=Path(plan['payload']).read_bytes()
@@ -72,10 +72,10 @@ def main():
         "sources": {
             str(path.relative_to(ROOT)): self_update.digest(path)
             for path in (
-                ROOT / "src/aerotizen/self_update.py",
-                ROOT / "src/aerotizen/helpers/cli-update.ps1",
-                ROOT / "src/aerotizen/cli.py",
-                ROOT / "src/aerotizen/releases.py",
+                ROOT / "src/qtizen/self_update.py",
+                ROOT / "src/qtizen/helpers/cli-update.ps1",
+                ROOT / "src/qtizen/cli.py",
+                ROOT / "src/qtizen/releases.py",
             )
         },
     }
@@ -181,7 +181,7 @@ def main():
         target = sample(mode + "-case", old_bytes)
         drive(target, mode, expected=1)
         assert target.read_bytes() == old_bytes
-        assert not list(target.parent.glob(".aerotizen-update-*"))
+        assert not list(target.parent.glob(".qtizen-update-*"))
         record(mode + "-failure-preserves-old")
 
     target = sample("rollback-case", old_bytes)
@@ -201,9 +201,7 @@ def main():
 
     clone = output / "build-source"
     (clone / "src").mkdir(parents=True)
-    shutil.copytree(
-        ROOT / "src/aerotizen", clone / "src/aerotizen", ignore=shutil.ignore_patterns("__pycache__")
-    )
+    shutil.copytree(ROOT / "src/qtizen", clone / "src/qtizen", ignore=shutil.ignore_patterns("__pycache__"))
     shutil.copyfile(ROOT / "LICENSE", clone / "LICENSE")
     binaries = {}
     for label, version in (
@@ -211,7 +209,7 @@ def main():
         ("current-updater", latest.version),
         ("newer-updater", "99.0.0"),
     ):
-        (clone / "src/aerotizen/__init__.py").write_text(f'__version__ = "{version}"\n', encoding="utf-8")
+        (clone / "src/qtizen/__init__.py").write_text(f'__version__ = "{version}"\n', encoding="utf-8")
         package = builder.build_cli(clone, output / "builds" / label)
         data = self_update.unpack_binary(package.read_bytes(), package.name, executable)
         binaries[label] = data
@@ -258,7 +256,7 @@ def main():
                 text=True,
             )
             deadline = time.monotonic() + 120
-            while not list(target.parent.glob(".aerotizen-update-*/ready")):
+            while not list(target.parent.glob(".qtizen-update-*/ready")):
                 if process.poll() is not None or time.monotonic() >= deadline:
                     raise AssertionError("Windows helper did not stage while the old file was open")
                 time.sleep(0.1)

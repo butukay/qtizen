@@ -11,11 +11,11 @@ for (const [build, url] of [
       await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
       await page.emulateMedia({ reducedMotion: "reduce" });
       await page.addInitScript(() => {
-        if (!localStorage.getItem("aerotizen.settings.v1"))
-          localStorage.setItem("aerotizen.settings.v1", JSON.stringify({ home: ["demo0"], language: "en" }));
+        if (!localStorage.getItem("qtizen.settings.v1"))
+          localStorage.setItem("qtizen.settings.v1", JSON.stringify({ home: ["demo0"], language: "en" }));
       });
       await page.goto(url);
-      await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+      await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
       await openSettings(page);
     });
 
@@ -95,7 +95,7 @@ for (const [build, url] of [
       await expect(page.locator('[data-clock-part="time"]')).toBeHidden();
       await expect(page.locator('[data-clock-part="date"]')).toBeHidden();
       await page.reload();
-      expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().accentColour)).toBe("violet");
+      expect(await page.evaluate(() => Qtizen.settings.getSnapshot().accentColour)).toBe("violet");
       await expect(page.locator("html")).toHaveAttribute("data-palette", "violet");
       await openSettings(page);
       await openCategory(page, "appearance");
@@ -107,7 +107,7 @@ for (const [build, url] of [
       { language: "ar", inward: "ArrowLeft", outward: "ArrowRight" },
     ]) {
       test(`Weather exits towards the sidebar from offset controls (${language})`, async ({ page }) => {
-        await page.evaluate((language) => AeroTizen.settings.update({ language }), language);
+        await page.evaluate((language) => Qtizen.settings.update({ language }), language);
         await expect(page.locator("html")).toHaveAttribute("dir", language === "ar" ? "rtl" : "ltr");
         await openCategory(page, "weather");
         const first = page.locator('[data-key="weather-display:true"]');
@@ -152,7 +152,7 @@ for (const [build, url] of [
       await closeSettings(page);
       await expect(page.locator('#grid [data-id="demo1"]')).toBeVisible();
       await page.reload();
-      expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().home)).toContain("demo1");
+      expect(await page.evaluate(() => Qtizen.settings.getSnapshot().home)).toContain("demo1");
     });
   });
 }

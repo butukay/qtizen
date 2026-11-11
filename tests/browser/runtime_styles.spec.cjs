@@ -15,7 +15,7 @@ for (const [build, url] of [
       await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
       await page.addInitScript((glassSettings) => {
         localStorage.setItem(
-          "aerotizen.settings.v1",
+          "qtizen.settings.v1",
           JSON.stringify({ glassSettings, home: ["demo0"], background: "black", showWeather: false, language: "en" }),
         );
       }, glassSettings);
@@ -28,7 +28,7 @@ for (const [build, url] of [
       await expect(tile).toHaveCSS("transition-duration", "0.15s");
       await page.emulateMedia({ reducedMotion: "reduce" });
       await expect(tile).toHaveCSS("transition-duration", "0s");
-      await page.evaluate(() => AeroTizen.toast("Overlay message"));
+      await page.evaluate(() => Qtizen.toast("Overlay message"));
       const toast = page.locator("#toast");
       await expect(toast).toHaveText("Overlay message");
       expect(
@@ -48,7 +48,7 @@ for (const [build, url] of [
       const arrow = page.locator('[data-key="section:appearance"] .lucide-chevron-right');
       await expect(arrow).toHaveCSS("transform", "none");
       await page.evaluate(() => {
-        AeroTizen.settings.update({ language: "ar" });
+        Qtizen.settings.update({ language: "ar" });
       });
       await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
       await expect(arrow).toHaveCSS("transform", "matrix(-1, 0, 0, 1, 0, 0)");

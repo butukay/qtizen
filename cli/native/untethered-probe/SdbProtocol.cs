@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace AeroTizen.UntetheredProbe
+namespace Qtizen.UntetheredProbe
 {
     internal sealed class SdbServiceRefusedException : IOException
     {
@@ -112,7 +112,7 @@ namespace AeroTizen.UntetheredProbe
             stream = client.GetStream();
             Stage = "cnxn-send";
             new Frame("CNXN", 0x01000000, Frame.MaxPayload,
-                Encoding.ASCII.GetBytes("host::aerotizen-root-probe\0")).Write(stream);
+                Encoding.ASCII.GetBytes("host::qtizen-root-probe\0")).Write(stream);
             Stage = "cnxn-reply";
             Frame reply = Frame.Read(stream, new Deadline(Math.Min(3000, deadline.Remaining)));
             if (reply.Command != "CNXN" || reply.Arg1 < 1024 || reply.Arg1 > Frame.MaxPayload)

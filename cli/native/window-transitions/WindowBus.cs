@@ -6,7 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-namespace AeroTizen.Transitions
+namespace Qtizen.Transitions
 {
     internal sealed record Window(uint Id, uint Resource, int Pid, string Name, int Width, int Height, int Layer);
     internal sealed record Hint(uint Id, string Value);

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace AeroTizen.Home
+namespace Qtizen.Home
 {
     internal static class Compatibility
     {

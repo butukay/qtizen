@@ -12,7 +12,7 @@ const source = path.join(root, "launcher");
 
 // Copy the explicit production page and runtime assets; source views are bundled separately.
 const widgetAssets = (output: string): Plugin => ({
-  name: "aerotizen-widget-assets",
+  name: "qtizen-widget-assets",
   apply: "build",
   async buildStart() {
     await rm(output, { recursive: true, force: true });
@@ -29,7 +29,7 @@ const widgetAssets = (output: string): Plugin => ({
 });
 
 const developmentEntry: Plugin = {
-  name: "aerotizen-development-entry",
+  name: "qtizen-development-entry",
   apply: "serve",
   transformIndexHtml: {
     order: "pre",
@@ -76,7 +76,7 @@ export default defineConfig(({ mode }) => {
       minify: true,
       lib: {
         entry: path.join(source, "src/index.ts"),
-        name: "AeroTizenLauncher",
+        name: "QtizenLauncher",
         formats: ["iife"],
         fileName: () => "launcher-ui.js",
         cssFileName: "launcher-ui",

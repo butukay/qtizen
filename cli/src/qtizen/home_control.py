@@ -13,12 +13,12 @@ from datetime import datetime, timezone
 from itertools import islice
 from pathlib import Path
 
-from aerotizen import diagnostics, home, remote, sdk
-from aerotizen.sdb import SdbError
+from qtizen import diagnostics, home, remote, sdk
+from qtizen.sdb import SdbError
 
 PAYLOAD_PATH = Path(__file__).parent / "helpers/home-control.json"
-HELPER_FILES = ("AeroTizenHomeControl.dll", "AeroTizenHomeControl.runtimeconfig.json")
-PREFIX = "AEROTIZEN_HOME_CONTROL="
+HELPER_FILES = ("QtizenHomeControl.dll", "QtizenHomeControl.runtimeconfig.json")
+PREFIX = "QTIZEN_HOME_CONTROL="
 MAX_RECEIPT_BYTES = 2 * 1024 * 1024
 MAX_RECOVERY_CHAIN = 128
 MAX_RECOVERY_RECEIPTS = 1024

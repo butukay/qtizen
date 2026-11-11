@@ -3,7 +3,7 @@ const { createNetworkPlatform } = loadTypeScript("launcher/src/platform/tizen/cr
 const { createNetworkService } = loadTypeScript("launcher/src/services/createNetworkService.ts");
 
 exports.installNetwork = (context) => {
-  const runtime = context.window.AeroTizen;
+  const runtime = context.window.Qtizen;
   const host = {
     tizen: context.window.tizen || runtime.tizen,
     webapis: context.window.webapis,

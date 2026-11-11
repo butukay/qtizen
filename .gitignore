@@ -15,9 +15,9 @@ test-results/
 playwright-report/
 cli/native/**/bin/
 cli/native/**/obj/
-cli/src/aerotizen/helpers/home-query.json
-cli/src/aerotizen/helpers/home-control.json
-cli/src/aerotizen/helpers/root-runtime.json
+cli/src/qtizen/helpers/home-query.json
+cli/src/qtizen/helpers/home-control.json
+cli/src/qtizen/helpers/root-runtime.json
 tests/native-root/bin/
 tests/native-root/obj/
 tests/native-home/bin/

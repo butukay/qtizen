@@ -13,12 +13,12 @@ import shlex
 import socket
 from concurrent.futures import ThreadPoolExecutor
 
-from aerotizen.device import DeviceSessionError
+from qtizen.device import DeviceSessionError
 
 DIRECTORY = "/home/owner/share/tmp/sdk_tools"
-CLEANUP_MARKER = "AEROTIZEN_SDK_CLEANED"
-EXIT_PREFIX = "AEROTIZEN_SDK_EXIT="
-DOTNET_UNAVAILABLE_MARKER = "AEROTIZEN_SDK_DOTNET_UNAVAILABLE"
+CLEANUP_MARKER = "QTIZEN_SDK_CLEANED"
+EXIT_PREFIX = "QTIZEN_SDK_EXIT="
+DOTNET_UNAVAILABLE_MARKER = "QTIZEN_SDK_DOTNET_UNAVAILABLE"
 
 
 def build_script(files, entrypoint, args, callback, port, token):

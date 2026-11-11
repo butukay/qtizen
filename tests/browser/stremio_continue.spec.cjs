@@ -32,7 +32,7 @@ async function setup(page, options = {}) {
     const path = new URL(route.request().url()).pathname;
     calls.push({
       path,
-      token: route.request().headers()["x-aerotizen-token"],
+      token: route.request().headers()["x-qtizen-token"],
     });
     if (path === "/v1/credential") {
       const available = state.root && state.installed && !state.prepareBlocked;
@@ -86,7 +86,7 @@ async function setup(page, options = {}) {
       if (state.installed) apps.push({ id: stremio, name: "Stremio", packageId: "IkWsFHtOY9" });
       if (state.youtube) apps.push({ id: youtube, name: "YouTube", packageId: youtube });
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({
           home: [prime],
           showWeather: false,
@@ -128,7 +128,7 @@ async function setup(page, options = {}) {
     { state, stremio, prime, youtube, secret },
   );
   await page.goto("/");
-  await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+  await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
   await openSettings(page);
   await openCategory(page, "apps");
   expect(calls).toEqual([]);
@@ -159,11 +159,11 @@ test("root helper and installed Stremio enable an opt-in source; loss hides it b
   await expect.poll(() => page.evaluate(() => window.stremioLaunches)).toEqual([stremio]);
   await page.evaluate(() => {
     window.savedStremio = document.querySelector("#continue-items > [data-key]");
-    AeroTizen.continueWatching.refresh();
+    Qtizen.continueWatching.refresh();
   });
   await expect
     .poll(() =>
-      page.evaluate((id) => AeroTizen.continueWatching.getSnapshot().sources.find((s) => s.id === id)?.status, stremio),
+      page.evaluate((id) => Qtizen.continueWatching.getSnapshot().sources.find((s) => s.id === id)?.status, stremio),
     )
     .toBe("Available");
   expect(
@@ -178,7 +178,7 @@ test("root helper and installed Stremio enable an opt-in source; loss hides it b
   await openSettings(page);
   await openCategory(page, "apps");
   await expect(option).toHaveCount(0);
-  expect(await page.evaluate((id) => AeroTizen.settings.getSnapshot().continueWatchingApps.includes(id), stremio)).toBe(
+  expect(await page.evaluate((id) => Qtizen.settings.getSnapshot().continueWatchingApps.includes(id), stremio)).toBe(
     true,
   );
   await closeSettings(page);
@@ -237,7 +237,7 @@ test("unchecking Stremio removes its cards and keeps its option in place", async
   await option.click();
   await expect(page.locator("#continue-items > [data-key]")).toHaveCount(1);
   await page.evaluate(() => {
-    const cw = AeroTizen.continueWatching;
+    const cw = Qtizen.continueWatching;
     window.sourceOrders = [];
     cw.subscribe(() => window.sourceOrders.push(cw.getSnapshot().sources.map((source) => source.id)));
   });

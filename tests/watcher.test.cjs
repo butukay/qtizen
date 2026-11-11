@@ -185,7 +185,7 @@ function harness(options = {}) {
       {
         method: "POST",
         url: "/control/home",
-        headers: { "content-type": "application/json", "x-aerotizen-home": "1" },
+        headers: { "content-type": "application/json", "x-qtizen-home": "1" },
       },
       overrides,
     );
@@ -794,7 +794,7 @@ test("mode control rejects browser requests, stale transactions and oversized bo
     {
       headers: {
         origin: "https://example.com",
-        "x-aerotizen-home": "1",
+        "x-qtizen-home": "1",
         "content-type": "application/json",
       },
     },
@@ -822,7 +822,7 @@ test("missing persistence refuses the handoff; failed persistence blocks all lau
 });
 
 test("corrupt saved mode fails closed at service startup", () => {
-  const stored = new Map([["aerotizen.home-routing.v1", "{bad json"]]);
+  const stored = new Map([["qtizen.home-routing.v1", "{bad json"]]);
   const h = harness({ stored, capability: false });
   h.api.onStart();
   h.advance(60000);
@@ -883,7 +883,7 @@ test("diagnostics enforce read access and batch limits without changing native H
   assert.equal(
     request("GET", "/diagnostics/logs", {
       origin: "https://evil.test",
-      "x-aerotizen-diagnostics": "1",
+      "x-qtizen-diagnostics": "1",
     }).code,
     403,
   );
@@ -908,7 +908,7 @@ test("diagnostics enforce read access and batch limits without changing native H
     ).code,
     200,
   );
-  const logs = request("GET", "/diagnostics/logs", { "x-aerotizen-diagnostics": "1" });
+  const logs = request("GET", "/diagnostics/logs", { "x-qtizen-diagnostics": "1" });
   assert.equal(logs.code, 200);
   assert.equal(logs.body.schema_version, 1);
   assert.equal(logs.body.ui.health.discarded, 2);
@@ -953,7 +953,7 @@ test("pending diagnostic storage does not delay Home requests or native mode con
   assert.equal(h.state().heartbeats, 0);
   let logs;
   h.servers[0].handler(
-    { method: "GET", url: "/diagnostics/logs", headers: { "x-aerotizen-diagnostics": "1" } },
+    { method: "GET", url: "/diagnostics/logs", headers: { "x-qtizen-diagnostics": "1" } },
     {
       writeHead(status) {
         assert.equal(status, 200);

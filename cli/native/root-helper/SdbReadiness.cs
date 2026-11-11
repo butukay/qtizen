@@ -5,9 +5,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
-using AeroTizen.UntetheredProbe;
+using Qtizen.UntetheredProbe;
 
-namespace AeroTizen.AutoRoot
+namespace Qtizen.AutoRoot
 {
     internal sealed class SdbReadinessAttempt
     {

@@ -1,6 +1,6 @@
 # TV compatibility
 
-> The inherited AeroTizen reports below describe its original builds, not a fresh
+> The inherited Qtizen reports below describe its original builds, not a fresh
 > validation of qtizen. For this project, see the [S95F report](devices/s95f.md).
 
 These are results for individual TVs and firmware. A result for one TV does not

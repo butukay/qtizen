@@ -10,9 +10,9 @@ test("Preact standby overrides persist without confusing custom labels with devi
     route.fulfill({ json: watcherStatus(route.request().url()) }),
   );
   await page.addInitScript(() => {
-    if (!localStorage.getItem("aerotizen.settings.v1"))
+    if (!localStorage.getItem("qtizen.settings.v1"))
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({
           background: "black",
           showWeather: false,
@@ -22,7 +22,7 @@ test("Preact standby overrides persist without confusing custom labels with devi
       );
   });
   await page.goto("/");
-  await page.waitForFunction(() => AeroTizen.inputs.getSnapshot().sources.length === 4);
+  await page.waitForFunction(() => Qtizen.inputs.getSnapshot().sources.length === 4);
   await expect(page.locator("#inputs")).toContainText("PC");
   await expect(page.locator("#inputs")).not.toContainText("Custom console label");
   await openSettings(page);
@@ -32,7 +32,7 @@ test("Preact standby overrides persist without confusing custom labels with devi
   await expect(page.locator("#inputs")).toContainText("Custom console label");
   await page.reload();
   await expect(page.locator("#inputs")).toContainText("Custom console label");
-  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().hdmiKeepVisible["2"])).toBe(true);
+  expect(await page.evaluate(() => Qtizen.settings.getSnapshot().hdmiKeepVisible["2"])).toBe(true);
   await openSettings(page);
   await openCategory(page, "sources");
   await page.locator('[data-key="hdmi-keep:2:false"]').click();
@@ -107,7 +107,7 @@ for (const hidesLauncher of [true, false]) {
     );
     await page.addInitScript((hide) => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({ background: "black", showWeather: false, hdmiNativeViewer: true }),
       );
       window.viewerAccepted = false;
@@ -156,7 +156,7 @@ async function mockHdmi(page, { stage = "ready", hideDisconnected = false } = {}
   await page.addInitScript(
     ({ stage, hideDisconnected }) => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({
           background: "black",
           showWeather: false,
@@ -264,9 +264,9 @@ for (const stage of ["setSource", "show"]) {
   test(`remote Back cancels pending ${stage} and ignores a late callback`, async ({ page }) => {
     await mockHdmi(page, { stage });
     await page.getByRole("button", { name: "HDMI 1", exact: true }).click();
-    await expect.poll(() => page.evaluate(() => AeroTizen.inputs.getSnapshot().playback !== "idle")).toBe(true);
+    await expect.poll(() => page.evaluate(() => Qtizen.inputs.getSnapshot().playback !== "idle")).toBe(true);
     await page.evaluate(() => document.dispatchEvent(new KeyboardEvent("keydown", { keyCode: 10009, bubbles: true })));
-    await expect.poll(() => page.evaluate(() => AeroTizen.inputs.getSnapshot().playback !== "idle")).toBe(false);
+    await expect.poll(() => page.evaluate(() => Qtizen.inputs.getSnapshot().playback !== "idle")).toBe(false);
     await page.evaluate(() => window.inputTest.complete());
     await expect(page.locator("body")).not.toHaveClass(/\btv\b/);
     await openSettings(page);
@@ -278,7 +278,7 @@ for (const stage of ["setSource", "show"]) {
     await mockHdmi(page, { stage });
     await page.getByRole("button", { name: "HDMI 1", exact: true }).click();
     await page.clock.fastForward(8100);
-    await expect.poll(() => page.evaluate(() => AeroTizen.inputs.getSnapshot().playback !== "idle")).toBe(false);
+    await expect.poll(() => page.evaluate(() => Qtizen.inputs.getSnapshot().playback !== "idle")).toBe(false);
     await expect(page.locator("#toast")).toHaveText("Could not show HDMI 1");
     await openSettings(page);
     await expect(page.locator("#editor")).toBeVisible();

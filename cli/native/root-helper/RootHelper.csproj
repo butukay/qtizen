@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework><OutputType>Exe</OutputType><UseAppHost>false</UseAppHost>
-    <AssemblyName>AeroTizenRootHelper</AssemblyName><DebugType>none</DebugType><Deterministic>true</Deterministic>
+    <AssemblyName>QtizenRootHelper</AssemblyName><DebugType>none</DebugType><Deterministic>true</Deterministic>
     <TvFrameworkDir>$(TV_FRAMEWORK_DIR)</TvFrameworkDir>
   </PropertyGroup>
   <ItemGroup>

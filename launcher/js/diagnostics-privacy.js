@@ -504,6 +504,6 @@
   if (typeof module !== "undefined" && module.exports) {
     module.exports = create;
   } else {
-    root.AeroDiagnosticsPrivacy = create;
+    root.QtizenDiagnosticsPrivacy = create;
   }
 })(typeof window !== "undefined" ? window : this);

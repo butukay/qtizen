@@ -1,6 +1,6 @@
 import pytest
 
-from aerotizen.sdb import Sdb, SdbError
+from qtizen.sdb import Sdb, SdbError
 
 
 def test_handshake_reads_banner(fake_tv):

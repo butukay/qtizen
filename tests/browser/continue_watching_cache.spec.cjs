@@ -48,9 +48,9 @@ async function fixture(page, initialRecords) {
             "http://localhost:9013/?module=EBHelper&func=GetItems",
             origin + "/feed?module=EBHelper&func=GetItems",
           ) +
-          `\nAeroTizen.continueWatching = ContinueWatchingModule.createContinueWatchingService({
-            apps: AeroTizen.apps, settings: AeroTizen.settings,
-            providers: AeroTizen.continueWatchingProviders,
+          `\nQtizen.continueWatching = ContinueWatchingModule.createContinueWatchingService({
+            apps: Qtizen.apps, settings: Qtizen.settings,
+            providers: Qtizen.continueWatchingProviders,
             clock: { subscribe: function () { return function () {}; } },
             now: function () { return Date.now(); }, elapsed: function () { return performance.now(); },
             timers: window,
@@ -68,7 +68,7 @@ async function fixture(page, initialRecords) {
           this.addEventListener('loadend', function () { completed++; });
           return send.apply(this, arguments);
         };
-        window.AeroTizen = {
+        window.Qtizen = {
           config: { HIDDEN_APPS: /hidden/ },
           apps: { getSnapshot: function () { return this; }, subscribeDiscovery: function () { return function () {}; }, inventory: [{ id: 'prime', packageId: 'prime', name: 'Prime' },
             { id: 'youtube', packageId: 'youtube', name: 'YouTube' }], ready: true, subscribe: function () { return function () {}; } },
@@ -81,16 +81,16 @@ async function fixture(page, initialRecords) {
             return [{ key: 'http://samsung.com/tv/metadata/app_support_continue_watching', value: 'true' }];
           } } }
         };
-        function select(sources) { AeroTizen.settings.update({ continueWatchingApps: sources }); }
-        function stop() { AeroTizen.settings.update({ continueWatching: false }); }
+        function select(sources) { Qtizen.settings.update({ continueWatchingApps: sources }); }
+        function stop() { Qtizen.settings.update({ continueWatching: false }); }
       </script><script src="/reader.js"></script><script>
-        AeroTizen.continueWatching.subscribe(function () {
+        Qtizen.continueWatching.subscribe(function () {
           var target = document.getElementById('items'); target.textContent = '';
-          AeroTizen.continueWatching.getSnapshot().items.forEach(function (item) {
+          Qtizen.continueWatching.getSnapshot().items.forEach(function (item) {
             var node = document.createElement('p'); node.textContent = item.title; target.appendChild(node);
           });
         });
-        AeroTizen.continueWatching.start();
+        Qtizen.continueWatching.start();
       </script>`);
     }
   });

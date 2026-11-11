@@ -35,7 +35,7 @@ function harness(preferences = {}) {
       addEventListener: (_, fn) => visibility.add(fn),
       removeEventListener: (_, fn) => visibility.delete(fn),
     },
-    AeroTizen: {
+    Qtizen: {
       homewatch: {},
       tizen: {
         application: {
@@ -246,7 +246,7 @@ for (const stage of ["setSource", "show"]) {
   test(`pending ${stage} is cancellable and late callbacks cannot reopen video after disposal`, () => {
     const h = harness();
     let complete;
-    h.host.AeroTizen.tizen.tvwindow[stage] = (...args) => {
+    h.host.Qtizen.tizen.tvwindow[stage] = (...args) => {
       complete = stage === "setSource" ? args[1] : args[0];
     };
     h.service.show({ type: "HDMI", number: 1 });
@@ -287,7 +287,7 @@ test("selecting a sleeping HDMI wakes only that port before handing off to the n
     woke = done;
     return () => {};
   };
-  h.host.AeroTizen.homewatch.openNativeViewer = (value) => {
+  h.host.Qtizen.homewatch.openNativeViewer = (value) => {
     h.native.push(value);
     return true;
   };

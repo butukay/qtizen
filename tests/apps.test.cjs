@@ -16,7 +16,7 @@ const first = { id: "youtube", name: "YouTube", packageId: "abcdefghij", iconPat
 const second = { id: "video", name: "Video", packageId: "klmnopqrst", iconPath: "video.png" };
 
 function harness(options = {}) {
-  const data = new Map(Object.entries(options.cache === undefined ? {} : { "aerotizen.apps.v1": options.cache }));
+  const data = new Map(Object.entries(options.cache === undefined ? {} : { "qtizen.apps.v1": options.cache }));
   const requests = [];
   const launches = [];
   const calls = { dispose: 0, store: 0 };
@@ -88,7 +88,7 @@ test("discovery keeps hidden provider records, resolves watcher IDs and saves on
   assert.deepEqual(snapshot.realIds, ["youtube", "video", "hbbtv.host", "12345"]);
   assert.equal(snapshot.inventory.length, 6, "provider metadata retains hidden companions");
   assert.deepEqual(h.service.defaultHome(), ["youtube", "video"]);
-  assert.deepEqual(JSON.parse(h.data.get("aerotizen.apps.v1")), snapshot.all);
+  assert.deepEqual(JSON.parse(h.data.get("qtizen.apps.v1")), snapshot.all);
   assert.equal(h.service.byId("missing"), null);
   records[0].name = "Changed outside the service";
   assert.equal(snapshot.inventory[0].name, "YouTube");
@@ -192,7 +192,7 @@ test("disposing the TV adapter suppresses delayed handoff, native launch failure
   const calls = [];
   let ready, reply, failed;
   const host = {
-    AeroTizen: {
+    Qtizen: {
       config,
       translate: (key) => key,
       toast: (message) => calls.push(message),

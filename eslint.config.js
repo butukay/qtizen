@@ -40,7 +40,7 @@ module.exports = [
       sourceType: "script",
       globals: {
         ...globals.browser,
-        AeroTizen: "writable",
+        Qtizen: "writable",
         tizen: "readonly",
         webapis: "readonly",
         Uint8Array: "readonly",
@@ -213,7 +213,7 @@ module.exports = [
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "commonjs",
-      globals: { ...globals.node, ...globals.browser, AeroTizen: "readonly" },
+      globals: { ...globals.node, ...globals.browser, Qtizen: "readonly" },
     },
   },
   {
@@ -223,6 +223,10 @@ module.exports = [
       sourceType: "commonjs",
       globals: { ...globals.node, tizen: "readonly" },
     },
+  },
+  {
+    files: ["tests/fixtures/legacy-launcher/js/**/*.js", "tests/upstream-browser/**/*.cjs"],
+    languageOptions: { globals: { AeroTizen: "writable" } },
   },
   prettier,
   {

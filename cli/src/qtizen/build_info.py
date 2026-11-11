@@ -7,12 +7,12 @@ import subprocess
 from functools import lru_cache
 from pathlib import Path
 
-from aerotizen import __version__
+from qtizen import __version__
 
 
 def describe(root=None, version=None):
     root = Path(root) if root is not None else Path(__file__).resolve().parents[2]
-    source = root / "src/aerotizen"
+    source = root / "src/qtizen"
     if not source.is_dir():
         source = Path(__file__).resolve().parent
     digest = hashlib.sha256()

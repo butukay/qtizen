@@ -6,10 +6,10 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using AeroTizen.Root;
-using AeroTizen.UntetheredProbe;
+using Qtizen.Root;
+using Qtizen.UntetheredProbe;
 
-namespace AeroTizen.RootHelper
+namespace Qtizen.RootHelper
 {
     internal static class RuntimeBundle
     {
@@ -51,7 +51,7 @@ namespace AeroTizen.RootHelper
             foreach (string name in ServiceLaunch.Managed) serviceFiles[name] = settings.Files["bin/" + name];
             var service = new { operation = "serve", installation_id = settings.Installation, setup_stage = (string)null, files = serviceFiles };
             var values = new Dictionary<string, byte[]>();
-            foreach (string name in new[] { "AeroTizenRootProbe.dll", "AeroTizenRootProbe.runtimeconfig.json", "AeroTizenRootProbe.deps.json" })
+            foreach (string name in new[] { "QtizenRootProbe.dll", "QtizenRootProbe.runtimeconfig.json", "QtizenRootProbe.deps.json" })
             {
                 byte[] bytes = Bundle.ReadBounded(packageRoot + "/res/runner/" + name);
                 if (Bundle.Digest(bytes) != settings.Files["res/runner/" + name]) throw new IOException("SDK supervisor checksum differs");
@@ -60,7 +60,7 @@ namespace AeroTizen.RootHelper
             foreach (string name in new[] { "SamsungTvArchiveRoot.dll", "SamsungTvArchiveRoot.runtimeconfig.json", "SamsungTvArchiveRoot.deps.json" })
                 values[name] = Bundle.ReadBounded(packageRoot + "/res/payload/" + name);
             // Build the same fixed proof prefix as Bundle, then the narrow signed service launch.
-            string proofDirectory = Bundle.StagingRoot + "/aerotizen-probe-proof-" + nonce;
+            string proofDirectory = Bundle.StagingRoot + "/qtizen-probe-proof-" + nonce;
             string script = string.Join("\n", new[] {
                 "#!/bin/sh", "set -eu", "umask 077", "test \"$(id -u)\" = 0", "test \"$(id -ru)\" = 0", "test \"$(id -g)\" = 0",
                 "boot=$(cat /proc/sys/kernel/random/boot_id)", "case \"$boot\" in *[!a-f0-9-]*|'') exit 80;; esac",

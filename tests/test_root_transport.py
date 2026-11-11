@@ -4,8 +4,8 @@ import hashlib
 
 import pytest
 
-from aerotizen import device, root_bridge, root_state
-from aerotizen.device import DeviceSession, DeviceSessionError
+from qtizen import device, root_bridge, root_state
+from qtizen.device import DeviceSession, DeviceSessionError
 
 
 @pytest.mark.parametrize("wrong_device", [False, True])

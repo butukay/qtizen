@@ -2,7 +2,7 @@ const { test, expect } = require("@playwright/test");
 const { openSettings, openCategory } = require("./drawer_helpers.cjs");
 
 const image = (page) => page.evaluate(() => getComputedStyle(document.documentElement).backgroundImage);
-const saved = (page) => page.evaluate(() => JSON.parse(localStorage.getItem("aerotizen.settings.v1")));
+const saved = (page) => page.evaluate(() => JSON.parse(localStorage.getItem("qtizen.settings.v1")));
 
 const openGradient = async (page) => {
   const errors = [];
@@ -14,7 +14,7 @@ const openGradient = async (page) => {
   await page.route("https://**/*", (route) => route.fulfill({ json: {} }));
   await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ json: {} }));
   await page.addInitScript(() => {
-    const key = "aerotizen.settings.v1";
+    const key = "qtizen.settings.v1";
     if (!localStorage.getItem(key)) {
       localStorage.setItem(
         key,
@@ -157,10 +157,10 @@ test("Back restores a weather photo after a gradient preview, and light gradient
 }) => {
   const errors = await openGradient(page);
   await page.evaluate(() => {
-    AeroTizen.weather.currentReading = () => ({ code: 0 });
-    AeroTizen.weather.solarPhase = () => "day";
-    AeroTizen.settings.update({ weatherPhoto: true });
-    AeroTizen.applyBackground();
+    Qtizen.weather.currentReading = () => ({ code: 0 });
+    Qtizen.weather.solarPhase = () => "day";
+    Qtizen.settings.update({ weatherPhoto: true });
+    Qtizen.applyBackground();
   });
   await expect(page.locator("[data-weather-photo]")).toBeVisible();
   const before = await saved(page);
@@ -170,11 +170,11 @@ test("Back restores a weather photo after a gradient preview, and light gradient
   await expect(page.locator("[data-weather-photo]")).toBeVisible();
   expect(await saved(page)).toEqual(before);
   await page.evaluate(() => {
-    AeroTizen.settings.update({
+    Qtizen.settings.update({
       weatherPhoto: false,
       customGradient: { start: "#ffffff", end: "#ffffdd", angle: 180 },
     });
-    AeroTizen.applyBackground();
+    Qtizen.applyBackground();
   });
   await expect(page.locator("html")).toHaveAttribute("data-light-background", "true");
   await expect(page.locator("#gear")).toHaveCSS("color", "rgb(21, 21, 27)");

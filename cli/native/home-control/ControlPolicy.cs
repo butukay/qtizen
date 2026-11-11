@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AeroTizen.Home
+namespace Qtizen.Home
 {
     public sealed class Snapshot
     {
@@ -146,7 +146,7 @@ namespace AeroTizen.Home
         }
         private static void RequireAbsent(IPlatform platform)
         {
-            if (platform.LauncherInstalled()) throw new Exception("AeroTizen is installed; watcher coordination is required.");
+            if (platform.LauncherInstalled()) throw new Exception("Qtizen is installed; watcher coordination is required.");
         }
         private static void WriteStrings(IPlatform platform, Snapshot desired, string[] keys, bool requireAbsent = false)
         {
@@ -260,7 +260,7 @@ namespace AeroTizen.Home
             if (request.Action == "restore")
             {
                 bool installed = platform.LauncherInstalled();
-                if (installed == request.LauncherAbsent) throw new Exception("AeroTizen installation changed; query status and retry.");
+                if (installed == request.LauncherAbsent) throw new Exception("Qtizen installation changed; query status and retry.");
                 if (!installed) return RestoreAbsent(platform, request, before);
             }
             var watcher = CheckWatcher(platform.ReadWatcher());
@@ -270,7 +270,7 @@ namespace AeroTizen.Home
             {
                 if (!MatchesApplyBaseline(before, request.Original) || watcher.Mode != "watcher")
                     throw new Exception("Home has changed since the baseline; apply refused.");
-                if (!platform.LauncherEligible()) throw new Exception("Installed AeroTizen is not eligible for native Home.");
+                if (!platform.LauncherEligible()) throw new Exception("Installed Qtizen is not eligible for native Home.");
             }
             else
             {

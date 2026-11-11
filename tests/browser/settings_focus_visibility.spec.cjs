@@ -47,14 +47,14 @@ for (const [build, url] of [
     await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.addInitScript(() => {
-      localStorage.setItem("aerotizen.settings.v1", JSON.stringify({ home: ["demo0", "demo1"], language: "en" }));
+      localStorage.setItem("qtizen.settings.v1", JSON.stringify({ home: ["demo0", "demo1"], language: "en" }));
     });
     await page.goto(url);
-    await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+    await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
     await page.evaluate(() => document.fonts.ready);
     await page.evaluate(() => {
-      const describe = AeroTizen.tiles.describe;
-      AeroTizen.tiles.describe = (app) => ({ ...describe(app), logoPath: "M3 3h18v18H3Z" });
+      const describe = Qtizen.tiles.describe;
+      Qtizen.tiles.describe = (app) => ({ ...describe(app), logoPath: "M3 3h18v18H3Z" });
     });
     await openSettings(page);
     await openCategory(page, "appearance");

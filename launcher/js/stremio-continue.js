@@ -62,7 +62,7 @@
       xhr.open(method, endpoint + path, true);
       xhr.timeout = 1800;
       if (method === "GET") {
-        xhr.setRequestHeader("X-AeroTizen-Token", token);
+        xhr.setRequestHeader("X-Qtizen-Token", token);
       }
       xhr.send();
     } catch (e) {
@@ -252,4 +252,4 @@
       A.apps.launch({ id: item.sourceId, name: item.sourceName });
     },
   });
-})(window.AeroTizen);
+})(window.Qtizen);

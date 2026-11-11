@@ -7,7 +7,7 @@ import subprocess
 
 import pytest
 
-from aerotizen import root_transfer
+from qtizen import root_transfer
 from test_root_bridge import native_root as native_fixture
 from test_root_bridge import receipt_data
 
@@ -18,7 +18,7 @@ native_root = native_fixture
 def test_private_input_uses_native_pinned_tls_without_uploading_credentials(native_root, monkeypatch, wrong):
     receipt = receipt_data()
     secret = b"private setup data that must not enter an SDB upload"
-    files = {"AeroTizenRootBridge.dll": b"public managed code"}
+    files = {"QtizenRootBridge.dll": b"public managed code"}
 
     class Session:
         host = "127.0.0.1"

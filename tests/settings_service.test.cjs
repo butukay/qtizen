@@ -8,7 +8,7 @@ const harness = (saved = {}, overrides = {}) => {
   const reads = [];
   const writes = [];
   const service = createSettingsService({
-    storageKey: "aerotizen.settings.v1",
+    storageKey: "qtizen.settings.v1",
     legacyStorageKeys: ["hearth.home.v1", "declutter.home.v5"],
     locale: { timeFormat: () => "24", tempUnit: () => "C" },
     speedRange: { MIN: 0.25, MAX: 3 },
@@ -30,14 +30,14 @@ const harness = (saved = {}, overrides = {}) => {
 test("performance mode stays off for fresh and existing preferences until explicitly enabled", () => {
   for (const saved of [
     {},
-    { "aerotizen.settings.v1": JSON.stringify({ background: "snow" }) },
+    { "qtizen.settings.v1": JSON.stringify({ background: "snow" }) },
     { "hearth.home.v1": JSON.stringify({ favorites: ["video.app"] }) },
-    { "aerotizen.settings.v1": JSON.stringify({ performanceMode: "true" }) },
+    { "qtizen.settings.v1": JSON.stringify({ performanceMode: "true" }) },
   ]) {
     const h = harness(saved);
     h.service.load();
     assert.equal(h.service.getSnapshot().performanceMode, false);
-    assert.equal(JSON.parse(h.data.get("aerotizen.settings.v1")).performanceMode, false);
+    assert.equal(JSON.parse(h.data.get("qtizen.settings.v1")).performanceMode, false);
     h.service.update({ performanceMode: true });
     h.service.load();
     assert.equal(h.service.getSnapshot().performanceMode, true);
@@ -49,14 +49,14 @@ test("performance mode stays off for fresh and existing preferences until explic
 
 test("the current key wins without reading older storage; derived and unknown fields are never saved", () => {
   const h = harness({
-    "aerotizen.settings.v1": JSON.stringify({ background: "snow", home: [], unrelated: true }),
+    "qtizen.settings.v1": JSON.stringify({ background: "snow", home: [], unrelated: true }),
     "hearth.home.v1": JSON.stringify({ background: "lava", home: ["old.app"] }),
   });
   h.service.load();
-  assert.deepEqual(h.reads, ["aerotizen.settings.v1"]);
+  assert.deepEqual(h.reads, ["qtizen.settings.v1"]);
   assert.equal(h.service.getSnapshot().background, "snow");
   assert.equal(h.service.getSnapshot().homeInitialized, true);
-  const saved = JSON.parse(h.data.get("aerotizen.settings.v1"));
+  const saved = JSON.parse(h.data.get("qtizen.settings.v1"));
   assert.deepEqual(saved.home, []);
   assert.equal("homeInitialized" in saved, false);
   assert.equal("unrelated" in saved, false);
@@ -64,7 +64,7 @@ test("the current key wins without reading older storage; derived and unknown fi
 
 test("historical fields migrate on load and cannot affect runtime updates", () => {
   const h = harness({
-    "aerotizen.settings.v1": JSON.stringify({ favorites: ["video.app"], cardSize: "small" }),
+    "qtizen.settings.v1": JSON.stringify({ favorites: ["video.app"], cardSize: "small" }),
   });
   h.service.load();
   assert.deepEqual(h.service.getSnapshot().home, ["video.app"]);
@@ -73,7 +73,7 @@ test("historical fields migrate on load and cannot affect runtime updates", () =
   const current = h.service.getSnapshot();
   h.service.update({ favorites: ["old.app"], cardSize: "big" });
   assert.equal(h.service.getSnapshot(), current);
-  const saved = JSON.parse(h.data.get("aerotizen.settings.v1"));
+  const saved = JSON.parse(h.data.get("qtizen.settings.v1"));
   assert.equal("favorites" in saved, false);
   assert.equal("cardSize" in saved, false);
   h.service.load();
@@ -81,7 +81,7 @@ test("historical fields migrate on load and cannot affect runtime updates", () =
 });
 
 test("custom backgrounds survive current and historical storage keys in the TypeScript service", () => {
-  for (const key of ["aerotizen.settings.v1", "hearth.home.v1", "declutter.home.v5"]) {
+  for (const key of ["qtizen.settings.v1", "hearth.home.v1", "declutter.home.v5"]) {
     const h = harness({
       [key]: JSON.stringify({
         background: "custom-gradient",
@@ -99,7 +99,7 @@ test("custom backgrounds survive current and historical storage keys in the Type
     assert.equal(h.service.getSnapshot().background, "custom-gradient");
     assert.equal(h.service.getSnapshot().customColour, before.customColour);
     assert.equal(h.service.getSnapshot().customGradient, before.customGradient);
-    const stored = JSON.parse(h.data.get("aerotizen.settings.v1"));
+    const stored = JSON.parse(h.data.get("qtizen.settings.v1"));
     assert.equal(stored.customColour, before.customColour);
     assert.deepEqual(stored.customGradient, before.customGradient);
   }
@@ -112,20 +112,20 @@ test("custom background updates validate fields before publishing or saving them
   assert.equal(state.customColour, "#7c5cff");
   assert.deepEqual(state.customGradient, { start: "#7c5cff", end: "#00c4d4", angle: 135 });
   assert.equal(Object.isFrozen(state.customGradient), true);
-  const stored = JSON.parse(h.data.get("aerotizen.settings.v1"));
+  const stored = JSON.parse(h.data.get("qtizen.settings.v1"));
   assert.equal(stored.customColour, state.customColour);
   assert.deepEqual(stored.customGradient, state.customGradient);
 });
 
 test("malformed JSON shapes and individual values produce usable typed preferences", () => {
   for (const saved of [null, [], true, 5, "text", { home: {}, inputNames: null }]) {
-    const h = harness({ "aerotizen.settings.v1": JSON.stringify(saved) });
+    const h = harness({ "qtizen.settings.v1": JSON.stringify(saved) });
     assert.doesNotThrow(() => h.service.load());
     assert.equal(h.service.getSnapshot().background, "black");
     assert.deepEqual(h.service.getSnapshot().inputNames, {});
   }
   const h = harness({
-    "aerotizen.settings.v1": JSON.stringify({
+    "qtizen.settings.v1": JSON.stringify({
       home: ["one.app", null, "one.app", "bad id"],
       homeCardColumns: { toString: null, valueOf: null },
       showWeather: "false",
@@ -189,7 +189,7 @@ test("first-launch null and an empty Home survive reload; large Home lists are r
   const h = harness();
   h.service.load();
   assert.equal(h.service.getSnapshot().homeInitialized, false);
-  assert.equal(JSON.parse(h.data.get("aerotizen.settings.v1")).home, null);
+  assert.equal(JSON.parse(h.data.get("qtizen.settings.v1")).home, null);
   h.service.update({ home: [] });
   h.service.load();
   assert.equal(h.service.getSnapshot().homeInitialized, true);

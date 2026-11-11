@@ -11,9 +11,9 @@ import time
 import uuid
 from pathlib import Path
 
-from aerotizen import home, remote, root_package, root_state, root_transfer, sdk
-from aerotizen.device import DeviceSession, DeviceSessionError
-from aerotizen.root_bridge import BridgeClient, BridgeError
+from qtizen import home, remote, root_package, root_state, root_transfer, sdk
+from qtizen.device import DeviceSession, DeviceSessionError
+from qtizen.root_bridge import BridgeClient, BridgeError
 
 APP_ID = root_state.APP_ID
 ROW = ("app_id", "package", "app_type", "app_component", "app_onboot", "app_autorestart", "app_exec")
@@ -77,9 +77,9 @@ def _parse(result, prefix):
 
 
 def _registry(session, managed):
-    bridge = _managed(managed, "bin/AeroTizenRootBridge")
+    bridge = _managed(managed, "bin/QtizenRootBridge")
     result = _parse(
-        sdk.run(session, bridge, "AeroTizenRootBridge.dll", ("--registry",)), "AEROTIZEN_ROOT_REGISTRY="
+        sdk.run(session, bridge, "QtizenRootBridge.dll", ("--registry",)), "QTIZEN_ROOT_REGISTRY="
     )
     row = result.get("row")
     if row is not None:
@@ -92,7 +92,7 @@ def _registry(session, managed):
             "svcapp",
             row[4],
             "false",
-            f"/opt/usr/apps/{APP_ID}/bin/AeroTizenRootHelper.dll",
+            f"/opt/usr/apps/{APP_ID}/bin/QtizenRootHelper.dll",
         ]
         if len(row) != len(ROW) or row != expected or row[4] not in ("false", "true"):
             raise DeviceSessionError("The root helper registration belongs to another installation")
@@ -113,11 +113,11 @@ def _preflight(session, managed):
     return _parse(
         sdk.run(
             session,
-            _managed(managed, "bin/AeroTizenRootBridge"),
-            "AeroTizenRootBridge.dll",
+            _managed(managed, "bin/QtizenRootBridge"),
+            "QtizenRootBridge.dll",
             ("--preflight",),
         ),
-        "AEROTIZEN_ROOT_PREFLIGHT=",
+        "QTIZEN_ROOT_PREFLIGHT=",
     )
 
 
@@ -140,7 +140,7 @@ def _bootstrap(session, path, receipt, managed, upstream, operation, *, configur
         "root_json": root_package.config_bytes(configuration or receipt["public_config"]).decode(),
         "bridge_files": {
             name: base64.b64encode(value).decode()
-            for name, value in _managed(managed, "bin/AeroTizenRootBridge").items()
+            for name, value in _managed(managed, "bin/QtizenRootBridge").items()
         },
         "files": {name: base64.b64encode(value).decode() for name, value in values.items()},
     }
@@ -152,12 +152,12 @@ def _bootstrap(session, path, receipt, managed, upstream, operation, *, configur
     result = _parse(
         root_transfer.run(
             session,
-            _managed(managed, "bin/AeroTizenRootBridge"),
+            _managed(managed, "bin/QtizenRootBridge"),
             json.dumps(request).encode(),
             base64.b64decode(receipt["server_pfx"], validate=True),
             receipt["certificate_sha256"],
         ),
-        "AEROTIZEN_ROOT_BOOTSTRAP=",
+        "QTIZEN_ROOT_BOOTSTRAP=",
     )
     expected = {"install": "bridge_ready", "upgrade": "startup_repaired", "remove": "cleanup_verified"}[
         operation
@@ -281,6 +281,11 @@ def setup(host, *, state_dir=None, receipt_path=None, runtime=None, release=None
         Path(state_dir or remote.CONFIG_DIR) / "root-cache", release=release
     )
     with DeviceSession(host, source_address=source, direct=True) as session:
+        if "org.aerotizen.roothelper" in session.applist():
+            raise DeviceSessionError(
+                "Remove the old org.aerotizen.roothelper with its original AeroTizen CLI first; "
+                "keep its private receipt and signing profile. See docs/manage-installation.md."
+            )
         before = home.read_status(session, None, info)
         if not before["complete"]:
             raise DeviceSessionError("Save a complete Home snapshot before root setup")
@@ -339,7 +344,7 @@ def setup(host, *, state_dir=None, receipt_path=None, runtime=None, release=None
             receipt["public_config"] = config
             receipt["package_sha256"] = root_package.digest(package.read_bytes())
             root_state.save(path, receipt)
-            upload_name = "aerotizen-root-" + receipt["installation_id"] + ".tpk"
+            upload_name = "qtizen-root-" + receipt["installation_id"] + ".tpk"
             try:
                 output = session.install_native(package.read_bytes(), upload_name)
             finally:
@@ -396,11 +401,11 @@ def _clean_upload(session, managed, name, checksum):
     _parse(
         sdk.run(
             session,
-            _managed(managed, "bin/AeroTizenRootBridge"),
-            "AeroTizenRootBridge.dll",
+            _managed(managed, "bin/QtizenRootBridge"),
+            "QtizenRootBridge.dll",
             ("--clean-upload", name, checksum),
         ),
-        "AEROTIZEN_ROOT_UPLOAD=",
+        "QTIZEN_ROOT_UPLOAD=",
     )
 
 
@@ -483,7 +488,7 @@ def upgrade(host, *, state_dir=None, receipt_path=None, runtime=None, release=No
             receipt["upgrade"] = pending
             root_state.save(path, receipt)
 
-        upload = "aerotizen-root-" + receipt["installation_id"] + ".tpk"
+        upload = "qtizen-root-" + receipt["installation_id"] + ".tpk"
         checksum = pending["package_sha256"]
         if installed != target:
             data = archive.read_bytes()

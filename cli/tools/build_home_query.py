@@ -12,7 +12,7 @@ from tempfile import TemporaryDirectory
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "native/home-query"
-OUTPUT = ROOT / "src/aerotizen/helpers/home-query.json"
+OUTPUT = ROOT / "src/qtizen/helpers/home-query.json"
 
 
 def build(dotnet):
@@ -22,7 +22,7 @@ def build(dotnet):
         "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
         "DOTNET_NOLOGO": "1",
     }
-    with TemporaryDirectory(prefix="aerotizen-home-build-") as temporary:
+    with TemporaryDirectory(prefix="qtizen-home-build-") as temporary:
         output = Path(temporary)
         subprocess.run(
             [
@@ -40,7 +40,7 @@ def build(dotnet):
             check=True,
         )
         files = {}
-        for name in ("AeroTizenHomeQuery.dll", "AeroTizenHomeQuery.runtimeconfig.json"):
+        for name in ("QtizenHomeQuery.dll", "QtizenHomeQuery.runtimeconfig.json"):
             data = (output / name).read_bytes()
             files[name] = {
                 "base64": base64.b64encode(data).decode(),

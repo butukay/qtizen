@@ -5,7 +5,7 @@ async function persistedEvents(page) {
   return page.evaluate(
     () =>
       new Promise((resolve) => {
-        const open = indexedDB.open("aerotizen.diagnostics.v1", 1);
+        const open = indexedDB.open("qtizen.diagnostics.v1", 1);
         open.onerror = () => resolve([]);
         open.onsuccess = () => {
           const db = open.result;
@@ -47,11 +47,11 @@ test("diagnostics persist across reload without changing launcher navigation or 
   await expect(page).toHaveTitle(/qtizen/);
   await expect(page.locator("#grid > [data-id]").first()).toBeVisible();
   const first = await page.evaluate(
-    () => window.AeroDiagnostics.snapshot().records.find((item) => item.event === "ui.start").id,
+    () => window.QtizenDiagnostics.snapshot().records.find((item) => item.event === "ui.start").id,
   );
   await page.keyboard.press("ArrowRight");
   await expect(page.locator("#grid > [data-id][data-focused=true]")).toHaveCount(1);
-  await page.evaluate(() => AeroTizen.settingsUi.open());
+  await page.evaluate(() => Qtizen.settingsUi.open());
   await expect(page.locator("#editor")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.locator("#editor")).toBeHidden();
@@ -59,11 +59,13 @@ test("diagnostics persist across reload without changing launcher navigation or 
   await page.reload();
   await expect(page.locator("#grid > [data-id]").first()).toBeVisible();
   await expect
-    .poll(() => page.evaluate((id) => window.AeroDiagnostics.snapshot().records.some((item) => item.id === id), first))
+    .poll(() =>
+      page.evaluate((id) => window.QtizenDiagnostics.snapshot().records.some((item) => item.id === id), first),
+    )
     .toBe(true);
   expect(
     await page.evaluate(
-      () => window.AeroDiagnostics.snapshot().records.filter((item) => item.event === "ui.start").length,
+      () => window.QtizenDiagnostics.snapshot().records.filter((item) => item.event === "ui.start").length,
     ),
   ).toBe(2);
   await expect(page.locator("vite-error-overlay")).toHaveCount(0);
@@ -89,7 +91,7 @@ test("cold-start UI events reach a late service without leaving the launcher", a
     });
   });
   await page.addInitScript(() => {
-    localStorage.setItem("aerotizen.settings.v1", JSON.stringify({ home: ["test.app"] }));
+    localStorage.setItem("qtizen.settings.v1", JSON.stringify({ home: ["test.app"] }));
     window.tizen = {
       ApplicationControl: function (operation) {
         this.operation = operation;
@@ -121,13 +123,13 @@ test("legacy UI logs migrate asynchronously without writing the old localStorage
   await page.route("https://**/*", (route) => route.fulfill({ body: "{}" }));
   await page.addInitScript(() => {
     localStorage.setItem(
-      "aerotizen.diagnostics.v1",
+      "qtizen.diagnostics.v1",
       JSON.stringify([{ id: "legacy-1", at: 1, source: "ui", event: "ui.loaded", data: {} }]),
     );
     window.legacyWrites = 0;
     const write = Storage.prototype.setItem;
     Storage.prototype.setItem = function (key, value) {
-      if (key === "aerotizen.diagnostics.v1") {
+      if (key === "qtizen.diagnostics.v1") {
         window.legacyWrites++;
         throw new Error("Synchronous log write");
       }
@@ -137,7 +139,7 @@ test("legacy UI logs migrate asynchronously without writing the old localStorage
   await page.goto("/");
   await expect(page.locator("#grid > [data-id]").first()).toBeVisible();
   await expect.poll(async () => (await persistedEvents(page)).some((item) => item.event === "ui.loaded")).toBe(true);
-  await expect.poll(() => page.evaluate(() => localStorage.getItem("aerotizen.diagnostics.v1"))).toBe(null);
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("qtizen.diagnostics.v1"))).toBe(null);
   expect(await page.evaluate(() => window.legacyWrites)).toBe(0);
   expect(errors).toEqual([]);
 });
@@ -165,12 +167,12 @@ for (const unavailable of [false, true]) {
       window.inputStorageCalls = 0;
       window.logWrites = 0;
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({ home: ["test.app"], showWeather: false, background: "black" }),
       );
       const transaction = IDBDatabase.prototype.transaction;
       IDBDatabase.prototype.transaction = function (...args) {
-        if (this.name === "aerotizen.diagnostics.v1" && args[1] === "readwrite") {
+        if (this.name === "qtizen.diagnostics.v1" && args[1] === "readwrite") {
           window.logWrites++;
           if (window.inLaunch) window.inputStorageCalls++;
         }
@@ -178,7 +180,7 @@ for (const unavailable of [false, true]) {
       };
       const write = Storage.prototype.setItem;
       Storage.prototype.setItem = function (key, value) {
-        if (key === "aerotizen.diagnostics.v1") {
+        if (key === "qtizen.diagnostics.v1") {
           window.inputStorageCalls++;
           throw new Error("Synchronous log write");
         }
@@ -208,8 +210,8 @@ for (const unavailable of [false, true]) {
     await page.goto("/");
     await expect(page.locator("#grid > [data-id]").first()).toBeVisible();
     await page.evaluate(() => {
-      const launch = AeroTizen.apps.launch;
-      AeroTizen.apps.launch = function (app) {
+      const launch = Qtizen.apps.launch;
+      Qtizen.apps.launch = function (app) {
         window.inLaunch = true;
         try {
           return launch(app);
@@ -222,7 +224,7 @@ for (const unavailable of [false, true]) {
     await expect.poll(() => page.evaluate(() => window.launches)).toEqual(["test.app"]);
     expect(
       await page.evaluate(() =>
-        window.AeroDiagnostics.snapshot().records.some((item) => item.event === "app.launch_requested"),
+        window.QtizenDiagnostics.snapshot().records.some((item) => item.event === "app.launch_requested"),
       ),
     ).toBe(true);
     expect(await page.evaluate(() => window.inputStorageCalls)).toBe(0);
@@ -246,9 +248,9 @@ test("personal text is excluded before IndexedDB persistence and loopback delive
     });
   });
   await page.addInitScript((poison) => {
-    localStorage.setItem("aerotizen.settings.v1", JSON.stringify({ home: ["test.app"] }));
+    localStorage.setItem("qtizen.settings.v1", JSON.stringify({ home: ["test.app"] }));
     localStorage.setItem(
-      "aerotizen.diagnostics.v1",
+      "qtizen.diagnostics.v1",
       JSON.stringify([
         {
           id: "private-person",
@@ -279,8 +281,8 @@ test("personal text is excluded before IndexedDB persistence and loopback delive
   await page.goto("/");
   await expect(page.locator("#grid > [data-id]").first()).toBeVisible();
   await page.evaluate((poison) => {
-    window.AeroBuildInfo.owner = poison;
-    window.AeroDiagnostics.record("app.launch_requested", {
+    window.QtizenBuildInfo.owner = poison;
+    window.QtizenDiagnostics.record("app.launch_requested", {
       app_id: poison,
       message: poison,
       payload: poison,
@@ -292,7 +294,7 @@ test("personal text is excluded before IndexedDB persistence and loopback delive
         lineno: 9,
       }),
     );
-    window.AeroDiagnostics.flush();
+    window.QtizenDiagnostics.flush();
   }, poison);
   await page.keyboard.press("ArrowRight");
   await expect(page.locator("#grid > [data-id][data-focused=true]")).toHaveCount(1);
@@ -305,9 +307,9 @@ test("personal text is excluded before IndexedDB persistence and loopback delive
   const raw = JSON.stringify({
     saved: await persistedEvents(page),
     uploads: delivered,
-    memory: await page.evaluate(() => window.AeroDiagnostics.snapshot()),
+    memory: await page.evaluate(() => window.QtizenDiagnostics.snapshot()),
   });
   for (const value of poison.split(" ").concat(["private-person"])) expect(raw).not.toContain(value);
-  await expect.poll(() => page.evaluate(() => localStorage.getItem("aerotizen.diagnostics.v1"))).toBe(null);
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("qtizen.diagnostics.v1"))).toBe(null);
   await expect(page.locator("vite-error-overlay")).toHaveCount(0);
 });

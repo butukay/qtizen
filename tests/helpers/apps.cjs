@@ -4,7 +4,7 @@ const { createAppsService } = loadTypeScript("launcher/src/services/createAppsSe
 
 // Exercise the same service and Tizen boundary as the compiled launcher.
 exports.installApps = (context) => {
-  const runtime = context.window.AeroTizen;
+  const runtime = context.window.Qtizen;
   const service = createAppsService({
     catalog: runtime.catalog,
     config: runtime.config,

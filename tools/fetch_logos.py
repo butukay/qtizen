@@ -21,7 +21,7 @@ OUT = ROOT / "launcher" / "js" / "logos.js"
 def logo_sources(catalog_path=CATALOG):
     """Read the data-only JS wrapper as JSON, without executing JavaScript."""
     source = catalog_path.read_text(encoding="utf-8")
-    match = re.search(r"\bwindow\.AeroTizen\.catalog\s*=\s*(\{.*\})\s*;\s*\Z", source, re.DOTALL)
+    match = re.search(r"\bwindow\.Qtizen\.catalog\s*=\s*(\{.*\})\s*;\s*\Z", source, re.DOTALL)
     if not match:
         raise ValueError(f"Expected a data-only catalogue in {catalog_path}")
     catalog = json.loads(match.group(1))

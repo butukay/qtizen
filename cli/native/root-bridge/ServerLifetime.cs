@@ -4,9 +4,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
-using AeroTizen.UntetheredProbe;
+using Qtizen.UntetheredProbe;
 
-namespace AeroTizen.Root
+namespace Qtizen.Root
 {
     internal static class ServerLifetime
     {
@@ -24,7 +24,7 @@ namespace AeroTizen.Root
         internal static bool Matches(string installation, string savedTicks, string actualTicks, string[] command, string uid)
         {
             return savedTicks == actualTicks && command.Length == 6 && command[0] == "/usr/bin/dotnet"
-                && command[1] == RootPaths.Package + "/bin/AeroTizenRootBridge.dll" && command[2] == "--serve"
+                && command[1] == RootPaths.Package + "/bin/QtizenRootBridge.dll" && command[2] == "--serve"
                 && command[3] == installation && (command[5] == "boot" || command[5] == "setup")
                 && System.Text.RegularExpressions.Regex.IsMatch(command[4], "\\A[a-f0-9]{32}\\z")
                 && uid.Split((char[])null, StringSplitOptions.RemoveEmptyEntries).Skip(1).SequenceEqual(new[] { "0", "0", "0", "0" });

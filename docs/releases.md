@@ -4,7 +4,7 @@ qtizen has two release streams in one repository:
 
 | Component | Tag | Version files | Release notes |
 |---|---|---|---|
-| CLI | `cli-vX.Y.Z` | `cli/src/aerotizen/__init__.py` | `cli/CHANGELOG.md` |
+| CLI | `cli-vX.Y.Z` | `cli/src/qtizen/__init__.py` | `cli/CHANGELOG.md` |
 | Launcher and watcher | `launcher-vX.Y.Z` | `launcher/version.txt`, `launcher/config.xml` | `launcher/CHANGELOG.md` |
 
 Release Please manages both versions from `.release-please-manifest.json`. The existing
@@ -127,7 +127,7 @@ build and startup checks; they do not test TV hardware.
 These workflows do not apply Windows code signing or Apple notarization.
 
 The web inspector is included as `qtizen inspect launcher` in both standalone
-and Python installations. It replaces the separate `aerotizen-inspect` Python command;
+and Python installations. It replaces the separate `qtizen-inspect` Python command;
 see [Working on the launcher](../CONTRIBUTING.md#working-on-the-launcher).
 
 Launcher releases contain:

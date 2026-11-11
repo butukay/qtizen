@@ -44,7 +44,7 @@ def write_checksums(path, assets):
 
 
 def cli_version(root):
-    source = ast.parse((root / "src/aerotizen/__init__.py").read_text(encoding="utf-8"))
+    source = ast.parse((root / "src/qtizen/__init__.py").read_text(encoding="utf-8"))
     for statement in source.body:
         if isinstance(statement, ast.Assign) and any(
             isinstance(target, ast.Name) and target.id == "__version__" for target in statement.targets
@@ -64,7 +64,7 @@ def platform_name():
 
 def smoke_binaries(binaries, version):
     """Run copied executables outside the checkout with no Python or source path."""
-    with tempfile.TemporaryDirectory(prefix="aerotizen-smoke-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="qtizen-smoke-") as temporary:
         directory = Path(temporary)
         env = {key: value for key, value in os.environ.items() if not key.startswith("PYTHON")}
         env["PATH"] = ""
@@ -102,19 +102,19 @@ def smoke_binaries(binaries, version):
 def build_cli(root, output, tag=None):
     version = cli_version(root)
     check_tag("cli", version, tag)
-    if not (root / "src/aerotizen/helpers/home-query.json").is_file():
+    if not (root / "src/qtizen/helpers/home-query.json").is_file():
         raise ValueError("Build the read-only Home helper with python cli/tools/build_home_query.py first")
-    if not (root / "src/aerotizen/helpers/home-control.json").is_file():
+    if not (root / "src/qtizen/helpers/home-control.json").is_file():
         raise ValueError("Build the guarded Home writer with python cli/tools/build_home_control.py first")
-    root_runtime = root / "src/aerotizen/helpers/root-runtime.json"
+    root_runtime = root / "src/qtizen/helpers/root-runtime.json"
     if not root_runtime.is_file():
         raise ValueError("Build the root runtime with python cli/tools/build_root_runtime.py first")
-    from aerotizen.root_package import runtime_files
+    from qtizen.root_package import runtime_files
 
     runtime_files(root_runtime)
     target = platform_name()
     output.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="aerotizen-build-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="qtizen-build-") as temporary:
         work = Path(temporary)
         # Frozen OpenSSL must not depend on the build machine's certificate path.
         tls_hook = work / "tls_roots.py"
@@ -122,15 +122,15 @@ def build_cli(root, output, tag=None):
             'import os\nimport certifi\nos.environ.setdefault("SSL_CERT_FILE", certifi.where())\n',
             encoding="utf-8",
         )
-        from aerotizen.build_info import describe
+        from qtizen.build_info import describe
 
         build_info = work / "_build.json"
         build_info.write_text(json.dumps(describe(root, version)), encoding="utf-8")
         binaries = []
         for name, module in ENTRYPOINTS.items():
-            # Do not name the entry script aerotizen.py: it would shadow the package.
+            # Do not name the entry script qtizen.py: it would shadow the package.
             entry = work / f"run_{module}.py"
-            entry.write_text(f"from aerotizen.{module} import main\n\nmain()\n", encoding="utf-8")
+            entry.write_text(f"from qtizen.{module} import main\n\nmain()\n", encoding="utf-8")
             subprocess.run(
                 [
                     sys.executable,
@@ -146,11 +146,11 @@ def build_cli(root, output, tag=None):
                     "--paths",
                     str(root / "src"),
                     "--collect-data",
-                    "aerotizen",
+                    "qtizen",
                     "--collect-data",
                     "certifi",
                     "--add-data",
-                    str(build_info) + os.pathsep + "aerotizen",
+                    str(build_info) + os.pathsep + "qtizen",
                     "--runtime-hook",
                     str(tls_hook),
                     "--distpath",

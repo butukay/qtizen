@@ -5,7 +5,7 @@ In Windows PowerShell, use `.\qtizen.exe` in place of `./qtizen`.
 Reproduce the problem, then run:
 
 ```sh
-./qtizen --tv TV_IP logs export --output aerotizen-report.zip
+./qtizen --tv TV_IP logs export --output qtizen-report.zip
 ```
 
 This creates a ZIP you can attach to a bug report. Existing files are never overwritten.
@@ -28,8 +28,8 @@ the TV address from its network settings.
 
 ## PC logs
 
-Each parsed CLI command writes a JSON-lines log under `~/.config/aerotizen/logs/`.
-`./qtizen logs open` prints and opens the folder. Set `AEROTIZEN_LOG_DIR` to use
+Each parsed CLI command writes a JSON-lines log under `~/.config/qtizen/logs/`.
+`./qtizen logs open` prints and opens the folder. Set `QTIZEN_LOG_DIR` to use
 another folder. The CLI keeps the last 10 files, at most 256 KiB each. A failed command
 prints its log path. If log storage fails, the command keeps its normal behaviour.
 Help, version output and parser errors do not create logs.
@@ -146,7 +146,7 @@ A separately copied backup folder is not searched automatically.
 For Home or startup problems, use:
 
 ```sh
-./qtizen --tv TV_IP logs export --include-home --output aerotizen-home-report.zip
+./qtizen --tv TV_IP logs export --include-home --output qtizen-home-report.zip
 ```
 
 This optional check stages the existing read-only SDK query helper and cleans it up.

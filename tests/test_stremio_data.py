@@ -66,9 +66,9 @@ def batch(sequence, rows):
 
 @pytest.fixture(scope="session")
 def native_reader(tmp_path_factory):
-    dotnet = os.environ.get("AEROTIZEN_DOTNET") or shutil.which("dotnet")
+    dotnet = os.environ.get("QTIZEN_DOTNET") or shutil.which("dotnet")
     if not dotnet:
-        pytest.skip("Set AEROTIZEN_DOTNET to a .NET 6 SDK for native reader tests")
+        pytest.skip("Set QTIZEN_DOTNET to a .NET 6 SDK for native reader tests")
     project = tmp_path_factory.mktemp("native-stremio-data")
     (project / "NuGet.Config").write_text(
         "<configuration><packageSources><clear /></packageSources></configuration>"

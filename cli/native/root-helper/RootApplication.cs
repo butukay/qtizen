@@ -4,12 +4,12 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AeroTizen.AutoRoot;
-using AeroTizen.Root;
-using AeroTizen.SdbTest;
+using Qtizen.AutoRoot;
+using Qtizen.Root;
+using Qtizen.SdbTest;
 using Tizen.Applications;
 
-namespace AeroTizen.RootHelper
+namespace Qtizen.RootHelper
 {
     internal sealed class RootApplication : ServiceApplication
     {

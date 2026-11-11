@@ -6,9 +6,9 @@ using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AeroTizen.Root;
-using AeroTizen.RootHelper;
-using AeroTizen.UntetheredProbe;
+using Qtizen.Root;
+using Qtizen.RootHelper;
+using Qtizen.UntetheredProbe;
 
 internal static class RootTests
 {
@@ -18,7 +18,7 @@ internal static class RootTests
     { bool rejected = false; try { action(); } catch { rejected = true; } Check(rejected, message); }
     private static void Gates()
     {
-        string data = Path.Combine(Path.GetTempPath(), "aerotizen-boot-gate-" + Guid.NewGuid().ToString("N"));
+        string data = Path.Combine(Path.GetTempPath(), "qtizen-boot-gate-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(data);
         try
         {
@@ -42,7 +42,7 @@ internal static class RootTests
             Reject(() => reopened.Claim(Guid.NewGuid().ToString("D")), "Disabled helper requested root");
             Reject(() => gate.Decision("../invalid"), "Unsafe boot identity accepted");
             Reject(() => new PerBootGate(data, "invalid", baseline), "Unsafe installation identity accepted");
-            string[] command = { "/usr/bin/dotnet", RootPaths.Package + "/bin/AeroTizenRootBridge.dll", "--serve", installation, nonce, "boot" };
+            string[] command = { "/usr/bin/dotnet", RootPaths.Package + "/bin/QtizenRootBridge.dll", "--serve", installation, nonce, "boot" };
             Check(ServerLifetime.Matches(installation, "12", "12", command, "Uid: 0 0 0 0"), "Owned process was not recognised");
             Check(!ServerLifetime.Matches(installation, "12", "13", command, "Uid: 0 0 0 0"), "Reused PID was accepted");
             Check(!ServerLifetime.Matches(installation, "12", "12", command, "Uid: 5001 5001 5001 5001"), "Non-root process was accepted");
@@ -157,12 +157,12 @@ internal static class RootTests
                 };
                 TextWriter original = Console.Out;
                 var captured = new StringWriter();
-                try { Console.SetOut(captured); AeroTizen.UntetheredProbe.Program.Write(report); }
+                try { Console.SetOut(captured); Qtizen.UntetheredProbe.Program.Write(report); }
                 finally { Console.SetOut(original); }
-                string output = captured.ToString() + "AEROTIZEN_PROBE_DONE\nAEROTIZEN_PROBE_CLEANED\nAEROTIZEN_ROOT_EXIT=0\n";
-                var verified = AeroTizen.SdbTest.RootProofController.ParseResult(output, bundle, boot);
+                string output = captured.ToString() + "QTIZEN_PROBE_DONE\nQTIZEN_PROBE_CLEANED\nQTIZEN_ROOT_EXIT=0\n";
+                var verified = Qtizen.SdbTest.RootProofController.ParseResult(output, bundle, boot);
                 Check(verified.GetProperty("mode").GetString() == "--run-service", "Service report mode was not preserved");
-                Reject(() => AeroTizen.SdbTest.RootProofController.ParseResult(output.Replace("AEROTIZEN_PROOF_RESULT=", ""), bundle, boot),
+                Reject(() => Qtizen.SdbTest.RootProofController.ParseResult(output.Replace("QTIZEN_PROOF_RESULT=", ""), bundle, boot),
                     "Unframed service output was accepted");
                 Console.WriteLine("ROOT_SERVICE_REPORT_CONTRACT_PASSED=" + checks); return 0;
             }

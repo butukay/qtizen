@@ -5,8 +5,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from aerotizen import __version__, cli, releases, signer
-from aerotizen.sdb import SdbError
+from qtizen import __version__, cli, releases, signer
+from qtizen.sdb import SdbError
 
 APP = "DclHome001.Home"
 VERSION = "2.2.0"
@@ -126,7 +126,7 @@ def test_install_flags_select_a_version_and_repository(installation, monkeypatch
     monkeypatch.setattr(
         "sys.argv",
         [
-            "aerotizen",
+            "qtizen",
             "--tv",
             "tv",
             "install",
@@ -134,11 +134,11 @@ def test_install_flags_select_a_version_and_repository(installation, monkeypatch
             "--version",
             VERSION,
             "--release-repo",
-            "example/AeroTizen",
+            "example/Qtizen",
         ],
     )
     cli.main()
-    assert installation.downloads[0][1:] == (VERSION, "example/AeroTizen")
+    assert installation.downloads[0][1:] == (VERSION, "example/Qtizen")
 
 
 @pytest.mark.parametrize("source", ["./launcher", "app.wgt"])
@@ -155,7 +155,7 @@ def test_explicit_local_sources_do_not_download(installation, monkeypatch, sourc
     assert installation.tv.closed
 
 
-@pytest.mark.parametrize("option", [{"release_version": VERSION}, {"release_repo": "example/AeroTizen"}])
+@pytest.mark.parametrize("option", [{"release_version": VERSION}, {"release_repo": "example/Qtizen"}])
 def test_release_flags_are_rejected_for_local_sources_before_connecting(installation, option):
     with pytest.raises(SystemExit, match="apply only to"):
         cli.cmd_install(install_args("./launcher", **option))
@@ -267,7 +267,7 @@ def test_install_status_errors_override_a_matching_version(failure):
 
 
 def test_global_version_exits_without_tv_access(monkeypatch, capsys):
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--version"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "--version"])
     with pytest.raises(SystemExit) as exc:
         cli.main()
     assert exc.value.code == 0
@@ -275,7 +275,7 @@ def test_global_version_exits_without_tv_access(monkeypatch, capsys):
 
 
 def test_install_help_explains_release_and_local_sources(monkeypatch, capsys):
-    monkeypatch.setattr("sys.argv", ["aerotizen", "install", "--help"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "install", "--help"])
     with pytest.raises(SystemExit) as exc:
         cli.main()
     assert exc.value.code == 0
@@ -337,7 +337,7 @@ def test_update_uses_one_session_and_the_saved_signing_profile(updating, capsys)
 
 def test_update_check_needs_no_certificates_and_downloads_no_widget(updating, monkeypatch, capsys):
     (updating.cdir / "distributor.p12").unlink()
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--tv", "tv", "update", "launcher", "--check"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "--tv", "tv", "update", "launcher", "--check"])
     cli.main()
     assert updating.events == ["resolve", "connect", "applist"]
     assert not updating.downloads
@@ -387,11 +387,11 @@ def test_update_requires_one_installed_launcher(updating, inventory):
 
 def test_update_selects_fork_for_metadata_and_exact_download(updating, monkeypatch):
     monkeypatch.setattr(
-        "sys.argv", ["aerotizen", "--tv", "tv", "update", "launcher", "--release-repo", "example/AeroTizen"]
+        "sys.argv", ["qtizen", "--tv", "tv", "update", "launcher", "--release-repo", "example/Qtizen"]
     )
     cli.main()
-    assert updating.repositories == ["example/AeroTizen"]
-    assert updating.downloads[0][1:] == (VERSION, "example/AeroTizen")
+    assert updating.repositories == ["example/Qtizen"]
+    assert updating.downloads[0][1:] == (VERSION, "example/Qtizen")
 
 
 def test_update_rejects_failed_install_even_if_target_version_is_listed(updating):
@@ -438,7 +438,7 @@ def test_update_download_error_releases_session_and_removes_partial_widget(updat
 @pytest.mark.parametrize("flags", [["--force"], ["--check", "--force"]])
 @pytest.mark.parametrize("target", ["launcher", "cli"])
 def test_update_rejects_force_before_any_device_or_release_access(updating, monkeypatch, flags, target):
-    monkeypatch.setattr("sys.argv", ["aerotizen", "update", target, *flags])
+    monkeypatch.setattr("sys.argv", ["qtizen", "update", target, *flags])
     with pytest.raises(SystemExit) as exc:
         cli.main()
     assert exc.value.code == 2

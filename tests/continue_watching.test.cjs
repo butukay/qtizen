@@ -102,7 +102,7 @@ function harness(providers) {
     this.onabort?.();
   };
   const context = vm.createContext({
-    window: { AeroTizen: A, performance: { now: () => elapsed } },
+    window: { Qtizen: A, performance: { now: () => elapsed } },
     document,
     XMLHttpRequest,
     Date: { now: () => now },

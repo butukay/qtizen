@@ -33,7 +33,7 @@ for (const [name, url] of [
     await expect(page).toHaveTitle("qtizen");
     await expect(page.locator("#grid > [data-id]")).toHaveCount(1);
     await expect(page.locator("#grid")).toHaveAttribute("data-columns", "5");
-    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("aerotizen.settings.v1")));
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("qtizen.settings.v1")));
     expect(saved.home).toEqual(["demo0"]);
     expect(saved.inputNames).toEqual({ "HDMI 1": "Console" });
     expect(saved.tempUnit).toBe("F");
@@ -53,7 +53,7 @@ for (const [name, url] of [
     await closeSettings(page);
     await page.reload();
     await expect(page.locator("#grid > [data-id]")).toHaveCount(0);
-    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("aerotizen.settings.v1")).home)).toEqual([]);
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("qtizen.settings.v1")).home)).toEqual([]);
     expect(errors).toEqual([]);
   });
 }

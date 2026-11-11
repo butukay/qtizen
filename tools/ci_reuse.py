@@ -12,7 +12,7 @@ def read_github(path, **query):
     if query:
         url += "?" + urlencode(query)
     # These endpoints are public. Keep the reusable release workflow's token scopes unchanged.
-    request = Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "AeroTizen-CI"})
+    request = Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "Qtizen-CI"})
     with urlopen(request, timeout=5) as response:
         return json.load(response)
 

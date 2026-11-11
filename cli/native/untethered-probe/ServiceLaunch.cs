@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace AeroTizen.UntetheredProbe
+namespace Qtizen.UntetheredProbe
 {
     internal sealed class ServiceLaunch
     {
-        internal const string AppId = "org.aerotizen.roothelper";
+        internal const string AppId = "org.qtizen.roothelper";
         internal const string Bin = "/opt/usr/apps/" + AppId + "/bin/";
         internal const string ScopeRunner = "/usr/bin/systemd-run";
-        internal static readonly string[] Managed = { "AeroTizenRootBridge.dll", "AeroTizenRootBridge.runtimeconfig.json", "AeroTizenRootBridge.deps.json" };
+        internal static readonly string[] Managed = { "QtizenRootBridge.dll", "QtizenRootBridge.runtimeconfig.json", "QtizenRootBridge.deps.json" };
         internal readonly string Operation, Installation, SetupStage;
         internal readonly Dictionary<string, string> Hashes = new Dictionary<string, string>();
         internal static void RequireScopeRunner()
@@ -27,7 +27,7 @@ namespace AeroTizen.UntetheredProbe
                 throw new InvalidDataException("Invalid root bridge launch identity");
             // setsid detaches the terminal, but the process would still belong to
             // sdbd.service and be killed when Samsung restarts the developer daemon.
-            string unit = "aerotizen-root-" + installation + "-" + nonce + ".scope";
+            string unit = "qtizen-root-" + installation + "-" + nonce + ".scope";
             return ScopeRunner + " --quiet --scope --unit=" + Bundle.Quote(unit)
                 + " -- /usr/bin/dotnet " + Bundle.Quote(Bin + Managed[0])
                 + " --serve " + Bundle.Quote(installation) + " " + Bundle.Quote(nonce) + " " + Bundle.Quote(origin);

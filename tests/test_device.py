@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from aerotizen import device
-from aerotizen.device import DeviceSession, DeviceSessionError
+from qtizen import device
+from qtizen.device import DeviceSession, DeviceSessionError
 
 
 @pytest.fixture
@@ -113,7 +113,7 @@ def test_failed_recovery_closes_and_releases_ownership(rig, phase, tmp_path):
 def test_process_lock_prevents_a_second_cli_owner(rig, tmp_path):
     session, _, _, _, _ = rig
     program = (
-        "from aerotizen.device import DeviceSession, DeviceSessionError\n"
+        "from qtizen.device import DeviceSession, DeviceSessionError\n"
         f"session = DeviceSession('127.0.0.1', lock_dir={str(tmp_path)!r})\n"
         "try:\n session.connect()\n"
         "except DeviceSessionError:\n raise SystemExit(23)\n"

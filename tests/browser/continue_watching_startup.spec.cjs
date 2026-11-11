@@ -6,7 +6,7 @@ for (const correctClock of [false, true]) {
   test(
     correctClock
       ? "a cold TV clock correction does not cancel startup retries"
-      : "a late startup feed appears without reopening AeroTizen or reloading settled cards",
+      : "a late startup feed appears without reopening Qtizen or reloading settled cards",
     async ({ page }) => {
       const reads = { prime: 0, youtube: 0 },
         errors = [];
@@ -39,7 +39,7 @@ for (const correctClock of [false, true]) {
       await page.addInitScript(
         ({ prime, youtube, correctClock }) => {
           localStorage.setItem(
-            "aerotizen.settings.v1",
+            "qtizen.settings.v1",
             JSON.stringify({
               home: [youtube],
               showWeather: false,
@@ -150,7 +150,7 @@ test("settled cards reorder on the existing clock tick without rereading feeds",
   await page.addInitScript(
     ({ prime, youtube }) => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({
           home: [prime],
           showWeather: false,
@@ -181,9 +181,10 @@ test("settled cards reorder on the existing clock tick without rereading feeds",
   await page.clock.setSystemTime(corrected);
   await page.clock.fastForward(10000);
   await expect(titles).toHaveText(["Newer YouTube programme", "Older Prime programme"]);
-  expect(
-    await page.evaluate(() => AeroTizen.continueWatching.getSnapshot().items.map((item) => item.timestamp)),
-  ).toEqual([recent, recent - 3600]);
+  expect(await page.evaluate(() => Qtizen.continueWatching.getSnapshot().items.map((item) => item.timestamp))).toEqual([
+    recent,
+    recent - 3600,
+  ]);
   await page.evaluate(() => {
     window.correctedCards = [...document.querySelectorAll("#continue-items > [data-key]")];
   });

@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AeroTizen.Root;
+using Qtizen.Root;
 
-namespace AeroTizen.Transitions
+namespace Qtizen.Transitions
 {
     internal sealed class WindowTransitions : IDisposable
     {
@@ -20,7 +20,7 @@ namespace AeroTizen.Transitions
         {
             if (worker != null) return;
             RootPaths.RequireTv(true);
-            ownership = new FileStream("/run/aerotizen-window-transitions.lock", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            ownership = new FileStream("/run/qtizen-window-transitions.lock", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
             if (flock(ownership.SafeFileHandle.DangerousGetHandle().ToInt32(), 6) != 0) { ownership.Dispose(); ownership = null; return; }
             worker = Task.Run(Run);
         }

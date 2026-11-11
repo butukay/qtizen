@@ -2,7 +2,7 @@
 // IDs are strings. Only add IDs verified from a TV or the existing launcher.
 // Legacy names retain the previous exact-artwork and prefix-brand matches until
 // more app IDs are verified. Lookup logic lives in app-lookup.js.
-window.AeroTizen.catalog = {
+window.Qtizen.catalog = {
   "apps": [
     {
       "key": "youtube",

@@ -706,7 +706,7 @@ function controlHome(req, res) {
     reply(405, { error: "POST required" });
     return;
   }
-  if (headers.origin || headers["x-aerotizen-home"] !== "1") {
+  if (headers.origin || headers["x-qtizen-home"] !== "1") {
     reply(403, { error: "Local native control required" });
     return;
   }
@@ -758,7 +758,7 @@ function diagnosticRequest(req, res, pathname) {
     res.end(JSON.stringify(data));
   }
   if (pathname === "/diagnostics/logs") {
-    if (req.method !== "GET" || headers.origin || headers["x-aerotizen-diagnostics"] !== "1") {
+    if (req.method !== "GET" || headers.origin || headers["x-qtizen-diagnostics"] !== "1") {
       reply(403, { error: "Developer connection required" });
       return;
     }

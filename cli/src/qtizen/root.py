@@ -7,7 +7,7 @@ import signal
 import subprocess
 from pathlib import Path
 
-from aerotizen.device import DeviceSessionError
+from qtizen.device import DeviceSessionError
 
 SUPPORTED_VERSION = "0.0.12"
 

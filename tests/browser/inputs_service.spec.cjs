@@ -17,7 +17,7 @@ for (const [build, url] of [
     );
     await page.addInitScript(() => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({ home: [], background: "black", showWeather: false, hideDisconnectedHdmi: false }),
       );
       const tv = (window.inputsTest = { reads: 0, watches: 0, removed: 0, hidden: 0, replies: [] });
@@ -70,15 +70,15 @@ for (const [build, url] of [
     const first = page.getByRole("textbox", { name: "HDMI 1 name", exact: true });
     await first.fill("Unsaved console name");
     await page.evaluate(() => {
-      window.inputsTest.before = AeroTizen.inputs.getSnapshot();
+      window.inputsTest.before = Qtizen.inputs.getSnapshot();
       window.inputsTest.cards = [...document.querySelectorAll("#inputs > [data-input-card]")];
       window.inputsTest.nameField = document.querySelector('[data-key="name:HDMI 1"] input');
-      AeroTizen.inputs.load();
+      Qtizen.inputs.load();
       window.inputsTest.replies.shift()(JSON.parse(JSON.stringify(window.inputsTest.report)));
     });
     expect(
       await page.evaluate(() => {
-        const s = AeroTizen.inputs.getSnapshot();
+        const s = Qtizen.inputs.getSnapshot();
         return (
           s === window.inputsTest.before &&
           [s, s.sources, s.sources[0], s.visibleSources].every(Object.isFrozen) &&
@@ -91,8 +91,8 @@ for (const [build, url] of [
     ).toBe(true);
     await expect(first).toHaveValue("Unsaved console name");
     await page.evaluate(() => {
-      AeroTizen.settings.update({ hideDisconnectedHdmi: true, showLiveTv: false });
-      AeroTizen.settingsUi.close();
+      Qtizen.settings.update({ hideDisconnectedHdmi: true, showLiveTv: false });
+      Qtizen.settingsUi.close();
     });
     await expect(cards).toHaveCount(1);
     expect(await page.evaluate(() => window.inputsTest.reads)).toBe(2);
@@ -113,7 +113,7 @@ for (const [build, url] of [
     );
     await page.addInitScript(() => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({ home: [], background: "black", showWeather: false, hideDisconnectedHdmi: false }),
       );
       const tv = (window.inputsTest = { reads: 0, removed: 0, shows: 0 });
@@ -147,23 +147,23 @@ for (const [build, url] of [
     });
     await page.goto(url);
     await page.getByRole("button", { name: "HDMI 1", exact: true }).click();
-    await expect.poll(() => page.evaluate(() => AeroTizen.inputs.getSnapshot().playback)).toBe("opening");
+    await expect.poll(() => page.evaluate(() => Qtizen.inputs.getSnapshot().playback)).toBe("opening");
     await page.evaluate(() => {
       window.inputsTest.defer = true;
-      AeroTizen.inputs.load();
-      AeroTizen.inputs.dispose();
-      window.inputsTest.disposed = AeroTizen.inputs.getSnapshot();
+      Qtizen.inputs.load();
+      Qtizen.inputs.dispose();
+      window.inputsTest.disposed = Qtizen.inputs.getSnapshot();
       window.inputsTest.lateRead({ connected: [{ type: "HDMI", number: 2 }] });
       window.inputsTest.lateSource();
-      AeroTizen.inputs.start();
-      AeroTizen.inputs.load();
+      Qtizen.inputs.start();
+      Qtizen.inputs.load();
     });
     await expect(page.locator("body")).not.toHaveClass(/\btv\b/);
     await expect(page.locator("#gear")).toBeVisible();
     expect(
       await page.evaluate(() => ({
-        same: AeroTizen.inputs.getSnapshot() === window.inputsTest.disposed,
-        playback: AeroTizen.inputs.getSnapshot().playback,
+        same: Qtizen.inputs.getSnapshot() === window.inputsTest.disposed,
+        playback: Qtizen.inputs.getSnapshot().playback,
         shows: window.inputsTest.shows,
         removed: window.inputsTest.removed,
       })),

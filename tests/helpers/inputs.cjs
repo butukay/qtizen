@@ -3,7 +3,7 @@ const { createInputsService } = loadTypeScript("launcher/src/services/createInpu
 const { createInputsPlatform } = loadTypeScript("launcher/src/platform/tizen/createInputsPlatform.ts");
 
 exports.installInputs = (context) => {
-  const runtime = context.window.AeroTizen;
+  const runtime = context.window.Qtizen;
   const service = createInputsService({
     platform: createInputsPlatform({
       ...context.window,

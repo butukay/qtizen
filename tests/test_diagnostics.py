@@ -4,9 +4,9 @@ import zipfile
 
 import pytest
 
-from aerotizen import build_info, cli, diagnostics
-from aerotizen import diagnostic_privacy as privacy
-from aerotizen.sdb import CLSE, OKAY, WRTE, Sdb, SdbError
+from qtizen import build_info, cli, diagnostics
+from qtizen import diagnostic_privacy as privacy
+from qtizen.sdb import CLSE, OKAY, WRTE, Sdb, SdbError
 
 _read_metadata = diagnostics._metadata
 
@@ -14,7 +14,7 @@ _read_metadata = diagnostics._metadata
 @pytest.fixture(autouse=True)
 def log_folder(monkeypatch, tmp_path):
     path = tmp_path / "logs"
-    monkeypatch.setenv("AEROTIZEN_LOG_DIR", str(path))
+    monkeypatch.setenv("QTIZEN_LOG_DIR", str(path))
     monkeypatch.setattr(diagnostics, "_metadata", lambda host: {"state": "unavailable", "model": None})
     return path
 
@@ -57,7 +57,7 @@ def test_logs_rotate_without_touching_backups_and_failures_keep_original_exit(
 def test_unwritable_log_storage_never_blocks_a_command(tmp_path, monkeypatch):
     target = tmp_path / "not-a-directory"
     target.write_text("file")
-    monkeypatch.setenv("AEROTIZEN_LOG_DIR", str(target))
+    monkeypatch.setenv("QTIZEN_LOG_DIR", str(target))
     called = []
     diagnostics.run_logged(argparse.Namespace(cmd="status"), lambda args: called.append(True), tmp_path)
     assert called == [True]
@@ -71,7 +71,7 @@ def test_auth_console_is_not_captured(tmp_path, log_folder):
 
 
 def test_cli_update_check_is_identified_without_recording_release_urls(monkeypatch, log_folder):
-    from aerotizen import releases
+    from qtizen import releases
 
     private_repository = "example/private-release-source"
     private_url = f"https://github.com/{private_repository}/releases/tag/cli-v99.0.0"
@@ -80,7 +80,7 @@ def test_cli_update_check_is_identified_without_recording_release_urls(monkeypat
     )
     monkeypatch.setattr(cli, "pick_tv", lambda *args: pytest.fail("CLI update must not contact a TV"))
     monkeypatch.setattr(
-        "sys.argv", ["aerotizen", "update", "cli", "--check", "--release-repo", private_repository]
+        "sys.argv", ["qtizen", "update", "cli", "--check", "--release-repo", private_repository]
     )
     cli.main()
     raw = next(log_folder.glob("*.log")).read_text()
@@ -91,7 +91,7 @@ def test_cli_update_check_is_identified_without_recording_release_urls(monkeypat
 
 
 def test_export_is_offline_by_default_and_omits_recovery_credentials(tmp_path, monkeypatch, log_folder):
-    from aerotizen import device
+    from qtizen import device
 
     monkeypatch.setattr(device, "DeviceSession", lambda *a, **kw: pytest.fail("No TV contact"))
     log_folder.mkdir()
@@ -120,7 +120,7 @@ def test_export_is_offline_by_default_and_omits_recovery_credentials(tmp_path, m
 
 
 def test_unavailable_tv_still_exports_pc_diagnostics(tmp_path, monkeypatch):
-    from aerotizen import device
+    from qtizen import device
 
     def unavailable(*args, **kwargs):
         raise SdbError("cannot reach 192.0.2.10")
@@ -136,7 +136,7 @@ def test_fetch_tv_is_only_a_bounded_read_of_the_log_endpoint():
     class Session:
         def tcp_request(self, port, request, **limits):
             assert port == 47790 and b"GET /diagnostics/logs " in request
-            assert b"X-AeroTizen-Diagnostics: 1" in request and limits["timeout"] == 5
+            assert b"X-Qtizen-Diagnostics: 1" in request and limits["timeout"] == 5
             body = json.dumps(
                 {"schema_version": 1, "records": [{"source": "ui", "event": "ui.start"}]}
             ).encode()
@@ -189,9 +189,7 @@ def test_sdb_tcp_request_output_failure_discards_uncertain_connection():
 def test_log_export_command_never_discovers_a_tv_without_explicit_target(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(cli, "STATE_DIR", tmp_path)
     monkeypatch.setattr(cli, "pick_tv", lambda args: pytest.fail("No discovery"))
-    monkeypatch.setattr(
-        "sys.argv", ["aerotizen", "logs", "export", "--output", str(tmp_path / "support.zip")]
-    )
+    monkeypatch.setattr("sys.argv", ["qtizen", "logs", "export", "--output", str(tmp_path / "support.zip")])
     cli.main()
     assert "not_requested" in capsys.readouterr().out
 
@@ -254,8 +252,8 @@ def test_tcp_request_real_framing_preserves_owned_connection():
     import socket
     import threading
 
-    from aerotizen.sdb import OPEN
     from conftest import _frame, _read_frame
+    from qtizen.sdb import OPEN
 
     local, peer = socket.socketpair()
     local.settimeout(1)
@@ -340,7 +338,7 @@ def test_rapid_commands_keep_the_current_log(tmp_path, monkeypatch):
 
 
 def test_export_preserves_all_tv_events_and_public_environment(tmp_path, monkeypatch):
-    from aerotizen import device
+    from qtizen import device
 
     class Session:
         def __init__(self, *args, **kwargs):
@@ -404,7 +402,7 @@ def test_export_preserves_all_tv_events_and_public_environment(tmp_path, monkeyp
 
 
 def test_native_snapshot_uses_only_read_status_and_filters_identity(monkeypatch):
-    from aerotizen import home
+    from qtizen import home
 
     def status(session, provider, info):
         assert session == "session" and provider is None
@@ -430,7 +428,7 @@ def test_native_snapshot_uses_only_read_status_and_filters_identity(monkeypatch)
 def test_include_home_requires_explicit_tv_without_discovery(tmp_path, monkeypatch):
     monkeypatch.setattr(cli, "STATE_DIR", tmp_path)
     monkeypatch.setattr(cli, "pick_tv", lambda args: pytest.fail("No discovery"))
-    monkeypatch.setattr("sys.argv", ["aerotizen", "logs", "export", "--include-home"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "logs", "export", "--include-home"])
     with pytest.raises(SystemExit, match="--tv"):
         cli.main()
 
@@ -453,7 +451,7 @@ def test_cli_sequence_error_context_and_health_survive_clock_jumps(tmp_path, mon
 
 
 def test_cli_content_identity_changes_with_source_and_reads_embedded_stamp(tmp_path, monkeypatch):
-    source = tmp_path / "src/aerotizen"
+    source = tmp_path / "src/qtizen"
     source.mkdir(parents=True)
     (source / "main.py").write_text("value=1")
     first = build_info.describe(tmp_path, "2.4.0")
@@ -510,7 +508,7 @@ def test_errors_omit_arbitrary_messages_and_nonfinite_numbers():
 
 @pytest.mark.parametrize("fails", [False, True])
 def test_optional_home_snapshot_never_prevents_partial_zip(tmp_path, monkeypatch, fails):
-    from aerotizen import device
+    from qtizen import device
 
     class Session:
         def __init__(self, *args, **kwargs):
@@ -647,7 +645,7 @@ def test_legacy_zip_filters_every_text_and_nested_receipt_path_without_changing_
 
 
 def test_optional_native_snapshot_filters_query_error_text_identifiers_and_extra_keys(monkeypatch):
-    from aerotizen import home
+    from qtizen import home
 
     poison = "Alex Example alex@example.invalid PRIVATE-CREDENTIAL"
 

@@ -27,7 +27,7 @@ uses SDK 6.0.428. Standalone CLI releases include all three payloads, so users d
 a .NET SDK. Home commands use the SDK user by default and offer temporary root for
 read-only operations. See [inspection](docs/home-read-only.md) and
 [setup and recovery](docs/home-pc-flow.md). The policy test harness runs on the
-host without loading any Tizen library. Set `AEROTIZEN_DOTNET` if the SDK is not on
+host without loading any Tizen library. Set `QTIZEN_DOTNET` if the SDK is not on
 `PATH`. Tests use mocks or localhost servers; they do not contact a real TV.
 
 Checks (CI runs the same):
@@ -155,7 +155,7 @@ for leftover words in the states it visits. Add coverage for new UI paths in Def
 
 | Path                              | What                                                                                            |
 | --------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `cli/src/aerotizen/`              | Python CLI: sdb client, certificates, package signing, debloat                                  |
+| `cli/src/qtizen/`                 | Python CLI: sdb client, certificates, package signing, debloat                                  |
 | `cli/pyproject.toml`              | CLI package metadata; root pip installs use this same definition                                |
 | `cli/native/`, `cli/tools/`       | Native Home helpers, root runtime, and CLI build tools                                          |
 | `launcher/`                       | Production HTML, runtime files and frontend source                                              |
@@ -239,7 +239,7 @@ Inspection is included in both the Python package and standalone CLI. It uses th
 same automatic TV discovery as other commands. To select a TV, use
 `qtizen --tv <tv-ip> inspect launcher`. To inspect another app or choose a local
 port, use `qtizen inspect APPID --port 9223`.
-The separate `aerotizen-inspect` Python command has been replaced by `qtizen inspect`.
+The separate `qtizen-inspect` Python command has been replaced by `qtizen inspect`.
 
 `qtizen install launcher` installs the latest published launcher, even when a
 `launcher` directory exists in the current directory. Use `qtizen install ./dist/launcher`
@@ -312,4 +312,4 @@ references, legacy matching and the preloaded IDs sent to the Home watcher.
 - New launcher strings and behaviour should work with only the remote (no pointer).
 - For UI changes, screenshots or a short video from the TV are really helpful (before and after
   if you can). They make the idea much easier to follow and review. A photo of the screen is fine.
-- Don't commit certificates, `.wgt` packages or anything from `~/.config/aerotizen`.
+- Don't commit certificates, `.wgt` packages or anything from `~/.config/qtizen`.

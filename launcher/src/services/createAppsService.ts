@@ -13,7 +13,7 @@ interface AppsDependencies {
   storage: Pick<Storage, "getItem" | "setItem">;
 }
 
-const CACHE_KEY = "aerotizen.apps.v1";
+const CACHE_KEY = "qtizen.apps.v1";
 const MAX_CACHED_APPS = 1000;
 
 const appRecords = (value: unknown): AppRecord[] | null => {

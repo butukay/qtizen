@@ -7,7 +7,7 @@
     BATCH_SIZE = 24,
     MAX_BATCH_CHARACTERS = 4000;
   var createPrivacy =
-    typeof module !== "undefined" && module.exports ? require("./diagnostics-privacy") : root.AeroDiagnosticsPrivacy;
+    typeof module !== "undefined" && module.exports ? require("./diagnostics-privacy") : root.QtizenDiagnosticsPrivacy;
   function create(source, options) {
     options = options || {};
     var privacy = createPrivacy();
@@ -288,7 +288,7 @@
     module.exports = create;
     return;
   }
-  var logger = (root.AeroDiagnostics = create("ui")),
+  var logger = (root.QtizenDiagnostics = create("ui")),
     packetPrivacy = createPrivacy(),
     busy = false,
     sent = {};
@@ -313,8 +313,8 @@
     }, retryDelays[retries++]);
   }
   try {
-    if (typeof root.AeroDiagnosticsStorage === "function") {
-      root.AeroDiagnosticsStorage(function (storage) {
+    if (typeof root.QtizenDiagnosticsStorage === "function") {
+      root.QtizenDiagnosticsStorage(function (storage) {
         if (storage) {
           logger.attach(storage, flush);
         }
@@ -409,7 +409,7 @@
       };
       var build = {};
       ["version", "build_id", "commit", "dirty"].forEach(function (key) {
-        build[key] = packetPrivacy.value((root.AeroBuildInfo || {})[key], key);
+        build[key] = packetPrivacy.value((root.QtizenBuildInfo || {})[key], key);
       });
       request.send(
         JSON.stringify({
@@ -443,8 +443,8 @@
   logger.record("ui.start", {
     component: "launcher",
     version: version,
-    build_id: root.AeroBuildInfo && root.AeroBuildInfo.build_id,
-    commit: root.AeroBuildInfo && root.AeroBuildInfo.commit,
+    build_id: root.QtizenBuildInfo && root.QtizenBuildInfo.build_id,
+    commit: root.QtizenBuildInfo && root.QtizenBuildInfo.commit,
   });
   root.addEventListener("error", function (event) {
     logger.captureError("ui.error", event.error || { name: "ScriptError", message: event.message }, {

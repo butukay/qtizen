@@ -2,9 +2,9 @@
 
 import pytest
 
-from aerotizen import cli, home, releases
+from qtizen import cli, home, releases
 
-LAUNCHER = f"app_id={releases.APP_ID} app_title=AeroTizen"
+LAUNCHER = f"app_id={releases.APP_ID} app_title=Qtizen"
 OTHER = "app_id=Abcdefghij.Player app_title=Player"
 
 
@@ -64,14 +64,14 @@ def tv(monkeypatch):
 
 
 def run(monkeypatch, *arguments):
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--tv", "tv", *arguments])
+    monkeypatch.setattr("sys.argv", ["qtizen", "--tv", "tv", *arguments])
     cli.main()
 
 
 def test_uninstall_launcher_uses_the_app_id(monkeypatch, tv, capsys):
     run(monkeypatch, "uninstall", "launcher", "--yes")
     assert tv.removed == [releases.APP_ID]
-    assert "Uninstalled AeroTizen" in capsys.readouterr().out
+    assert "Uninstalled Qtizen" in capsys.readouterr().out
 
 
 def test_uninstall_asks_first_and_mentions_lost_settings(monkeypatch, tv):

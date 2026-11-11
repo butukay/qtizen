@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
-using AeroTizen.UntetheredProbe;
+using Qtizen.UntetheredProbe;
 
-namespace AeroTizen.Root
+namespace Qtizen.Root
 {
     internal static class SetupBootstrap
     {
@@ -112,7 +112,7 @@ namespace AeroTizen.Root
                 }
                 catch (Exception error) { report["passed"] = false; report["cleanup_error"] = error.Message; }
             }
-            Console.WriteLine("AEROTIZEN_ROOT_BOOTSTRAP=" + JsonSerializer.Serialize(report));
+            Console.WriteLine("QTIZEN_ROOT_BOOTSTRAP=" + JsonSerializer.Serialize(report));
             return (bool)report["passed"] ? 0 : 1;
         }
     }

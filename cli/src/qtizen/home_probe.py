@@ -8,10 +8,10 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from aerotizen import __version__, sdk
-from aerotizen.device import DeviceSessionError
+from qtizen import __version__, sdk
+from qtizen.device import DeviceSessionError
 
-PREFIX = "AEROTIZEN_HOME_PROBE\t"
+PREFIX = "QTIZEN_HOME_PROBE\t"
 COMMANDS = (
     "/usr/bin/dotnet",
     "/usr/bin/dotnet-launcher",
@@ -42,7 +42,7 @@ MAX_VERSIONS = 32
 def build_script():
     # Every path is built in. No user input is included in the TV script.
     lines = [
-        'emit() { printf \'AEROTIZEN_HOME_PROBE\\t%s\\t%s\\n\' "$1" "$2"; }',
+        'emit() { printf \'QTIZEN_HOME_PROBE\\t%s\\t%s\\n\' "$1" "$2"; }',
         'emit uid "$(id -u)"',
         'emit architecture "$(uname -m 2>/dev/null || true)"',
         "if [ -r /etc/os-release ]; then",

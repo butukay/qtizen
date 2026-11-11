@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from aerotizen import cli, home, home_control, root, sdk
+from qtizen import cli, home, home_control, root, sdk
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -212,7 +212,7 @@ def test_backup_preserves_original_when_values_or_firmware_change(tmp_path, stat
 @pytest.mark.parametrize("custom_output", [False, True])
 @pytest.mark.parametrize("profile", ["New User", "Bénédicte 名"])
 def test_backup_creates_missing_parent_directories(tmp_path, status, custom_output, profile):
-    state_dir = tmp_path / profile / ".config" / "aerotizen"
+    state_dir = tmp_path / profile / ".config" / "qtizen"
     output = tmp_path / profile / "chosen" / "tv" / "original-home.json" if custom_output else None
     expected = output or state_dir / "backups" / status["device"]["identity_sha256"] / "original-home.json"
     assert not expected.parent.exists()
@@ -349,7 +349,7 @@ def test_root_mode_requires_tools_before_discovery(monkeypatch, action):
     monkeypatch.setattr(cli, "pick_tv", lambda *args: pytest.fail("must not contact a TV"))
     monkeypatch.setattr(cli.shutil, "which", lambda *args: None)
     monkeypatch.delenv("SDB", raising=False)
-    monkeypatch.setattr("sys.argv", ["aerotizen", "home", action, "--root"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "home", action, "--root"])
     with pytest.raises(SystemExit, match="Pass --root-tool"):
         cli.main()
 
@@ -381,7 +381,7 @@ def test_cli_routes_read_only_home_commands_and_closes_session(monkeypatch, tmp_
     monkeypatch.setattr(
         "sys.argv",
         [
-            "aerotizen",
+            "qtizen",
             "--tv",
             "192.0.2.10",
             "home",
@@ -437,7 +437,7 @@ def test_cli_reports_missing_tv_runtime_without_backup_or_writer(
     monkeypatch.setattr(home, "load_helper", lambda: {name: b"dll" for name in home.HELPER_FILES})
     monkeypatch.setattr(home_control, "load_helper", lambda: {})
     monkeypatch.setattr(sdk, "run", run)
-    argv = ["aerotizen", "--tv", "192.0.2.10", "home", action]
+    argv = ["qtizen", "--tv", "192.0.2.10", "home", action]
     if action in ("apply", "restore"):
         argv.append("--yes")
     if json_output:
@@ -524,7 +524,7 @@ def test_offline_metadata_uses_only_identity_bound_original(monkeypatch, tmp_pat
     monkeypatch.setattr(cli.remote, "info", offline)
     value = home.device_info(Session(), "192.0.2.10", state_dir=tmp_path)
     assert value["modelName"] == "TEST-FRAME"
-    assert "backup" in value["_aerotizen_metadata_source"]
+    assert "backup" in value["_qtizen_metadata_source"]
 
     class Other:
         def duid(self):
@@ -565,7 +565,7 @@ def test_service_diagnostic_survives_query_and_is_visible_in_cli(
     monkeypatch.setattr(cli, "require_sdb", lambda host: nullcontext(object()))
     monkeypatch.setattr(home, "device_info", lambda *args, **kwargs: {})
     monkeypatch.setattr(home, "read_status", lambda *args: status)
-    argv = ["aerotizen", "--tv", "192.0.2.10", "home", "status"]
+    argv = ["qtizen", "--tv", "192.0.2.10", "home", "status"]
     if json_output:
         argv.append("--json")
     monkeypatch.setattr("sys.argv", argv)

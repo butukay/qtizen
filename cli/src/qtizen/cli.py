@@ -44,9 +44,9 @@ from collections import OrderedDict
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from aerotizen import __version__, catalog, diagnostics, discover, remote
-from aerotizen.device import DeviceSession
-from aerotizen.sdb import SdbError
+from qtizen import __version__, catalog, diagnostics, discover, profile, remote
+from qtizen.device import DeviceSession
+from qtizen.sdb import SdbError
 
 STATE_DIR = remote.CONFIG_DIR
 
@@ -200,7 +200,7 @@ def cert_dir_for(duid):
 
 
 def cmd_certs(args):
-    from aerotizen import certs
+    from qtizen import certs
 
     host = pick_tv(args)
     with require_sdb(host) as s:
@@ -261,7 +261,7 @@ def verify_install(app_id, version, output, applist):
 
 def _install_signed(session, src, temporary, host):
     """Update in place with the saved signing profile and verify the TV's reply."""
-    from aerotizen import signer
+    from qtizen import signer
 
     app_id, version = app_metadata_of(src)
     duid = session.duid()
@@ -279,12 +279,12 @@ def _install_signed(session, src, temporary, host):
 
 
 def cmd_install(args):
-    from aerotizen import releases
+    from qtizen import releases
 
     if args.src != "launcher" and (args.release_version is not None or args.release_repo is not None):
         sys.exit("--version and --release-repo apply only to 'install launcher'.")
     try:
-        with TemporaryDirectory(prefix="aerotizen-install-") as temporary:
+        with TemporaryDirectory(prefix="qtizen-install-") as temporary:
             src = args.src
             if src == "launcher":
                 downloaded = releases.download_launcher(
@@ -303,7 +303,7 @@ def cmd_install(args):
 
 
 def cmd_update_cli(args):
-    from aerotizen import releases
+    from qtizen import releases
 
     try:
         release = releases.resolve_cli(repository=args.release_repo or releases.DEFAULT_REPOSITORY)
@@ -324,7 +324,7 @@ def cmd_update_cli(args):
                 print("No matching CLI archive is available for this platform.")
             print(f"Release: {release.release_url}")
             if not args.check:
-                from aerotizen import self_update
+                from qtizen import self_update
 
                 result = self_update.install(
                     release, repository=args.release_repo or releases.DEFAULT_REPOSITORY
@@ -342,7 +342,7 @@ def cmd_update_cli(args):
 
 
 def cmd_update(args):
-    from aerotizen import releases
+    from qtizen import releases
 
     if args.target == "cli":
         cmd_update_cli(args)
@@ -381,7 +381,7 @@ def cmd_update(args):
                 return
             if current_key is None:
                 sys.exit("To install without a version comparison, run: qtizen install launcher")
-            with TemporaryDirectory(prefix="aerotizen-update-") as temporary:
+            with TemporaryDirectory(prefix="qtizen-update-") as temporary:
                 downloaded = release.download(Path(temporary))
                 print(f"Downloaded launcher {downloaded.version}.")
                 _install_signed(session, downloaded.path, temporary, host)
@@ -390,7 +390,7 @@ def cmd_update(args):
 
 
 def cmd_uninstall(args):
-    from aerotizen import releases
+    from qtizen import releases
 
     app_id = releases.APP_ID if args.appid == "launcher" else args.appid
     if not re.fullmatch(r"[A-Za-z0-9_.-]+", app_id):
@@ -405,7 +405,7 @@ def cmd_uninstall(args):
         if not args.yes and input(f"Uninstall {name} ({app_id})?{note} [y/N] ").strip().lower() != "y":
             return
         if launcher_package:
-            from aerotizen import home
+            from qtizen import home
 
             try:
                 status = home.read_status(s, None, {})
@@ -481,7 +481,7 @@ def cmd_launch(args):
 
 
 def cmd_inspect(args):
-    from aerotizen import inspect_app, releases
+    from qtizen import inspect_app, releases
 
     app_id = releases.APP_ID if args.appid == "launcher" else args.appid
     if not re.fullmatch(r"[A-Za-z0-9_.-]+", app_id):
@@ -497,7 +497,7 @@ def cmd_inspect(args):
 
 
 def cmd_home_probe(args):
-    from aerotizen import home_probe
+    from qtizen import home_probe
 
     try:
         output = args.output.expanduser()
@@ -519,8 +519,8 @@ def cmd_home_probe(args):
 
 
 def cmd_home(args):
-    from aerotizen import home, home_control
-    from aerotizen.root import SamsungTvRoot
+    from qtizen import home, home_control
+    from qtizen.root import SamsungTvRoot
 
     try:
         writing = args.home_command in ("apply", "restore")
@@ -618,7 +618,7 @@ def cmd_logs(args):
         if args.logs_command == "open":
             diagnostics.open_logs(STATE_DIR)
             return
-        output = args.output or Path(f"aerotizen-diagnostics-{datetime.datetime.now():%Y%m%d-%H%M%S}.zip")
+        output = args.output or Path(f"qtizen-diagnostics-{datetime.datetime.now():%Y%m%d-%H%M%S}.zip")
         if getattr(args, "include_home", False) and not args.tv:
             sys.exit("Use --tv TV_IP with --include-home.")
         path, tv_state = diagnostics.export_logs(
@@ -631,7 +631,7 @@ def cmd_logs(args):
 
 
 def cmd_root(args):
-    from aerotizen import root_control, root_state
+    from qtizen import root_control, root_state
 
     try:
         host = pick_tv(args)
@@ -822,6 +822,7 @@ def main():
             )
         command.set_defaults(fn=cmd_root)
     args = parser.parse_args()
+    profile.migrate(STATE_DIR)
     diagnostics.run_logged(args, args.fn, STATE_DIR)
 
 

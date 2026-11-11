@@ -1,13 +1,35 @@
-// AeroTizen launcher behaviour and settings. App identities live in app-catalog.js.
-window.AeroTizen = window.AeroTizen || {};
+// Qtizen launcher behaviour and settings. App identities live in app-catalog.js.
+window.Qtizen = window.Qtizen || {};
 
-AeroTizen.config = {
+// Copy saved preferences once without removing the old installation's rollback data.
+(function () {
+  try {
+    var storage = window.localStorage;
+    var keys = [];
+    var i;
+    for (i = 0; i < storage.length; i++) {
+      keys.push(storage.key(i));
+    }
+    for (i = 0; i < keys.length; i++) {
+      if (keys[i] && keys[i].indexOf("aerotizen.") === 0) {
+        var destination = "qtizen." + keys[i].slice(10);
+        if (storage.getItem(destination) === null) {
+          storage.setItem(destination, storage.getItem(keys[i]));
+        }
+      }
+    }
+  } catch (e) {
+    // Preferences can still use the legacy key if browser storage is unavailable.
+  }
+})();
+
+Qtizen.config = {
   APP_ID: "DclHome001.Home",
   SERVICE_ID: "DclHome001.Watcher",
   SERVICE_URL: "http://127.0.0.1:47790",
 
-  STORAGE_KEY: "aerotizen.settings.v1",
-  LEGACY_STORAGE_KEYS: ["hearth.home.v1", "declutter.home.v5"],
+  STORAGE_KEY: "qtizen.settings.v1",
+  LEGACY_STORAGE_KEYS: ["aerotizen.settings.v1", "hearth.home.v1", "declutter.home.v5"],
 
   // Remote control key codes (Tizen TV).
   KEY: {

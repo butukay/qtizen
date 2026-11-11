@@ -5,18 +5,18 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using AeroTizen.UntetheredProbe;
+using Qtizen.UntetheredProbe;
 using Microsoft.Win32.SafeHandles;
 
-namespace AeroTizen.Root
+namespace Qtizen.Root
 {
     internal static class RootPaths
     {
-        internal const string AppId = "org.aerotizen.roothelper", Version = "0.1.0";
+        internal const string AppId = "org.qtizen.roothelper", Version = "0.1.0";
         internal static readonly string RuntimeVersion = typeof(RootPaths).Assembly.GetName().Version.ToString(3);
         internal const string Package = "/opt/usr/apps/" + AppId;
         internal const string Data = "/home/owner/apps_rw/" + AppId + "/data";
-        internal const string Private = "/opt/usr/share/aerotizen-root-private";
+        internal const string Private = "/opt/usr/share/qtizen-root-private";
         internal const string Config = Package + "/bin/root.json";
         [DllImport("libc.so.6")] internal static extern uint getuid();
         [DllImport("libc.so.6")] internal static extern uint geteuid();
@@ -127,9 +127,9 @@ namespace AeroTizen.Root
                 Port = root.GetProperty("bridge_port").GetInt32();
                 if (Port < 1024 || Port > 65535 || Port == 26101 || Port == 26102) throw new InvalidDataException("Invalid bridge port");
                 var names = new HashSet<string>();
-                foreach (string name in new[] { "AeroTizenRootHelper", "AeroTizenRootBridge", "AeroTizenRootProbe", "AeroTizenBootWriter" })
+                foreach (string name in new[] { "QtizenRootHelper", "QtizenRootBridge", "QtizenRootProbe", "QtizenBootWriter" })
                     foreach (string suffix in new[] { ".dll", ".runtimeconfig.json", ".deps.json" })
-                        names.Add((name == "AeroTizenRootProbe" ? "res/runner/" : name == "AeroTizenBootWriter" ? "res/setup/" : "bin/") + name + suffix);
+                        names.Add((name == "QtizenRootProbe" ? "res/runner/" : name == "QtizenBootWriter" ? "res/setup/" : "bin/") + name + suffix);
                 foreach (var item in root.GetProperty("files").EnumerateObject())
                 {
                     if (!names.Remove(item.Name)) throw new InvalidDataException("Unexpected managed root file");

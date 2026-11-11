@@ -41,9 +41,9 @@
     } else {
       trace.last_launch = launch;
     }
-    w.AeroStartup.mark(event);
+    w.QtizenStartup.mark(event);
   }
-  w.AeroStartup = {
+  w.QtizenStartup = {
     trace: trace,
     captureLaunch: function () {
       captureLaunch("launch-request");
@@ -66,18 +66,18 @@
         });
       }
       try {
-        localStorage.setItem("aerotizen.startup.v1", JSON.stringify(trace));
+        localStorage.setItem("qtizen.startup.v1", JSON.stringify(trace));
       } catch (e) {
         /* diagnostics are optional */
       }
     },
   };
-  w.AeroStartup.mark("first-script");
+  w.QtizenStartup.mark("first-script");
   document.addEventListener("DOMContentLoaded", function () {
-    w.AeroStartup.mark("dom-ready");
+    w.QtizenStartup.mark("dom-ready");
   });
   w.addEventListener("load", function () {
-    w.AeroStartup.mark("page-loaded");
+    w.QtizenStartup.mark("page-loaded");
     loaded = true;
     pending.forEach(function (callback) {
       setTimeout(callback, 0);
@@ -85,13 +85,13 @@
     pending = [];
   });
   document.addEventListener("visibilitychange", function () {
-    w.AeroStartup.mark(document.hidden ? "hidden" : "visible");
+    w.QtizenStartup.mark(document.hidden ? "hidden" : "visible");
   });
   w.addEventListener("focus", function () {
-    w.AeroStartup.mark("focus");
+    w.QtizenStartup.mark("focus");
   });
   w.addEventListener("blur", function () {
-    w.AeroStartup.mark("blur");
+    w.QtizenStartup.mark("blur");
   });
   w.addEventListener("appcontrol", function () {
     captureLaunch("appcontrol");

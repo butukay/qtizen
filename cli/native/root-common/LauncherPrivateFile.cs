@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using AeroTizen.Root;
+using Qtizen.Root;
 using Microsoft.Win32.SafeHandles;
 
 internal sealed class LauncherPrivateFile

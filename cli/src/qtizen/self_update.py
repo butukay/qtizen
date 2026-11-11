@@ -22,7 +22,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 
-from aerotizen import releases
+from qtizen import releases
 
 MAX_ARCHIVE_BYTES = 128 * 1024 * 1024
 MAX_BINARY_BYTES = 256 * 1024 * 1024
@@ -262,7 +262,7 @@ def install(release, *, repository=releases.DEFAULT_REPOSITORY):
         raise UpdateError("The CLI is not a regular, non-privileged executable.")
     with update_lock(target):
         old_hash = digest(target)
-        stage = Path(tempfile.mkdtemp(prefix=".aerotizen-update-", dir=target.parent))
+        stage = Path(tempfile.mkdtemp(prefix=".qtizen-update-", dir=target.parent))
         handed_off = False
         token = secrets.token_hex(6)
         backup_name = (

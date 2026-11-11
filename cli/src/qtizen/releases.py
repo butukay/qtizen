@@ -18,7 +18,7 @@ import zlib
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
-from aerotizen import __version__
+from qtizen import __version__
 
 DEFAULT_REPOSITORY = "butukay/qtizen"
 APP_ID = "DclHome001.Home"
@@ -86,7 +86,7 @@ class _HTTPSRedirect(urllib.request.HTTPRedirectHandler):
 def _read_url(url, limit):
     request = urllib.request.Request(
         url,
-        headers={"User-Agent": f"aerotizen/{__version__}", "Accept": "application/octet-stream"},
+        headers={"User-Agent": f"qtizen/{__version__}", "Accept": "application/octet-stream"},
     )
     if urllib.parse.urlsplit(url).netloc == "api.github.com":
         request.add_header("Accept", "application/vnd.github+json")

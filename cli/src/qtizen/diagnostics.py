@@ -17,13 +17,13 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from aerotizen import __version__, build_info
-from aerotizen import diagnostic_privacy as privacy
+from qtizen import __version__, build_info
+from qtizen import diagnostic_privacy as privacy
 
 MAX_LOG_BYTES = 256 * 1024
 MAX_LOG_FILES = 10
 MAX_TV_BYTES = 256 * 1024
-_CURRENT = contextvars.ContextVar("aerotizen_diagnostics", default=None)
+_CURRENT = contextvars.ContextVar("qtizen_diagnostics", default=None)
 
 
 def _native_summary(result, policy=None):
@@ -39,7 +39,7 @@ def _log_line(line, policy):
 
 
 def log_directory(state_dir):
-    return Path(os.environ.get("AEROTIZEN_LOG_DIR", Path(state_dir) / "logs")).expanduser()
+    return Path(os.environ.get("QTIZEN_LOG_DIR", Path(state_dir) / "logs")).expanduser()
 
 
 def event(name, **fields):
@@ -182,7 +182,7 @@ def fetch_tv(session, *, policy=None):
     raw = session.tcp_request(
         47790,
         b"GET /diagnostics/logs HTTP/1.0\r\nHost: localhost\r\n"
-        b"Connection: close\r\nX-AeroTizen-Diagnostics: 1\r\n\r\n",
+        b"Connection: close\r\nX-Qtizen-Diagnostics: 1\r\n\r\n",
         timeout=5,
         max_output=MAX_TV_BYTES + 8192,
     )
@@ -335,7 +335,7 @@ def _metadata(host):
 
 
 def _native_snapshot(session, *, policy=None):
-    from aerotizen import home
+    from qtizen import home
 
     policy = policy or privacy.Policy()
     status = home.read_status(session, None, {})
@@ -389,8 +389,8 @@ def _native_snapshot(session, *, policy=None):
 
 def export_logs(state_dir, output, host=None, *, include_home=False):
     """Export allowlisted diagnostics, never certificates, tokens or recovery requests."""
-    from aerotizen.device import DeviceSession
-    from aerotizen.sdb import SdbError
+    from qtizen.device import DeviceSession
+    from qtizen.sdb import SdbError
 
     policy = privacy.Policy()
     report = {

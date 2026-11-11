@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
   await page.route("http://127.0.0.1:47790/**", (r) => r.fulfill({ body: "{}" }));
   await page.addInitScript(() =>
     localStorage.setItem(
-      "aerotizen.settings.v1",
+      "qtizen.settings.v1",
       JSON.stringify({
         background: "black",
         showWeather: false,
@@ -22,12 +22,12 @@ test.beforeEach(async ({ page }) => {
 
 test("held OK is cancelled if the app loses visibility before its release", async ({ page }) => {
   await page.goto("/");
-  await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+  await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
   await page.keyboard.down("Enter");
   await page.evaluate(() => {
     Object.defineProperty(document, "hidden", { configurable: true, value: true });
     document.dispatchEvent(new Event("visibilitychange"));
-    AeroTizen.homeScreen.refreshApps();
+    Qtizen.homeScreen.refreshApps();
   });
   await expect(page.locator("#home-root [data-focused=true]")).toHaveCount(0);
   await page.waitForTimeout(800);
@@ -75,7 +75,7 @@ for (const trigger of ["visibilitychange", "appcontrol", "failed launch"]) {
     await page.evaluate((event) => {
       const tv = window.testTv;
       // Keep an older read pending so its result can arrive after the refresh.
-      AeroTizen.apps.load(() => {});
+      Qtizen.apps.load(() => {});
       tv.installed = tv.installed.slice(1);
       if (event === "visibilitychange") {
         Object.defineProperty(document, "hidden", { configurable: true, value: true });
@@ -98,14 +98,14 @@ for (const trigger of ["visibilitychange", "appcontrol", "failed launch"]) {
     });
     await expect(removed).toHaveCount(0);
     await expect(other).toBeVisible();
-    expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().home)).toEqual(["demo0", "demo1", "demo2"]);
+    expect(await page.evaluate(() => Qtizen.settings.getSnapshot().home)).toEqual(["demo0", "demo1", "demo2"]);
   });
 }
 
 test("moving visible favourites ignores stale uninstalled IDs in saved settings", async ({ page }) => {
   await page.addInitScript(() =>
     localStorage.setItem(
-      "aerotizen.settings.v1",
+      "qtizen.settings.v1",
       JSON.stringify({
         background: "black",
         showWeather: false,
@@ -114,7 +114,7 @@ test("moving visible favourites ignores stale uninstalled IDs in saved settings"
     ),
   );
   await page.goto("/");
-  await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+  await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
   await expect(page.locator("#grid > [data-id]")).toHaveCount(3);
   await page.keyboard.down("Enter");
   await expect(page.getByRole("menu")).toBeVisible();
@@ -127,26 +127,26 @@ test("moving visible favourites ignores stale uninstalled IDs in saved settings"
     "demo2",
   ]);
   await page.keyboard.press("Enter");
-  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().home)).toEqual(["demo1", "demo0", "demo2"]);
+  expect(await page.evaluate(() => Qtizen.settings.getSnapshot().home)).toEqual(["demo1", "demo0", "demo2"]);
 });
 
 test("an inventory refresh removing the moving app cannot delete another favourite", async ({ page }) => {
   await page.goto("/");
-  await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+  await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
   await page.keyboard.down("Enter");
   await expect(page.getByRole("menu")).toBeVisible();
   await page.keyboard.up("Enter");
   await page.keyboard.press("Enter");
   await expect(page.locator("#grid [data-id][data-moving=true]")).toHaveCount(1);
   await page.evaluate(() => {
-    const snapshot = AeroTizen.apps.getSnapshot();
+    const snapshot = Qtizen.apps.getSnapshot();
     const next = { ...snapshot, all: snapshot.all.filter((app) => app.id !== "demo0") };
-    AeroTizen.apps.getSnapshot = () => next;
-    AeroTizen.homeScreen.refreshApps();
+    Qtizen.apps.getSnapshot = () => next;
+    Qtizen.homeScreen.refreshApps();
   });
   await expect(page.locator("#grid [data-id][data-moving=true]")).toHaveCount(0);
   await page.keyboard.press("ArrowRight");
-  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().home)).toEqual(["demo0", "demo1", "demo2"]);
+  expect(await page.evaluate(() => Qtizen.settings.getSnapshot().home)).toEqual(["demo0", "demo1", "demo2"]);
   expect(await page.locator("#grid > [data-id]").evaluateAll((nodes) => nodes.map((n) => n.dataset.id))).toEqual([
     "demo1",
     "demo2",
@@ -157,20 +157,20 @@ test("source reachability keeps active, recognised and manually pinned inputs di
   page,
 }) => {
   await page.goto("/");
-  await page.waitForFunction(() => AeroTizen.apps.getSnapshot().ready);
+  await page.waitForFunction(() => Qtizen.apps.getSnapshot().ready);
   await page.evaluate(() => {
-    const inputSnapshot = AeroTizen.inputs.getSnapshot();
+    const inputSnapshot = Qtizen.inputs.getSnapshot();
     const sources = [1, 2, 3, 4].map((number) => ({
       type: "HDMI",
       number,
       connected: false,
       active: number === 1,
     }));
-    AeroTizen.inputs.isVisible = () => true;
-    AeroTizen.inputs.hasRecognizedDevice = (source) => source.number === 2;
-    AeroTizen.inputs.alwaysVisible = (source) => source.number === 3;
-    AeroTizen.inputs.getSnapshot = () => ({ ...inputSnapshot, sources, visibleSources: sources });
-    AeroTizen.homeScreen.render();
+    Qtizen.inputs.isVisible = () => true;
+    Qtizen.inputs.hasRecognizedDevice = (source) => source.number === 2;
+    Qtizen.inputs.alwaysVisible = (source) => source.number === 3;
+    Qtizen.inputs.getSnapshot = () => ({ ...inputSnapshot, sources, visibleSources: sources });
+    Qtizen.homeScreen.render();
   });
   const sources = page.locator("#inputs > [data-input-card]");
   await expect(sources).toHaveCount(4);

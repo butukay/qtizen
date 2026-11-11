@@ -18,7 +18,7 @@ from pathlib import Path
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 
-from aerotizen.root import SUPPORTED_VERSION
+from qtizen.root import SUPPORTED_VERSION
 
 
 def _payload_hashes(dll, runtimeconfig, dependencies):
@@ -32,9 +32,9 @@ def _payload_hashes(dll, runtimeconfig, dependencies):
 STAGING_ROOT = "/home/owner/share/tmp/sdk_tools"
 PROBE_ROOT_VERSION = "0.0.12"
 AGENT_FILES = (
-    "AeroTizenRootProbe.dll",
-    "AeroTizenRootProbe.runtimeconfig.json",
-    "AeroTizenRootProbe.deps.json",
+    "QtizenRootProbe.dll",
+    "QtizenRootProbe.runtimeconfig.json",
+    "QtizenRootProbe.deps.json",
 )
 # TV payloads from the previously verified v0.0.12 macOS ARM64 archive. These
 # are managed assemblies; the host executable is neither copied nor executed.
@@ -89,7 +89,7 @@ test "$(id -ru)" = 0
 test "$(id -g)" = 0
 boot=$(cat /proc/sys/kernel/random/boot_id)
 case "$boot" in *[!a-f0-9-]*|'') exit 80;; esac
-proofdir={STAGING_ROOT}/aerotizen-probe-proof-{nonce}
+proofdir={STAGING_ROOT}/qtizen-probe-proof-{nonce}
 test ! -e "$proofdir"
 test ! -L "$proofdir"
 mkdir -m 755 "$proofdir"
@@ -169,7 +169,7 @@ def prepare_bundle(release, agent, output, *, runtime="6.0"):
         },
     }
     output.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix=".aerotizen-probe-", dir=output.parent) as temporary:
+    with tempfile.TemporaryDirectory(prefix=".qtizen-probe-", dir=output.parent) as temporary:
         stage = Path(temporary) / "bundle"
         stage.mkdir(mode=0o700)
         for name, data in files.items():

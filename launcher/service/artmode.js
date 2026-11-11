@@ -194,7 +194,7 @@ module.exports = function createArtMode(options) {
     }
     var id;
     try {
-      id = "aerotizen-" + now() + "-" + ++sequence + "-" + crypto.randomBytes(4).toString("hex");
+      id = "qtizen-" + now() + "-" + ++sequence + "-" + crypto.randomBytes(4).toString("hex");
     } catch (e) {
       finishAll(waiters || [], "unknown");
       lost(conn, "request ID failed");

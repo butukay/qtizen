@@ -18,7 +18,7 @@ def test_owner_first_then_by_first_merged_pr(monkeypatch):
         ("later", "2026-10-22T00:00:00Z"),
     ]
     monkeypatch.setattr(uc, "merged_pull_authors", lambda repo: pulls)
-    assert uc.contributors("helalaou/AeroTizen") == ["helalaou", "early", "later"]
+    assert uc.contributors("helalaou/Qtizen") == ["helalaou", "early", "later"]
 
 
 def test_update_replaces_only_the_marked_block_and_wraps_rows():

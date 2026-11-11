@@ -27,7 +27,7 @@ for (const [name, url] of [
     });
     await page.addInitScript(() => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({
           home: ["org.tizen.primevideo"],
           showWeather: false,
@@ -61,7 +61,7 @@ for (const [name, url] of [
     const card = page.locator("#continue-items > [data-key]");
     await expect(card).toHaveText(/Continue Watching lifecycle/);
     await page.evaluate(() => {
-      const owner = (window.continueOwner = AeroTizen.continueWatching);
+      const owner = (window.continueOwner = Qtizen.continueWatching);
       window.continueSnapshot = owner.getSnapshot();
       window.continueCard = document.querySelector("#continue-items > [data-key]");
       owner.start();
@@ -70,7 +70,7 @@ for (const [name, url] of [
     expect(requests).toHaveLength(1);
     expect(
       await page.evaluate(() => {
-        const owner = AeroTizen.continueWatching;
+        const owner = Qtizen.continueWatching;
         const snapshot = owner.getSnapshot();
         return (
           snapshot === window.continueSnapshot &&
@@ -80,34 +80,34 @@ for (const [name, url] of [
         );
       }),
     ).toBe(true);
-    await page.evaluate(() => AeroTizen.continueWatching.refresh());
+    await page.evaluate(() => Qtizen.continueWatching.refresh());
     await expect.poll(() => requests.length).toBe(2);
     await expect
-      .poll(() => page.evaluate(() => AeroTizen.continueWatching.getSnapshot().sources[0].status))
+      .poll(() => page.evaluate(() => Qtizen.continueWatching.getSnapshot().sources[0].status))
       .toBe("1 item");
     expect(
       await page.evaluate(
         () =>
-          AeroTizen.continueWatching.getSnapshot().items === window.continueSnapshot.items &&
+          Qtizen.continueWatching.getSnapshot().items === window.continueSnapshot.items &&
           document.querySelector("#continue-items > [data-key]") === window.continueCard,
       ),
     ).toBe(true);
     const listeners = await page.evaluate(() => window.visibilityListeners.size);
     await page.evaluate(() => {
-      AeroTizen.continueWatching.dispose();
-      AeroTizen.continueWatching.dispose();
+      Qtizen.continueWatching.dispose();
+      Qtizen.continueWatching.dispose();
     });
     expect(await page.evaluate(() => window.visibilityListeners.size)).toBe(listeners - 1);
     await page.evaluate(() => {
-      AeroTizen.settings.update({ continueWatching: false });
-      AeroTizen.settings.update({ continueWatching: true });
-      AeroTizen.clock.tick();
-      AeroTizen.continueWatching.start();
-      AeroTizen.continueWatching.refresh();
+      Qtizen.settings.update({ continueWatching: false });
+      Qtizen.settings.update({ continueWatching: true });
+      Qtizen.clock.tick();
+      Qtizen.continueWatching.start();
+      Qtizen.continueWatching.refresh();
       document.dispatchEvent(new Event("visibilitychange"));
     });
     expect(requests).toHaveLength(2);
-    expect(await page.evaluate(() => AeroTizen.continueWatching === window.continueOwner)).toBe(true);
+    expect(await page.evaluate(() => Qtizen.continueWatching === window.continueOwner)).toBe(true);
     await expect(page.locator("vite-error-overlay")).toHaveCount(0);
     expect(errors).toEqual([]);
   });

@@ -12,7 +12,7 @@ test(
   "private storage commits atomically and reloads a pending handoff",
   { skip: process.platform === "win32" && "TV directory fsync requires a POSIX filesystem" },
   () => {
-    const directory = fs.mkdtempSync(path.join(os.tmpdir(), "aerotizen-mode-test-"));
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), "qtizen-mode-test-"));
     try {
       let store;
       createStore(
@@ -41,7 +41,7 @@ test(
       assert.equal(result.mode, "hold");
       assert.equal(createMode(store, () => {}).read().mode, "hold");
       const files = fs.readdirSync(directory);
-      assert.deepEqual(files, ["aerotizen-home-routing-v1.json"]);
+      assert.deepEqual(files, ["qtizen-home-routing-v1.json"]);
       if (process.platform !== "win32") assert.equal(fs.statSync(path.join(directory, files[0])).mode & 0o777, 0o600);
     } finally {
       fs.rmSync(directory, { recursive: true, force: true });
@@ -93,6 +93,7 @@ function portableStore(directory, events, failDirectorySync) {
     return path.join(directory, name.slice(virtual.length + 1));
   }
   const adapter = {
+    existsSync: (name) => fs.existsSync(local(name)),
     statSync: (name) => fs.statSync(local(name)),
     readFileSync: (name, encoding) => fs.readFileSync(local(name), encoding),
     writeFileSync: (descriptor, value, encoding) => fs.writeFileSync(descriptor, value, encoding),
@@ -144,7 +145,7 @@ function portableStore(directory, events, failDirectorySync) {
 }
 
 test("private storage handoff persists on any host through the Tizen filesystem contract", () => {
-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "aerotizen-portable-mode-"));
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "qtizen-portable-mode-"));
   const events = [];
   try {
     const storage = portableStore(directory, events, false);
@@ -168,14 +169,14 @@ test("private storage handoff persists on any host through the Tizen filesystem 
     });
     assert.equal(createMode(portableStore(directory, [], false), () => {}).read().mode, "native");
     assert.deepEqual(events, ["file-sync", "rename", "directory-sync", "file-sync", "rename", "directory-sync"]);
-    assert.deepEqual(fs.readdirSync(directory), ["aerotizen-home-routing-v1.json"]);
+    assert.deepEqual(fs.readdirSync(directory), ["qtizen-home-routing-v1.json"]);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }
 });
 
 test("private storage directory-sync failure blocks handoff on any host", () => {
-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "aerotizen-portable-mode-failure-"));
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "qtizen-portable-mode-failure-"));
   try {
     const events = [];
     const mode = createMode(portableStore(directory, events, true), () => {});
@@ -193,7 +194,7 @@ test("private storage directory-sync failure blocks handoff on any host", () => 
     );
     assert.equal(mode.read().mode, "blocked");
     assert.deepEqual(events, ["file-sync", "rename", "directory-sync"]);
-    assert.deepEqual(fs.readdirSync(directory), ["aerotizen-home-routing-v1.json"]);
+    assert.deepEqual(fs.readdirSync(directory), ["qtizen-home-routing-v1.json"]);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }

@@ -9,9 +9,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AeroTizen.SdbTest;
+using Qtizen.SdbTest;
 
-namespace AeroTizen.UntetheredProbe
+namespace Qtizen.UntetheredProbe
 {
     internal static class ProbeTests
     {
@@ -135,9 +135,9 @@ namespace AeroTizen.UntetheredProbe
         private static void CleanupOwnership(Bundle bundle)
         {
             if (!File.Exists("/bin/sh")) return;
-            string root = Path.Combine(Path.GetTempPath(), "aerotizen-cleanup-test-" + Bundle.Hex(8));
+            string root = Path.Combine(Path.GetTempPath(), "qtizen-cleanup-test-" + Bundle.Hex(8));
             string stage = root + "/" + bundle.Package, shared = root + "/on-demand";
-            string script = bundle.Cleanup("/tmp/aerotizen-root-probe-0123456789abcdef").Replace(Bundle.StagingRoot, root);
+            string script = bundle.Cleanup("/tmp/qtizen-root-probe-0123456789abcdef").Replace(Bundle.StagingRoot, root);
             Directory.CreateDirectory(stage); Directory.CreateDirectory(shared);
             try
             {
@@ -147,7 +147,7 @@ namespace AeroTizen.UntetheredProbe
                 Check(Shell(script) != 0 && File.Exists(stage + "/public.pem"), "Another run's staging was deleted");
                 File.WriteAllText(stage + "/probe-owner", "0123456789abcdef");
                 File.WriteAllText(shared + "/keep", "shared data");
-                string proofDirectory = root + "/aerotizen-probe-proof-" + bundle.Nonce;
+                string proofDirectory = root + "/qtizen-probe-proof-" + bundle.Nonce;
                 Directory.CreateDirectory(proofDirectory);
                 string proof = proofDirectory + "/proof.json";
                 File.WriteAllText(proof, "retained evidence");
@@ -175,7 +175,7 @@ namespace AeroTizen.UntetheredProbe
             ProcessResult success = BoundedProcess.Run(Command("printf done; printf diagnostic >&2"), 2000);
             Check(success.ExitCode == 0 && success.Output == "done" && success.Error == "diagnostic", "Payload output was lost");
             Check(BoundedProcess.Run(Command("exit 7"), 2000).ExitCode == 7, "Payload failure exit was lost");
-            string pidFile = Path.Combine(Path.GetTempPath(), "aerotizen-timer-test-" + Bundle.Hex(8));
+            string pidFile = Path.Combine(Path.GetTempPath(), "qtizen-timer-test-" + Bundle.Hex(8));
             var watch = Stopwatch.StartNew();
             try
             {
@@ -205,7 +205,7 @@ namespace AeroTizen.UntetheredProbe
             Reject(() => Proof.Validate(proof, bundle, boot, 0, 0x81a4, 1), "Writable proof accepted");
             Reject(() => Proof.Validate(proof, bundle, boot, 0, 0xa124, 1), "Non-file proof accepted");
             Reject(() => Proof.Validate(proof, bundle, boot, 0, 0x8124, 2), "Linked proof accepted");
-            string work = "/tmp/aerotizen-root-probe-0123456789abcdef";
+            string work = "/tmp/qtizen-root-probe-0123456789abcdef";
             string invocation = bundle.Invocation(work), cleanup = bundle.Cleanup(work);
             ProcessStartInfo start = PayloadRunner.StartInfo(bundle);
             Check(start.FileName == "/usr/bin/dotnet" && start.ArgumentList.Count == 2
@@ -240,11 +240,11 @@ namespace AeroTizen.UntetheredProbe
                 root_attempted = true, fresh_root_proof = true, proof_inode_checked = inode, proof_uid = uid,
                 system_files_unchanged = unchanged, same_boot = true, boot_id = boot,
                 nonce = nonce ?? bundle.Nonce, payload_sha256 = bundle.PayloadHash });
-            return RootProofController.ResultPrefix + record + "\nAEROTIZEN_PROBE_DONE\nAEROTIZEN_PROBE_CLEANED\nAEROTIZEN_ROOT_EXIT=0\n";
+            return RootProofController.ResultPrefix + record + "\nQTIZEN_PROBE_DONE\nQTIZEN_PROBE_CLEANED\nQTIZEN_ROOT_EXIT=0\n";
         }
         private static void ManualProof(Bundle bundle)
         {
-            string data = Path.Combine(Path.GetTempPath(), "aerotizen-arm-test-" + Bundle.Hex(8));
+            string data = Path.Combine(Path.GetTempPath(), "qtizen-arm-test-" + Bundle.Hex(8));
             Directory.CreateDirectory(data);
             try
             {
@@ -277,7 +277,7 @@ namespace AeroTizen.UntetheredProbe
                 string boot = "11111111-2222-3333-4444-555555555555";
                 string valid = SdkProof(bundle, boot);
                 Check(RootProofController.ParseResult(valid, bundle, boot).GetProperty("passed").GetBoolean(), "Valid SDK proof rejected");
-                Reject(() => RootProofController.ParseResult(valid.Replace("AEROTIZEN_PROBE_CLEANED", "MISSING"), bundle, boot), "Unconfirmed cleanup accepted");
+                Reject(() => RootProofController.ParseResult(valid.Replace("QTIZEN_PROBE_CLEANED", "MISSING"), bundle, boot), "Unconfirmed cleanup accepted");
                 Reject(() => RootProofController.ParseResult(valid + valid, bundle, boot), "Duplicate SDK proof accepted");
                 Reject(() => RootProofController.ParseResult(valid, bundle, "other-boot"), "Previous boot accepted");
                 Reject(() => RootProofController.ParseResult(SdkProof(bundle, boot, new string('0', 32)), bundle, boot), "Wrong proof nonce accepted");
@@ -349,7 +349,7 @@ namespace AeroTizen.UntetheredProbe
                 "SDB refusal without proof was accepted");
             Reject(() => RootProofController.CompleteProof(valid, bundle, "wrong-boot", refused, new Deadline(1000)),
                 "SDB refusal bypassed trial identity validation");
-            Reject(() => RootProofController.CompleteProof(valid.Replace("AEROTIZEN_PROBE_CLEANED", "MISSING"), bundle, boot,
+            Reject(() => RootProofController.CompleteProof(valid.Replace("QTIZEN_PROBE_CLEANED", "MISSING"), bundle, boot,
                 refused, new Deadline(1000)), "SDB refusal bypassed cleanup validation");
             Reject(() => RootProofController.CompleteProof(SdkProof(bundle, boot, inode: false), bundle, boot,
                 refused, new Deadline(1000)), "SDB refusal bypassed protected inode validation");

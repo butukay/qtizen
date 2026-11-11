@@ -43,7 +43,7 @@ try {
     await page.route("http://127.0.0.1:47790/**", (route) => route.fulfill({ body: "{}" }));
     await page.addInitScript((settings) => {
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({ home: ["demo0", "demo1", "demo2", "demo3", "demo4", "demo5"], ...settings }),
       );
       window.audit = { intl: 0, geometry: 0 };
@@ -65,12 +65,12 @@ try {
     const start = performance.now();
     await page.goto(values.url);
     await page.waitForFunction(
-      () => window.AeroTizen?.apps.getSnapshot().ready && document.querySelector("#grid [data-focused=true]"),
+      () => window.Qtizen?.apps.getSnapshot().ready && document.querySelector("#grid [data-focused=true]"),
     );
     await page.evaluate(() => document.fonts.ready);
     const readyMs = performance.now() - start;
     const performanceModeActive = await page.evaluate(
-      () => window.AeroTizen.settings.getSnapshot().performanceMode === true,
+      () => window.Qtizen.settings.getSnapshot().performanceMode === true,
     );
     await page.waitForTimeout(800);
     await cdp.send("HeapProfiler.collectGarbage");

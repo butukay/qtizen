@@ -6,7 +6,7 @@ import threading
 
 import pytest
 
-from aerotizen import sdb
+from qtizen import sdb
 
 
 def _frame(cmd, arg0, arg1, payload=b""):
@@ -119,4 +119,4 @@ def fake_tv():
 @pytest.fixture(autouse=True)
 def isolated_cli_logs(monkeypatch, tmp_path):
     """Do not write test command logs into the user profile."""
-    monkeypatch.setenv("AEROTIZEN_LOG_DIR", str(tmp_path / "cli-logs"))
+    monkeypatch.setenv("QTIZEN_LOG_DIR", str(tmp_path / "cli-logs"))

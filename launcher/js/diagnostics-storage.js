@@ -17,7 +17,7 @@
         finish(null);
         return;
       }
-      request = host.indexedDB.open("aerotizen.diagnostics.v1", 1);
+      request = host.indexedDB.open("qtizen.diagnostics.v1", 1);
       request.onupgradeneeded = function () {
         request.result.createObjectStore("logs");
       };
@@ -39,7 +39,7 @@
             function legacy() {
               var value = null;
               try {
-                value = host.localStorage.getItem("aerotizen.diagnostics.v1");
+                value = host.localStorage.getItem("qtizen.diagnostics.v1");
               } catch (e) {
                 /* optional legacy read */
               }
@@ -74,7 +74,7 @@
                   legacyRemoved = true;
                   var remove = function () {
                     try {
-                      host.localStorage.removeItem("aerotizen.diagnostics.v1");
+                      host.localStorage.removeItem("qtizen.diagnostics.v1");
                     } catch (e) {
                       /* optional old log cleanup */
                     }
@@ -102,7 +102,7 @@
   if (typeof module !== "undefined" && module.exports) {
     module.exports = open;
   } else {
-    root.AeroDiagnosticsStorage = function (ready) {
+    root.QtizenDiagnosticsStorage = function (ready) {
       open(root, ready);
     };
   }

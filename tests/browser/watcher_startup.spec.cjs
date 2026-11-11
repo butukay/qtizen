@@ -26,7 +26,7 @@ async function setup(page, version = "10.0", legacyWorks = true) {
       if (document.documentElement) mapModule();
       else document.addEventListener("DOMContentLoaded", mapModule);
       localStorage.setItem(
-        "aerotizen.settings.v1",
+        "qtizen.settings.v1",
         JSON.stringify({ home: ["youtube.app"], background: "black", showWeather: false }),
       );
       window.tizen = {
@@ -81,7 +81,7 @@ async function setup(page, version = "10.0", legacyWorks = true) {
     });
   });
   await page.goto("/");
-  await page.waitForFunction(() => window.testWatcher.up && AeroTizen.apps.getSnapshot().ready);
+  await page.waitForFunction(() => window.testWatcher.up && Qtizen.apps.getSnapshot().ready);
   await expect.poll(() => requests.filter((path) => path === "/apps").length).toBeGreaterThan(0);
   return {
     requests,
@@ -152,7 +152,7 @@ test("a regular app recovers the watcher before the launcher can freeze", async 
   await page.evaluate(() => {
     window.testWatcher.up = false;
   });
-  await page.evaluate(() => AeroTizen.apps.launch({ id: "regular.app", name: "Other app" }));
+  await page.evaluate(() => Qtizen.apps.launch({ id: "regular.app", name: "Other app" }));
   await page.waitForFunction(() => window.testWatcher.launches.includes("regular.app"));
   expect(await page.evaluate(() => window.testWatcher.starts)).toBe(2);
   expect(await page.evaluate(() => window.testWatcher.launches)).toEqual(["regular.app"]);

@@ -22,20 +22,14 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives.serialization import pkcs12
 from cryptography.x509.oid import NameOID
 
-from aerotizen import signer, untethered_probe
-from aerotizen.root_state import APP_ID, RUNTIME_VERSION, VERSION
+from qtizen import signer, untethered_probe
+from qtizen.root_state import APP_ID, RUNTIME_VERSION, VERSION
 
 MANAGED = {
-    (
-        "res/runner/"
-        if name == "AeroTizenRootProbe"
-        else "res/setup/"
-        if name == "AeroTizenBootWriter"
-        else "bin/"
-    )
+    ("res/runner/" if name == "QtizenRootProbe" else "res/setup/" if name == "QtizenBootWriter" else "bin/")
     + name
     + suffix
-    for name in ("AeroTizenRootHelper", "AeroTizenRootBridge", "AeroTizenRootProbe", "AeroTizenBootWriter")
+    for name in ("QtizenRootHelper", "QtizenRootBridge", "QtizenRootProbe", "QtizenBootWriter")
     for suffix in (".dll", ".runtimeconfig.json", ".deps.json")
 }
 UPSTREAM = untethered_probe.UPSTREAM_FILES["6.0"]["hashes"]
@@ -49,7 +43,7 @@ def digest(value):
 
 
 def runtime_files(path=None):
-    resource = Path(path) if path else files("aerotizen").joinpath("helpers/root-runtime.json")
+    resource = Path(path) if path else files("qtizen").joinpath("helpers/root-runtime.json")
     try:
         raw = resource.read_bytes()
     except FileNotFoundError as exc:
@@ -115,7 +109,7 @@ def upstream_payloads(cache, *, release=None):
 
 def new_pairing(installation):
     key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-    name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "AeroTizen " + installation)])
+    name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "Qtizen " + installation)])
     now = datetime.datetime.now(datetime.timezone.utc)
     certificate = (
         x509.CertificateBuilder()
@@ -129,7 +123,7 @@ def new_pairing(installation):
         .sign(key, hashes.SHA256())
     )
     pfx = pkcs12.serialize_key_and_certificates(
-        b"AeroTizen", key, certificate, None, serialization.NoEncryption()
+        b"Qtizen", key, certificate, None, serialization.NoEncryption()
     )
     return {
         "token": secrets.token_hex(32),
@@ -170,7 +164,7 @@ def validate_manifest(xml):
         or application.attrib
         != {
             "appid": APP_ID,
-            "exec": "AeroTizenRootHelper.dll",
+            "exec": "QtizenRootHelper.dll",
             "type": "dotnet",
             "multiple": "false",
             "taskmanage": "false",
@@ -180,7 +174,7 @@ def validate_manifest(xml):
         }
         or [node.tag.rsplit("}", 1)[-1] for node in application] != ["label", "icon"]
         or application.find("t:icon", NS).text != "root-helper.png"
-        or application.find("t:label", NS).text != "AeroTizen Root Helper"
+        or application.find("t:label", NS).text != "Qtizen Root Helper"
         or root.find("t:profile", NS).attrib != {"name": "tv-samsung"}
         or [node.text for node in root.findall("t:privileges/t:privilege", NS)]
         != ["http://tizen.org/privilege/internet"]
@@ -245,7 +239,7 @@ def validate_package(path):
 def package_helper(output, receipt, managed, upstream, xml, icon, certificates):
     validate_manifest(xml)
     config = public_config(receipt, managed)
-    with tempfile.TemporaryDirectory(prefix="aerotizen-root-package-") as directory:
+    with tempfile.TemporaryDirectory(prefix="qtizen-root-package-") as directory:
         root = Path(directory)
         values = {
             **managed,
@@ -269,16 +263,14 @@ def service_script(descriptor, nonce):
     installation = descriptor["installation_id"]
     if not re.fullmatch(r"[a-f0-9]{32}", installation) or not re.fullmatch(r"[a-f0-9]{32}", nonce):
         raise ValueError("Invalid root launch identity")
-    bridge_names = {
-        "AeroTizenRootBridge" + suffix for suffix in (".dll", ".runtimeconfig.json", ".deps.json")
-    }
+    bridge_names = {"QtizenRootBridge" + suffix for suffix in (".dll", ".runtimeconfig.json", ".deps.json")}
     if set(descriptor["files"]) != bridge_names:
         raise ValueError("Incomplete bridge checksums")
     lines = []
     for name in (
-        "AeroTizenRootBridge.dll",
-        "AeroTizenRootBridge.runtimeconfig.json",
-        "AeroTizenRootBridge.deps.json",
+        "QtizenRootBridge.dll",
+        "QtizenRootBridge.runtimeconfig.json",
+        "QtizenRootBridge.deps.json",
     ):
         value = descriptor["files"][name]
         if not re.fullmatch(r"[a-f0-9]{64}", value):
@@ -291,12 +283,12 @@ def service_script(descriptor, nonce):
         lines.extend(
             [f"test ! -L '{path}'", f"printf '%s  %s\\n' '{value}' '{path}' | sha256sum -c - >/dev/null"]
         )
-    dll = f"'/opt/usr/apps/{APP_ID}/bin/AeroTizenRootBridge.dll'"
+    dll = f"'/opt/usr/apps/{APP_ID}/bin/QtizenRootBridge.dll'"
     if descriptor["operation"] in ("install", "upgrade", "remove") and re.fullmatch(
         r"/home/owner/share/tmp/sdk_tools/arsetup-[a-f0-9]{16}", descriptor["setup_stage"] or ""
     ):
         if descriptor["operation"] == "remove":
-            dll = f"'{descriptor['setup_stage']}/AeroTizenRootBridge.dll'"
+            dll = f"'{descriptor['setup_stage']}/QtizenRootBridge.dll'"
         operation = {"install": "--install", "upgrade": "--repair-startup", "remove": "--cleanup"}[
             descriptor["operation"]
         ]
@@ -321,7 +313,7 @@ def setup_bundle(receipt, managed, upstream, stage, *, operation="install"):
         "files": {
             name.split("/")[-1]: digest(data)
             for name, data in managed.items()
-            if name.startswith("bin/AeroTizenRootBridge")
+            if name.startswith("bin/QtizenRootBridge")
         },
     }
     script = untethered_probe.proof_script(

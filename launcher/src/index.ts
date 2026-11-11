@@ -41,7 +41,7 @@ const inputPlaybackHost = document.getElementById("input-playback-root");
 if (!backgroundHost || !home || !settingsHost || !toastHost || !weatherPhotoHost || !inputPlaybackHost) {
   throw new Error("Launcher mount points are missing.");
 }
-const runtime = window.AeroTizen;
+const runtime = window.Qtizen;
 const hotData = import.meta.hot
   ? (import.meta.hot.data as {
       backgrounds?: BackgroundState;

@@ -14,8 +14,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from aerotizen import cli, home, home_control, remote, sdk
-from aerotizen.sdb import SdbError
+from qtizen import cli, home, home_control, remote, sdk
+from qtizen.sdb import SdbError
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -55,7 +55,7 @@ def status():
 @pytest.mark.parametrize("action", ["apply", "restore"])
 def test_cli_preview_never_discovers_or_connects(monkeypatch, action, capsys):
     monkeypatch.setattr(cli, "pick_tv", lambda *args: pytest.fail("No TV contact allowed"))
-    monkeypatch.setattr("sys.argv", ["aerotizen", "home", action, "--json"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "home", action, "--json"])
     cli.main()
     result = json.loads(capsys.readouterr().out)
     assert not result["will_write"] and result["requires_yes"] and result["action"] == action
@@ -331,7 +331,7 @@ def test_cli_only_reports_startup_fallback_after_saved_settings_are_verified(
     monkeypatch.setattr(cli, "pick_tv", lambda args: "TV")
     monkeypatch.setattr(cli, "require_sdb", lambda host: nullcontext(object()))
     monkeypatch.setattr(home, "device_info", lambda *args, **kwargs: {})
-    monkeypatch.setattr("sys.argv", ["aerotizen", "home", "apply", "--yes"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "home", "apply", "--yes"])
     if partial_startup:
         with pytest.raises(SystemExit, match=rf"final Home/watcher.*{partial_startup}"):
             cli.main()
@@ -341,7 +341,7 @@ def test_cli_only_reports_startup_fallback_after_saved_settings_are_verified(
 
 
 def test_native_policy_failure_boundaries_run_on_host_without_tizen():
-    dotnet = os.environ.get("AEROTIZEN_DOTNET") or shutil.which("dotnet")
+    dotnet = os.environ.get("QTIZEN_DOTNET") or shutil.which("dotnet")
     if not dotnet:
         pytest.skip("Install the .NET 6 SDK to run the native policy harness")
     result = subprocess.run(
@@ -365,7 +365,7 @@ def test_native_policy_failure_boundaries_run_on_host_without_tizen():
 @pytest.mark.parametrize("alias", [[], ["--boot"]])
 def test_apply_preview_includes_startup_without_device_contact(monkeypatch, capsys, alias):
     monkeypatch.setattr(cli, "pick_tv", lambda *args: pytest.fail("No TV contact allowed"))
-    monkeypatch.setattr("sys.argv", ["aerotizen", "home", "apply", *alias, "--json"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "home", "apply", *alias, "--json"])
     cli.main()
     captured = capsys.readouterr()
     result = json.loads(captured.out)
@@ -456,7 +456,7 @@ def test_boot_restore_refuses_missing_or_unrelated_receipts(monkeypatch, tmp_pat
 @pytest.mark.parametrize("yes", [False, True])
 def test_removed_art_return_option_refuses_before_tv_contact(monkeypatch, capsys, yes):
     monkeypatch.setattr(cli, "pick_tv", lambda *args: pytest.fail("No TV contact allowed"))
-    argv = ["aerotizen", "home", "apply", "--boot", "--art-return", "--json"]
+    argv = ["qtizen", "home", "apply", "--boot", "--art-return", "--json"]
     if yes:
         argv.append("--yes")
     monkeypatch.setattr("sys.argv", argv)
@@ -467,7 +467,7 @@ def test_removed_art_return_option_refuses_before_tv_contact(monkeypatch, capsys
 
 
 def test_apply_help_hides_removed_options(monkeypatch, capsys):
-    monkeypatch.setattr("sys.argv", ["aerotizen", "home", "apply", "--help"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "home", "apply", "--help"])
     with pytest.raises(SystemExit) as error:
         cli.main()
     assert error.value.code == 0
@@ -767,7 +767,7 @@ def test_same_restore_cli_works_without_launcher_or_boot_receipt(
         return native_result("restore")
 
     monkeypatch.setattr(sdk, "run", run)
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--tv", "192.0.2.10", "home", "restore", "--yes", "--json"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "--tv", "192.0.2.10", "home", "restore", "--yes", "--json"])
     cli.main()
     assert json.loads(capsys.readouterr().out)["success"]
     assert Path(backup).is_file()
@@ -1097,7 +1097,7 @@ def test_cli_startup_keeps_json_output_valid_and_read_only_commands_passive(
     monkeypatch.setattr(cli, "require_sdb", lambda host: nullcontext(h.session))
     monkeypatch.setattr(home, "device_info", lambda *args, **kwargs: {})
     monkeypatch.setattr(cli, "STATE_DIR", tmp_path)
-    args = ["aerotizen", "--tv", h.session.host, "home", command, "--json"]
+    args = ["qtizen", "--tv", h.session.host, "home", command, "--json"]
     if command == "apply":
         args.append("--yes")
     monkeypatch.setattr("sys.argv", args)

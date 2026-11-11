@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace AeroTizen.UntetheredProbe
+namespace Qtizen.UntetheredProbe
 {
     internal static class Proof
     {
@@ -168,7 +168,7 @@ namespace AeroTizen.UntetheredProbe
                     sdb.Service("capability:");
                     report["local_sdb_authorized"] = true;
                     if (args[0] == "--handshake") { report["passed"] = true; return Write(report); }
-                    work = "/tmp/aerotizen-root-probe-" + Bundle.Hex(8);
+                    work = "/tmp/qtizen-root-probe-" + Bundle.Hex(8);
                     if (Directory.Exists(work) || File.Exists(work)) throw new IOException("Temporary probe directory exists");
                     Directory.CreateDirectory(work);
                     if (chmod(work, 0x1ed) != 0) throw new IOException("Probe directory permissions could not be set"); // 0755
@@ -190,7 +190,7 @@ namespace AeroTizen.UntetheredProbe
                     {
                         rootAttempted = true;
                         string output = sdb.Service("shell:" + Bundle.Injection("cat " + Bundle.Quote(work + "/invoke.sh") + " | bash", Bundle.Hex(8)), 30000);
-                        if (!HasMarker(output, "AEROTIZEN_PROBE_DONE")) throw new IOException("Root invocation was not confirmed");
+                        if (!HasMarker(output, "QTIZEN_PROBE_DONE")) throw new IOException("Root invocation was not confirmed");
                         Proof.Read(bundle, boot);
                         report["fresh_root_proof"] = true;
                     }
@@ -201,7 +201,7 @@ namespace AeroTizen.UntetheredProbe
                             try
                             {
                                 string output = sdb.Service("shell:" + Bundle.Injection("cat " + Bundle.Quote(work + "/cleanup.sh") + " | bash", Bundle.Hex(8)), 5000);
-                                cleaned = HasMarker(output, "AEROTIZEN_PROBE_CLEANED");
+                                cleaned = HasMarker(output, "QTIZEN_PROBE_CLEANED");
                                 if (!cleaned) report["cleanup_error"] = "SDK probe cleanup was not confirmed";
                             }
                             catch (Exception error) { report["cleanup_error"] = error.GetType().Name + ": " + error.Message; }
@@ -232,7 +232,7 @@ namespace AeroTizen.UntetheredProbe
         internal static int Write(Dictionary<string, object> report)
         {
             string prefix = report.TryGetValue("mode", out object mode) && ((string)mode == "--run-proof" || (string)mode == "--run-service")
-                ? "AEROTIZEN_PROOF_RESULT=" : "";
+                ? "QTIZEN_PROOF_RESULT=" : "";
             Console.WriteLine(prefix + JsonSerializer.Serialize(report));
             return report.TryGetValue("passed", out object passed) && passed is bool value && value ? 0 : 1;
         }

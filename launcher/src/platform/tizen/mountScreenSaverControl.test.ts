@@ -11,7 +11,7 @@ const prepare = () => {
   const host = {
     document,
     location: { protocol: "file:" },
-    AeroTizen: { tizen: {} as unknown },
+    Qtizen: { tizen: {} as unknown },
     webapis: { appcommon: api },
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
@@ -56,7 +56,7 @@ test("unsupported firmware can reject requests without interrupting the launcher
 test("the TV SDK loads only on Tizen and cannot make a late request after disposal", () => {
   const { host } = prepare();
   const absent = { ...host, webapis: undefined };
-  const browserDispose = mountScreenSaverControl({ ...absent, AeroTizen: { tizen: null } });
+  const browserDispose = mountScreenSaverControl({ ...absent, Qtizen: { tizen: null } });
   expect(document.querySelector('script[src*="$WEBAPIS"]')).toBeNull();
   browserDispose();
   const dispose = mountScreenSaverControl(absent);

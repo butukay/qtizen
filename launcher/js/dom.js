@@ -7,4 +7,4 @@
   };
 
   A.tizen = window.tizen || null;
-})(window.AeroTizen);
+})(window.Qtizen);

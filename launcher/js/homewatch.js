@@ -17,8 +17,8 @@
   var START_TIMEOUT = 30000;
 
   function record(event, data) {
-    if (window.AeroDiagnostics) {
-      window.AeroDiagnostics.record(event, data);
+    if (window.QtizenDiagnostics) {
+      window.QtizenDiagnostics.record(event, data);
     }
   }
 
@@ -95,7 +95,7 @@
       starting = null;
       clearTimeout(deadline);
       clearTimeout(timer);
-      window.removeEventListener("aero-wrt-service", loaded);
+      window.removeEventListener("qtizen-wrt-service", loaded);
       if (script && script.parentNode) {
         script.parentNode.removeChild(script);
       }
@@ -211,7 +211,7 @@
         return;
       }
       Service = event.detail;
-      window.removeEventListener("aero-wrt-service", loaded);
+      window.removeEventListener("qtizen-wrt-service", loaded);
       launchWrt();
     }
     function useWrt() {
@@ -222,12 +222,12 @@
         launchWrt();
         return;
       }
-      window.addEventListener("aero-wrt-service", loaded);
+      window.addEventListener("qtizen-wrt-service", loaded);
       script = document.createElement("script");
       script.type = "module";
       script.textContent =
         // eslint-disable-next-line launcher-i18n/translated-copy -- Native module source, not displayed copy.
-        "import { Service } from 'wrt:service'; window.dispatchEvent(new CustomEvent('aero-wrt-service', { detail: Service }));";
+        "import { Service } from 'wrt:service'; window.dispatchEvent(new CustomEvent('qtizen-wrt-service', { detail: Service }));";
       script.onerror = function () {
         finish(false, "service_module_failed");
       };
@@ -294,8 +294,8 @@
         if (cancelled()) {
           return;
         }
-        if (window.AeroDiagnostics) {
-          window.AeroDiagnostics.flush();
+        if (window.QtizenDiagnostics) {
+          window.QtizenDiagnostics.flush();
         }
         if (done) {
           done(value);
@@ -404,4 +404,4 @@
       tell("/home");
     }
   });
-})(window.AeroTizen);
+})(window.Qtizen);

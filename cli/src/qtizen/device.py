@@ -8,8 +8,8 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Protocol
 
-from aerotizen import diagnostics, remote
-from aerotizen.sdb import PORT, Sdb, SdbError
+from qtizen import diagnostics, remote
+from qtizen.sdb import PORT, Sdb, SdbError
 
 
 class DeviceSessionError(SdbError):
@@ -54,7 +54,7 @@ class DeviceSession:
 
     def _new_connection(self):
         if not self.direct and self.port == PORT:
-            from aerotizen import root_state
+            from qtizen import root_state
 
             try:
                 receipt = self.bridge_receipt or root_state.find(self.host)
@@ -68,7 +68,7 @@ class DeviceSession:
                 except (OSError, SystemExit):
                     developer = None
                 if receipt["phase"] != "removed" and developer in (None, "127.0.0.1"):
-                    from aerotizen.root_bridge import BridgeSdb
+                    from qtizen.root_bridge import BridgeSdb
 
                     self.managed_root = True
                     return BridgeSdb(self.host, receipt, timeout=self.timeout)

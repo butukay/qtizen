@@ -5,7 +5,7 @@ const { createClockService } = loadTypeScript("launcher/src/services/createClock
 
 exports.installClock = (context, now = vm.runInContext("() => new Date().getTime()", context)) => {
   const host = context.window;
-  const runtime = host.AeroTizen;
+  const runtime = host.Qtizen;
   const platform = createClockPlatform(
     {
       document: host.document || { documentElement: { lang: "" } },

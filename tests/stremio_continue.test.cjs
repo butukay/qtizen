@@ -66,7 +66,7 @@ function harness(options = {}) {
     },
   };
   vm.runInNewContext(fs.readFileSync("launcher/js/stremio-continue.js", "utf8"), {
-    window: { AeroTizen: A },
+    window: { Qtizen: A },
     XMLHttpRequest: Xhr,
     setTimeout: (fn) => {
       timers.set(++next, fn);
@@ -120,7 +120,7 @@ test("Stremio discovery requires exact installation and private credentials; it 
   assert.equal(h.timers.size, 0);
   assert.equal(h.requests[0].url, "http://127.0.0.1:47791/v1/capabilities");
   assert.equal(h.requests[0].method, "GET");
-  assert.deepEqual(h.requests[0].headers, { "X-AeroTizen-Token": secret });
+  assert.deepEqual(h.requests[0].headers, { "X-Qtizen-Token": secret });
   h.respond(0, capabilities);
   assert.equal(source.id, app.id);
   assert.equal(source.storeId, "3202306031311");
@@ -185,7 +185,7 @@ test("Stremio requests a missing or stale credential once before checking capabi
     assert.deepEqual(prepare.headers, {});
     h.publishCredential();
     h.respond(prepareIndex, null, 204);
-    assert.deepEqual(h.requests[prepareIndex + 1].headers, { "X-AeroTizen-Token": secret });
+    assert.deepEqual(h.requests[prepareIndex + 1].headers, { "X-Qtizen-Token": secret });
     h.respond(prepareIndex + 1, capabilities);
     assert.equal(source.id, app.id);
   }

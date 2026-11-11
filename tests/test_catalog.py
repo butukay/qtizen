@@ -1,4 +1,4 @@
-from aerotizen import catalog
+from qtizen import catalog
 
 
 def _block(app_id, title, tizen_id, package, removable=1):
@@ -44,7 +44,7 @@ def test_non_removable_and_infrastructure_are_protected():
     assert catalog.classify(locked) == "protected"
     infra = {"appid": "ZODRT12q2l.WebAccountExtension", "pkgid": "ZODRT12q2l", "name": "WebAccount"}
     assert catalog.classify(infra) == "protected"
-    own = {"appid": "DclHome001.Home", "pkgid": "DclHome001", "name": "AeroTizen", "removable": True}
+    own = {"appid": "DclHome001.Home", "pkgid": "DclHome001", "name": "Qtizen", "removable": True}
     assert catalog.classify(own) == "protected"
 
 
@@ -54,7 +54,7 @@ def test_legacy_line_format_falls_back_to_store_pattern():
 
 
 def test_app_versions_are_optional_in_block_and_key_value_formats():
-    block = _block("DclHome001.Home", "AeroTizen", "DclHome001.Home", "DclHome001")
+    block = _block("DclHome001.Home", "Qtizen", "DclHome001.Home", "DclHome001")
     assert catalog.parse_applist(block)[0]["version"] is None
     block += "--------------app_version                         =2.2.0-------------\n"
     assert catalog.parse_applist(block)[0]["version"] == "2.2.0"

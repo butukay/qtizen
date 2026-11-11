@@ -7,7 +7,7 @@ import tarfile
 
 import pytest
 
-from aerotizen import untethered_probe as probe
+from qtizen import untethered_probe as probe
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 # Root CLI and per-boot helper
 
-The commands manage `org.aerotizen.roothelper`, a hidden .NET service.
+The commands manage `org.qtizen.roothelper`, a hidden .NET service.
 They do not write Home assignments, launcher startup values or Art Mode settings.
 Use CLI 3.0.0 for setup, status, upgrades, and removal. Its root helper also
 supports [Stremio in Continue Watching](launcher.md#stremio).

@@ -30,9 +30,9 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "cli" / "src"))
 
-from aerotizen import sdk  # noqa: E402
-from aerotizen.device import DeviceSession  # noqa: E402
-from aerotizen.sdb import SdbError  # noqa: E402
+from qtizen import sdk  # noqa: E402
+from qtizen.device import DeviceSession  # noqa: E402
+from qtizen.sdb import SdbError  # noqa: E402
 
 WIDTH, HEIGHT = 720, 540
 LUMA_SIZE = WIDTH * HEIGHT
@@ -50,21 +50,21 @@ CAPTURE_ERRORS = {
 
 PAGE = b"""<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AeroTizen TV mirror</title>
+<title>Qtizen TV mirror</title>
 <style>
 body { background: #101114; color: #eee; font: 16px system-ui; margin: 2rem; }
 main { max-width: 1200px; margin: auto; }
 h1 { font-size: 1.3rem; }
 img { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
 </style>
-<main><h1>AeroTizen TV mirror</h1><img src="/stream" alt="Live picture from the TV"></main>
+<main><h1>Qtizen TV mirror</h1><img src="/stream" alt="Live picture from the TV"></main>
 </html>"""
 
 
 def build_helper(build_dir):
-    dotnet = shutil.which(os.environ.get("AEROTIZEN_DOTNET", "dotnet"))
+    dotnet = shutil.which(os.environ.get("QTIZEN_DOTNET", "dotnet"))
     if not dotnet:
-        raise RuntimeError("Install the .NET 6 SDK or set AEROTIZEN_DOTNET to its dotnet executable.")
+        raise RuntimeError("Install the .NET 6 SDK or set QTIZEN_DOTNET to its dotnet executable.")
     project = ROOT / "tools" / "tv-mirror" / "FrameProbe.csproj"
     output = build_dir / "output"
     subprocess.run(
@@ -239,7 +239,7 @@ def receive(listener, host, token, preview, ready, *, stopping=False):
 def run_mirror(host, seconds, port, open_browser):
     preview = Preview()
     with (
-        tempfile.TemporaryDirectory(prefix="aerotizen-mirror-") as directory,
+        tempfile.TemporaryDirectory(prefix="qtizen-mirror-") as directory,
         socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener,
         socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as route,
         preview.server(port) as http,

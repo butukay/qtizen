@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Text.Json;
-using AeroTizen.Root;
+using Qtizen.Root;
 
-namespace AeroTizen.RootHelper
+namespace Qtizen.RootHelper
 {
     internal sealed class PerBootGate
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 using System.Text.Json;
-using AeroTizen.Hdmi;
+using Qtizen.Hdmi;
 
 internal static class HdmiWakeTests
 {

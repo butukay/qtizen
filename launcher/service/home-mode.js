@@ -2,7 +2,7 @@
 
 // Keep a pending handoff disabled across service restarts. Only the native helper
 // changes this preference; ordinary launcher /home and /watch events cannot.
-var KEY = "aerotizen.home-routing.v1";
+var KEY = "qtizen.home-routing.v1";
 module.exports = function (preference, changed, blocked) {
   var supported = !!(preference && preference.exists && preference.getValue && preference.setValue);
   var saved = { mode: blocked ? "blocked" : "watcher", transaction: null, baseline_sha256: null };
@@ -20,6 +20,9 @@ module.exports = function (preference, changed, blocked) {
     );
   }
   try {
+    if (supported && !preference.exists(KEY) && preference.exists("aerotizen.home-routing.v1")) {
+      preference.setValue(KEY, preference.getValue("aerotizen.home-routing.v1"));
+    }
     if (supported && preference.exists(KEY)) {
       saved = JSON.parse(preference.getValue(KEY));
       if (!valid(saved)) {

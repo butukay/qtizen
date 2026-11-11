@@ -45,4 +45,4 @@
   }
 
   A.tiles = { shortName: shortName, describe: describe };
-})(window.AeroTizen);
+})(window.Qtizen);

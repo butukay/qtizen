@@ -69,7 +69,7 @@ internal static class SqliteOwner
                 || !File.ReadAllLines("/proc/self/status").Any(line => line.StartsWith("CapEff:", StringComparison.Ordinal)
                     && line.Substring(7).Trim() == "0000000000000000"))
                 throw new InvalidOperationException("Database writer did not drop all root privileges");
-            Console.WriteLine("AEROTIZEN_SQLITE_OWNER=" + uid + ":" + gid);
+            Console.WriteLine("QTIZEN_SQLITE_OWNER=" + uid + ":" + gid);
             Console.Out.Flush();
             string[] values = { "/usr/bin/sqlite3", "-batch", "-bail", Database };
             IntPtr[] strings = values.Select(Marshal.StringToHGlobalAnsi).ToArray();
@@ -87,6 +87,6 @@ internal static class SqliteOwner
                 foreach (IntPtr text in strings) Marshal.FreeHGlobal(text);
             }
         }
-        catch (Exception error) { Console.Error.WriteLine("AEROTIZEN_BOOT_WRITER_ERROR=" + error.GetType().Name + ": " + error.Message); return 1; }
+        catch (Exception error) { Console.Error.WriteLine("QTIZEN_BOOT_WRITER_ERROR=" + error.GetType().Name + ": " + error.Message); return 1; }
     }
 }

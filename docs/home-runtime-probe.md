@@ -47,7 +47,7 @@ release stays available:
 python3 -m venv .venv-home-probe
 .venv-home-probe/bin/python -m pip install \
   'git+https://github.com/metacurb/qtizen.git@feat/native-home-read-only-probe-84'
-.venv-home-probe/bin/aerotizen --tv TV_IP home probe --output home-probe.json
+.venv-home-probe/bin/qtizen --tv TV_IP home probe --output home-probe.json
 ```
 
 Use the exact commit supplied with the diagnostic instructions instead of the

@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from aerotizen import releases, root_package, root_state
+from qtizen import releases, root_package, root_state
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("build_release", ROOT / "tools/build_release.py")
@@ -291,7 +291,7 @@ def test_legacy_cli_build_command_delegates_and_checks_the_tag(tmp_path):
 )
 def test_cli_options_do_not_contact_tv(arguments, tmp_path):
     result = subprocess.run(
-        [sys.executable, "-m", "aerotizen.cli", *arguments],
+        [sys.executable, "-m", "qtizen.cli", *arguments],
         cwd=tmp_path,
         capture_output=True,
         text=True,
@@ -302,7 +302,7 @@ def test_cli_options_do_not_contact_tv(arguments, tmp_path):
 
 
 def test_cli_release_requires_the_home_helper_before_freezing(tmp_path):
-    source = tmp_path / "src/aerotizen"
+    source = tmp_path / "src/qtizen"
     source.mkdir(parents=True)
     (source / "__init__.py").write_text('__version__ = "2.2.0"\n')
     with pytest.raises(ValueError, match="Home helper"):
@@ -311,7 +311,7 @@ def test_cli_release_requires_the_home_helper_before_freezing(tmp_path):
 
 
 def test_cli_release_rejects_root_runtime_from_a_different_version(tmp_path):
-    helpers = tmp_path / "src/aerotizen/helpers"
+    helpers = tmp_path / "src/qtizen/helpers"
     helpers.mkdir(parents=True)
     (helpers.parent / "__init__.py").write_text(f'__version__ = "{root_state.RUNTIME_VERSION}"\n')
     for name in ("home-query.json", "home-control.json"):

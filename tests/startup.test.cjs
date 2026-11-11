@@ -57,7 +57,7 @@ function harness(mode = "deferred", saved = ["youtube.id"]) {
     },
   };
   const window = {
-    AeroTizen: A,
+    Qtizen: A,
     tizen: A.tizen,
     Backgrounds: { setSpeed() {}, apply() {} },
 
@@ -74,7 +74,7 @@ function harness(mode = "deferred", saved = ["youtube.id"]) {
   const document = { hidden: false, addEventListener() {} };
   const context = vm.createContext({
     window,
-    AeroTizen: A,
+    Qtizen: A,
     document,
     localStorage,
     setTimeout: (cb) => timers.push(cb) - 1,
@@ -140,7 +140,7 @@ test("late discovery refreshes once and caches labels without resetting saved Ho
   assert.equal(h.calls.filter((x) => x === "refresh").length, 1);
   assert.deepEqual(h.A.settings.getSnapshot().home, ["youtube.id"]);
   assert.equal(h.A.apps.getSnapshot().ready, true);
-  const cached = JSON.parse(h.data["aerotizen.apps.v1"]);
+  const cached = JSON.parse(h.data["qtizen.apps.v1"]);
   assert.equal(cached[0].name, "YouTube");
 });
 
@@ -154,13 +154,13 @@ test("missing cache and never-returning discovery do not save first-run defaults
 
 test("valid cached labels remain available if discovery fails; malformed cache is ignored", () => {
   const h = harness("fail");
-  h.data["aerotizen.apps.v1"] = JSON.stringify([{ id: "youtube.id", name: "YouTube", icon: "" }, null]);
+  h.data["qtizen.apps.v1"] = JSON.stringify([{ id: "youtube.id", name: "YouTube", icon: "" }, null]);
   h.boot();
   h.discover();
   assert.equal(h.A.apps.byId("youtube.id").name, "YouTube");
   assert.deepEqual(plain(h.A.settings.getSnapshot().home), ["youtube.id"]);
   const bad = harness();
-  bad.data["aerotizen.apps.v1"] = "{";
+  bad.data["qtizen.apps.v1"] = "{";
   bad.boot();
   assert.equal(bad.A.apps.byId("youtube.id").name, "youtube.id");
 });
@@ -182,7 +182,7 @@ test("startup records routing flags and focus without keeping private launch pay
   });
   h.boot();
   h.discover();
-  let trace = JSON.parse(h.data["aerotizen.startup.v1"]);
+  let trace = JSON.parse(h.data["qtizen.startup.v1"]);
   assert.deepEqual(trace.launch.data, { entry_point: "cold_booting", __K_BG_LAUNCH: "enable" });
   assert.equal(trace.marks.at(-1).focused, false);
   assert.equal(JSON.stringify(trace).includes("private title"), false);
@@ -190,7 +190,7 @@ test("startup records routing flags and focus without keeping private launch pay
   h.events.focus();
   control = { operation: "main", data: [{ key: "entry_point", value: ["smarthub_key"] }] };
   h.events.appcontrol();
-  trace = JSON.parse(h.data["aerotizen.startup.v1"]);
+  trace = JSON.parse(h.data["qtizen.startup.v1"]);
   assert.equal(trace.launch.data.entry_point, "cold_booting");
   assert.equal(trace.last_launch.data.entry_point, "smarthub_key");
   assert.equal(trace.marks.at(-1).name, "appcontrol");
@@ -209,7 +209,7 @@ test("diagnostics stay bounded and tolerate unavailable launch APIs", () => {
     h.events.appcontrol();
     h.events.blur();
   }
-  let trace = JSON.parse(h.data["aerotizen.startup.v1"]);
+  let trace = JSON.parse(h.data["qtizen.startup.v1"]);
   assert.equal(trace.marks.length, 32);
   assert.equal(trace.launch.error, "SecurityError");
   assert.equal(JSON.stringify(trace).includes("private data"), false);
@@ -225,7 +225,7 @@ test("diagnostics stay bounded and tolerate unavailable launch APIs", () => {
     }),
   });
   h.events.appcontrol();
-  trace = JSON.parse(h.data["aerotizen.startup.v1"]);
+  trace = JSON.parse(h.data["qtizen.startup.v1"]);
   assert.equal(trace.last_launch.operation.length, 96);
   assert.equal(trace.last_launch.data.entry_point.length, 48);
   assert.ok(JSON.stringify(trace).length <= 4096);

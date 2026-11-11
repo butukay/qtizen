@@ -12,7 +12,7 @@ generator = runpy.run_path(str(Path(__file__).resolve().parents[1] / "tools" / "
 def write_catalog(tmp_path, apps):
     path = tmp_path / "app-catalog.js"
     path.write_text(
-        "// Data-only catalogue\nwindow.AeroTizen.catalog = " + json.dumps({"apps": apps}) + ";\n",
+        "// Data-only catalogue\nwindow.Qtizen.catalog = " + json.dumps({"apps": apps}) + ";\n",
         encoding="utf-8",
     )
     return path

@@ -17,8 +17,8 @@ function loadSettings(storage, defaults = {}) {
   };
   const A = {};
   const context = vm.createContext({
-    window: { AeroTizen: A, Intl, navigator: { language: "en-GB", languages: ["en-GB"] } },
-    AeroTizen: A,
+    window: { Qtizen: A, Intl, navigator: { language: "en-GB", languages: ["en-GB"] } },
+    Qtizen: A,
     localStorage,
   });
   vm.runInContext(fs.readFileSync(path.join(__dirname, "../launcher/js/config.js"), "utf8"), context);
@@ -44,7 +44,7 @@ test("defaults apply when nothing is saved", () => {
 });
 
 test("Home layout persists independently of app size and rejects unknown layout values", () => {
-  const key = "aerotizen.settings.v1";
+  const key = "qtizen.settings.v1";
   const { settings, store } = loadSettings({ [key]: JSON.stringify({ homeCardColumns: 4 }) });
   assert.equal(settings.getSnapshot().homeAppLayout, "grid");
   settings.update({ homeAppLayout: "scroll" });
@@ -61,7 +61,7 @@ test("Home layout persists independently of app size and rejects unknown layout 
 });
 
 test("square cards migrate legacy sizes and keep explicit row counts and other preferences", () => {
-  for (const key of ["aerotizen.settings.v1", "hearth.home.v1", "declutter.home.v5"]) {
+  for (const key of ["qtizen.settings.v1", "hearth.home.v1", "declutter.home.v5"]) {
     for (const cardSize of ["big", "small"]) {
       for (const homeCardColumns of [undefined, null, 3, 4, 5, "4", 0, 6, "invalid"]) {
         const legacy = {
@@ -78,7 +78,7 @@ test("square cards migrate legacy sizes and keep explicit row counts and other p
         const columns = Number(homeCardColumns);
         const expected = [3, 4, 5].includes(columns) ? columns : cardSize === "small" ? 5 : 3;
         assert.equal(settings.getSnapshot().homeCardColumns, expected);
-        const saved = JSON.parse(store["aerotizen.settings.v1"]);
+        const saved = JSON.parse(store["qtizen.settings.v1"]);
         assert.equal(saved.homeCardColumns, expected, "migration is saved even with explicit locale settings");
         assert.equal("cardSize" in saved, false);
         assert.equal("homeCardMode" in saved, false);
@@ -98,14 +98,14 @@ test("square cards migrate legacy sizes and keep explicit row counts and other p
 });
 
 test("browser demo defaults do not override a saved Big card choice", () => {
-  const key = "aerotizen.settings.v1";
+  const key = "qtizen.settings.v1";
   const { settings } = loadSettings({ [key]: JSON.stringify({ cardSize: "big" }) }, { homeCardColumns: 5 });
   assert.equal(settings.getSnapshot().homeCardColumns, 3);
   assert.equal(loadSettings({}, { homeCardColumns: 5 }).settings.getSnapshot().homeCardColumns, 5);
 });
 
 test("older saves use the quiet Default profile while preserving time and date settings", () => {
-  for (const key of ["aerotizen.settings.v1", "hearth.home.v1", "declutter.home.v5"]) {
+  for (const key of ["qtizen.settings.v1", "hearth.home.v1", "declutter.home.v5"]) {
     const { settings } = loadSettings({
       [key]: JSON.stringify({ tempUnit: "F", dateFormat: "none" }),
     });
@@ -156,10 +156,10 @@ test("header visibility survives a restart without changing date or weather pref
 
 test("an empty saved Home stays empty", () => {
   for (const home of [[], ["__fire"]]) {
-    const { settings, store } = loadSettings({ "aerotizen.settings.v1": JSON.stringify({ home }) });
+    const { settings, store } = loadSettings({ "qtizen.settings.v1": JSON.stringify({ home }) });
     assert.deepEqual(JSON.parse(JSON.stringify(settings.getSnapshot().home)), []);
     assert.equal(settings.getSnapshot().homeInitialized, true);
-    assert.deepEqual(JSON.parse(store["aerotizen.settings.v1"]).home, []);
+    assert.deepEqual(JSON.parse(store["qtizen.settings.v1"]).home, []);
   }
 });
 
@@ -176,13 +176,13 @@ test("save writes only known settings under the current key", () => {
   settings.update({ background: "snow" });
   settings.update({ unrelated: "ignored" });
 
-  const saved = JSON.parse(store["aerotizen.settings.v1"]);
+  const saved = JSON.parse(store["qtizen.settings.v1"]);
   assert.equal(saved.background, "snow");
   assert.equal("unrelated" in saved, false);
 });
 
 test("corrupt storage falls back to defaults", () => {
-  const { settings } = loadSettings({ "aerotizen.settings.v1": "{not json" });
+  const { settings } = loadSettings({ "qtizen.settings.v1": "{not json" });
   assert.equal(settings.getSnapshot().background, "black");
 });
 
@@ -192,7 +192,7 @@ test("settings publish updates and reloads, and unsubscribe is safe to repeat", 
   const unsubscribe = settings.subscribe(() => values.push(settings.getSnapshot().background));
   settings.update({ background: "snow" });
 
-  store["aerotizen.settings.v1"] = JSON.stringify({ background: "black" });
+  store["qtizen.settings.v1"] = JSON.stringify({ background: "black" });
   settings.load();
   assert.deepEqual(values, ["snow", "black"]);
   unsubscribe();
@@ -206,7 +206,7 @@ test("Continue Watching requires explicit opt-in and validates saved source choi
   const { settings } = loadSettings({});
   assert.equal(settings.getSnapshot().continueWatching, false);
   assert.deepEqual(Array.from(settings.getSnapshot().continueWatchingApps), []);
-  const key = "aerotizen.settings.v1";
+  const key = "qtizen.settings.v1";
   const restored = loadSettings({
     [key]: JSON.stringify({
       continueWatching: "true",
@@ -218,7 +218,7 @@ test("Continue Watching requires explicit opt-in and validates saved source choi
 });
 
 test("custom colours persist, normalize case and reject malformed saved values", () => {
-  const key = "aerotizen.settings.v1";
+  const key = "qtizen.settings.v1";
   const original = loadSettings({ [key]: JSON.stringify({ background: "custom", customColour: "#A1B2C3" }) });
   assert.equal(original.settings.getSnapshot().customColour, "#a1b2c3");
   original.settings.update({ customColour: "#A1B2C3" });
@@ -232,7 +232,7 @@ test("custom colours persist, normalize case and reject malformed saved values",
 });
 
 test("custom gradients preserve both colours and direction across a restart and validate saved fields", () => {
-  const key = "aerotizen.settings.v1";
+  const key = "qtizen.settings.v1";
   const original = loadSettings({
     [key]: JSON.stringify({
       background: "custom-gradient",
@@ -253,7 +253,7 @@ test("custom gradients preserve both colours and direction across a restart and 
 });
 
 test("accent colours default, validate and persist without changing favorites", () => {
-  const key = "aerotizen.settings.v1";
+  const key = "qtizen.settings.v1";
   const { settings, store } = loadSettings({ [key]: JSON.stringify({ home: ["video.app"] }) });
   assert.equal(settings.getSnapshot().accentColour, "ice");
   for (const colour of ["ice", "blue", "violet", "rose", "amber", "mint", "white"]) {

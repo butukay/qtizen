@@ -24,7 +24,7 @@ const artwork = (dark: string, light: string, index: number) =>
   `);
 
 if (new URLSearchParams(location.search).get("demo") === "1" && !("tizen" in window)) {
-  const runtime = window.AeroTizen;
+  const runtime = window.Qtizen;
   const config = runtime.config;
   config.STORAGE_KEY += ".demo";
   config.LEGACY_STORAGE_KEYS = [];

@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
-from aerotizen import home, sdk
-from aerotizen.device import DeviceSessionError
+from qtizen import home, sdk
+from qtizen.device import DeviceSessionError
 
 
 def test_sdk_transport_claims_a_script_once_and_remaps_helper_arguments():

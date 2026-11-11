@@ -63,15 +63,30 @@ Run `./qtizen --tv TV_IP apps` to list apps. Run `./qtizen --tv TV_IP debloat`
 to select packages and review the list before confirming removal. See
 [TV limits](tv-compatibility.md#tv-limits) for Samsung's restrictions.
 
-## Upgrade an existing AeroTizen installation
+## Migrate an existing AeroTizen installation
 
-Use the original signing certificates and install the local qtizen build following
-[Build and install](../README.md#build-and-install). Keep your Home backup.
+Keep the original CLI checkout and its private profile until migration is complete.
+The helper's package ID changes from `org.aerotizen.roothelper` to
+`org.qtizen.roothelper`, so it must be replaced rather than upgraded in place.
 
-qtizen retains the `DclHome001` package ID, existing settings keys, the `aerotizen`
-Python module and the legacy CLI alias so Home assignments and saved settings remain
-compatible. The PC profile directory remains `~/.config/aerotizen`. Public commands
-and release downloads use qtizen and `butukay/qtizen`.
+1. With the original AeroTizen CLI and original private root receipt, run
+   `aerotizen --tv TV_IP root remove --yes`. Finish any requested Developer Mode
+   and restart steps before continuing. This removes the helper's own startup
+   registration and pairing; it preserves Home assignments.
+2. Install the new qtizen CLI and build its native helpers. The first command
+   automatically copies certificates and Home backups from `~/.config/aerotizen`
+   into `~/.config/qtizen` when the new profile does not exist. The original profile
+   stays available for recovery. Old root pairing is not copied into the new helper.
+3. Install the local launcher with the same signing certificates. The `DclHome001`
+   package ID stays stable so the TV updates the existing launcher and preserves
+   its Home assignments. Saved interface settings are copied to `qtizen.*` keys.
+4. If you use root features, follow [root setup](root-cli.md#user-flow) to install
+   `org.qtizen.roothelper` and pair it with the new CLI. Complete the restart check
+   before treating automatic root acquisition as verified.
+
+The Python package, CLI, runtime assemblies, private root directory and protocol
+names now use qtizen. Remaining AeroTizen names are migration inputs, historical
+records and credits. Do not run both root helpers together: they share a bridge port.
 
 ## Other installation methods
 

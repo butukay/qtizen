@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AeroTizen.Transitions;
+using Qtizen.Transitions;
 
 internal static class TransitionTests
 {
@@ -27,7 +27,7 @@ internal static class TransitionTests
             check(TransitionPolicy.Parse(Encoding.UTF8.GetBytes("{\"schema_version\":1,\"mode\":\"" + mode + "\"}")) == mode, "Valid transition mode rejected");
         foreach (string value in new[] { "{}", "{", "null", "{\"schema_version\":2,\"mode\":\"none\"}", "{\"schema_version\":1,\"mode\":\"shell\"}" })
             check(TransitionPolicy.Parse(Encoding.UTF8.GetBytes(value)) == null, "Invalid transition preference accepted");
-        var home = new Window(10, 20, 30, "AeroTizen", 1920, 1080, 200);
+        var home = new Window(10, 20, 30, "Qtizen", 1920, 1080, 200);
         check(TransitionPolicy.Manage(home, "DclHome001.Home"), "Home excluded");
         check(TransitionPolicy.Manage(home, "rJeHak5zRg.Spotify"), "Spotify excluded");
         check(!TransitionPolicy.Manage(home, "org.tizen.volume-app"), "System overlay included");

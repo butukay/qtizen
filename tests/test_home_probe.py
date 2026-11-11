@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
-from aerotizen import cli, home, home_probe, sdk
-from aerotizen.device import DeviceSessionError
+from qtizen import cli, home, home_probe, sdk
+from qtizen.device import DeviceSessionError
 
 
 def local_script(script, root):
@@ -221,7 +221,7 @@ def test_cli_runs_without_managed_helpers_or_identity_queries(
     monkeypatch.setattr(cli.remote, "info", lambda *args: pytest.fail("No HTTP identity query is needed"))
     monkeypatch.setattr(sdk, "run_shell", lambda *args: shell_result)
     output = tmp_path / "report.json"
-    argv = ["aerotizen", "--tv", "192.0.2.10", "home", "probe", "--output", str(output)]
+    argv = ["qtizen", "--tv", "192.0.2.10", "home", "probe", "--output", str(output)]
     if json_output:
         argv.append("--json")
     monkeypatch.setattr("sys.argv", argv)
@@ -245,7 +245,7 @@ def test_failed_cli_probe_leaves_no_report(monkeypatch, tmp_path):
     monkeypatch.setattr(home_probe, "collect", fail)
     destination = tmp_path / "report.json"
     monkeypatch.setattr(
-        "sys.argv", ["aerotizen", "--tv", "192.0.2.10", "home", "probe", "--output", str(destination)]
+        "sys.argv", ["qtizen", "--tv", "192.0.2.10", "home", "probe", "--output", str(destination)]
     )
     with pytest.raises(SystemExit, match="cleanup is unconfirmed"):
         cli.main()
@@ -260,7 +260,7 @@ def test_existing_output_is_refused_before_tv_contact(monkeypatch, tmp_path, kin
     else:
         destination.symlink_to(tmp_path / "missing")
     monkeypatch.setattr(cli, "pick_tv", lambda *args: pytest.fail("No TV contact allowed"))
-    monkeypatch.setattr("sys.argv", ["aerotizen", "home", "probe", "--output", str(destination)])
+    monkeypatch.setattr("sys.argv", ["qtizen", "home", "probe", "--output", str(destination)])
     with pytest.raises(SystemExit, match="Report already exists"):
         cli.main()
     if kind == "file":

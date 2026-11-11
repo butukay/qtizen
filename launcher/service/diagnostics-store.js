@@ -17,7 +17,7 @@ module.exports = function (tz, ready) {
             ready(null);
             return;
           }
-          var file = decodeURIComponent(uri.slice(7)).replace(/\/$/, "") + "/aerotizen-diagnostics-v1.json";
+          var file = decodeURIComponent(uri.slice(7)).replace(/\/$/, "") + "/qtizen-diagnostics-v1.json";
           ready({
             load: function (done) {
               fs.stat(file, function (error, stat) {

@@ -100,7 +100,7 @@ await writeFile(
   path.join(output, "js/build-info.js"),
   "/* global module */\n(function(root){var value=" +
     JSON.stringify(metadata) +
-    ';if(typeof module!=="undefined"&&module.exports){module.exports=value;}else{root.AeroBuildInfo=value;}})(typeof window!=="undefined"?window:this);\n',
+    ';if(typeof module!=="undefined"&&module.exports){module.exports=value;}else{root.QtizenBuildInfo=value;}})(typeof window!=="undefined"?window:this);\n',
 );
 if (values.dev) {
   const label = await markDevBuild(output, metadata.build_id);

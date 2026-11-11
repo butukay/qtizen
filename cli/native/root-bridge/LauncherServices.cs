@@ -2,10 +2,10 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-using AeroTizen.Hdmi;
-using AeroTizen.Transitions;
+using Qtizen.Hdmi;
+using Qtizen.Transitions;
 
-namespace AeroTizen.Root
+namespace Qtizen.Root
 {
     internal sealed class LauncherServices : IDisposable
     {

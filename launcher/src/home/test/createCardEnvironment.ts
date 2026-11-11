@@ -42,7 +42,7 @@ export const createCardEnvironment = (selected = "", presentation: Partial<AppPr
       locale: { timeFormat: () => "24", tempUnit: () => "C" },
       speedRange: { MIN: 0.25, MAX: 3 },
       storage: { getItem: () => null, setItem: () => undefined },
-      storageKey: "aerotizen.card.test",
+      storageKey: "qtizen.card.test",
     }),
     state,
     nodes: new Map<string, HTMLElement>(),

@@ -7,7 +7,7 @@ const { installClock } = require("./helpers/clock.cjs");
 const { installSettings } = require("./helpers/settings.cjs");
 
 function runtime({ locale = "en-GB", time, intl = Intl, saved = {}, legacy = false, measure, view = true, now } = {}) {
-  const storage = new Map([[legacy ? "hearth.home.v1" : "aerotizen.settings.v1", JSON.stringify(saved)]]);
+  const storage = new Map([[legacy ? "hearth.home.v1" : "qtizen.settings.v1", JSON.stringify(saved)]]);
   const elements = {
     date: {},
     time: {
@@ -24,7 +24,7 @@ function runtime({ locale = "en-GB", time, intl = Intl, saved = {}, legacy = fal
   const timers = [];
   const context = vm.createContext({
     window: {
-      AeroTizen: A,
+      Qtizen: A,
       navigator: { languages: [locale], language: locale },
       Intl: intl,
       tizen: time ? { time } : undefined,
@@ -32,7 +32,7 @@ function runtime({ locale = "en-GB", time, intl = Intl, saved = {}, legacy = fal
     },
     document: measure ? { createElement: () => ({ getContext: () => ({ measureText: measure }) }) } : undefined,
     setInterval: (tick, delay) => timers.push({ tick, delay }),
-    AeroTizen: A,
+    Qtizen: A,
     localStorage: {
       getItem: (key) => storage.get(key),
       setItem: (key, value) => storage.set(key, value),

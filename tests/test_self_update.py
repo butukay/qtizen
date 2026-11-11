@@ -8,7 +8,7 @@ import zipfile
 
 import pytest
 
-from aerotizen import releases, self_update
+from qtizen import releases, self_update
 
 
 def archive_bytes(files, suffix="tar.gz"):
@@ -33,11 +33,11 @@ def update(tmp_path, monkeypatch):
     target.write_bytes(b"old-binary")
     target.chmod(0o755)
     suffix = "zip" if os.name == "nt" else "tar.gz"
-    name = f"aerotizen-2.5.0-test.{suffix}"
+    name = f"qtizen-2.5.0-test.{suffix}"
     data = archive_bytes([(executable, b"new-binary"), ("LICENSE", b"MIT")], suffix)
-    url = "https://github.com/example/AeroTizen/releases/download/cli-v2.5.0/" + name
+    url = "https://github.com/example/Qtizen/releases/download/cli-v2.5.0/" + name
     selected = releases.CLIRelease(
-        "2.5.0", "https://github.com/example/AeroTizen/releases/tag/cli-v2.5.0", url, url + ".sha256"
+        "2.5.0", "https://github.com/example/Qtizen/releases/tag/cli-v2.5.0", url, url + ".sha256"
     )
     responses = {url: data, url + ".sha256": f"{hashlib.sha256(data).hexdigest()}  {name}\n".encode()}
     monkeypatch.setattr(releases, "_read_url", lambda url, limit: responses[url])
@@ -57,7 +57,7 @@ def test_replacement_retains_a_verified_backup_and_unrelated_files(update):
     assert result.backup.read_bytes() == b"old-binary"
     assert stat.S_IMODE(target.stat().st_mode) == 0o755
     assert settings.read_bytes() == b"private-settings"
-    assert not list(target.parent.glob(".aerotizen-update-*"))
+    assert not list(target.parent.glob(".qtizen-update-*"))
 
 
 def test_checksum_failure_preserves_the_old_executable(update):
@@ -66,7 +66,7 @@ def test_checksum_failure_preserves_the_old_executable(update):
     with pytest.raises(self_update.UpdateError, match="checksum mismatch"):
         self_update.install(selected)
     assert target.read_bytes() == b"old-binary"
-    assert not list(target.parent.glob(".aerotizen-update-*"))
+    assert not list(target.parent.glob(".qtizen-update-*"))
 
 
 def test_missing_checksum_asset_prevents_any_download(update, monkeypatch):
@@ -116,7 +116,7 @@ def test_failed_version_probe_keeps_or_restores_previous_executable(update, monk
     with pytest.raises(self_update.UpdateError, match="Version check failed"):
         self_update.install(selected)
     assert target.read_bytes() == b"old-binary"
-    assert not list(target.parent.glob(".aerotizen-update-*"))
+    assert not list(target.parent.glob(".qtizen-update-*"))
 
 
 def test_python_install_never_replaces_the_interpreter(update, monkeypatch):
@@ -124,9 +124,9 @@ def test_python_install_never_replaces_the_interpreter(update, monkeypatch):
     monkeypatch.setattr(sys, "frozen", False)
     with pytest.raises(
         self_update.UpdateError,
-        match=r"-m pip install --upgrade git\+https://github.com/example/AeroTizen@cli-v2\.5\.0",
+        match=r"-m pip install --upgrade git\+https://github.com/example/Qtizen@cli-v2\.5\.0",
     ):
-        self_update.install(selected, repository="example/AeroTizen")
+        self_update.install(selected, repository="example/Qtizen")
     assert target.read_bytes() == b"old-binary"
     assert not list(target.parent.glob(".*.update.lock"))
 
@@ -140,47 +140,47 @@ def test_concurrent_update_is_rejected_before_download(update, monkeypatch):
 
 
 @pytest.mark.parametrize("suffix", ["zip", "tar.gz"])
-@pytest.mark.parametrize("bad_name", ["../aerotizen", "/aerotizen", "extra", "aerotizen/../aerotizen"])
+@pytest.mark.parametrize("bad_name", ["../qtizen", "/qtizen", "extra", "qtizen/../qtizen"])
 def test_archive_paths_and_unexpected_files_are_rejected(suffix, bad_name):
     data = archive_bytes([(bad_name, b"bad"), ("LICENSE", b"MIT")], suffix)
     with pytest.raises(self_update.UpdateError):
-        self_update.unpack_binary(data, "archive." + suffix, "aerotizen")
+        self_update.unpack_binary(data, "archive." + suffix, "qtizen")
 
 
 @pytest.mark.parametrize("suffix", ["zip", "tar.gz"])
 def test_archive_must_include_license(suffix):
-    data = archive_bytes([("aerotizen", b"binary")], suffix)
+    data = archive_bytes([("qtizen", b"binary")], suffix)
     with pytest.raises(self_update.UpdateError, match="executable and LICENSE"):
-        self_update.unpack_binary(data, "archive." + suffix, "aerotizen")
+        self_update.unpack_binary(data, "archive." + suffix, "qtizen")
 
 
 def test_tar_links_are_rejected():
     data = io.BytesIO()
     with tarfile.open(fileobj=data, mode="w:gz") as archive:
-        entry = tarfile.TarInfo("aerotizen")
+        entry = tarfile.TarInfo("qtizen")
         entry.type = tarfile.SYMTYPE
         entry.linkname = "/etc/passwd"
         archive.addfile(entry)
     with pytest.raises(self_update.UpdateError, match="link"):
-        self_update.unpack_binary(data.getvalue(), "archive.tar.gz", "aerotizen")
+        self_update.unpack_binary(data.getvalue(), "archive.tar.gz", "qtizen")
 
 
 def test_zip_device_entries_are_rejected():
     data = io.BytesIO()
     with zipfile.ZipFile(data, "w") as archive:
-        entry = zipfile.ZipInfo("aerotizen")
+        entry = zipfile.ZipInfo("qtizen")
         entry.external_attr = (stat.S_IFCHR | 0o600) << 16
         archive.writestr(entry, b"device")
         archive.writestr("LICENSE", b"MIT")
     with pytest.raises(self_update.UpdateError, match="unexpected files"):
-        self_update.unpack_binary(data.getvalue(), "archive.zip", "aerotizen")
+        self_update.unpack_binary(data.getvalue(), "archive.zip", "qtizen")
 
 
 def test_binary_size_is_bounded(monkeypatch):
     monkeypatch.setattr(self_update, "MAX_BINARY_BYTES", 4)
-    data = archive_bytes([("aerotizen", b"too-large"), ("LICENSE", b"MIT")])
+    data = archive_bytes([("qtizen", b"too-large"), ("LICENSE", b"MIT")])
     with pytest.raises(self_update.UpdateError, match="allowed size"):
-        self_update.unpack_binary(data, "archive.tar.gz", "aerotizen")
+        self_update.unpack_binary(data, "archive.tar.gz", "qtizen")
 
 
 def test_independent_child_environment_resets_pyinstaller_and_loader(monkeypatch):

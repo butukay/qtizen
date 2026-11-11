@@ -15,8 +15,8 @@ from pathlib import Path
 
 import pytest
 
-from aerotizen import root_package, root_state
-from aerotizen.root_bridge import BridgeClient, BridgeError, BridgeSdb
+from qtizen import root_package, root_state
+from qtizen.root_bridge import BridgeClient, BridgeError, BridgeSdb
 
 ROOT = Path(__file__).resolve().parents[1]
 

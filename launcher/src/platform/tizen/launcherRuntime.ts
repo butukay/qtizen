@@ -55,7 +55,7 @@ export interface LauncherPlatform {
 
 declare global {
   interface Window {
-    AeroTizen: LauncherRuntime;
     Backgrounds: LauncherPlatform["backgrounds"];
+    Qtizen: LauncherRuntime;
   }
 }

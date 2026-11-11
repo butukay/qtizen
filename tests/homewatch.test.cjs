@@ -89,8 +89,8 @@ function harness(options = {}) {
     this.onerror();
   };
   const window = {
-    AeroTizen: A,
-    AeroDiagnostics: { record: (event, data) => logs.push({ event, data }), flush() {} },
+    Qtizen: A,
+    QtizenDiagnostics: { record: (event, data) => logs.push({ event, data }), flush() {} },
     addEventListener: (name, callback) => {
       windowEvents[name] = callback;
     },
@@ -132,7 +132,7 @@ function harness(options = {}) {
         return reject ? Promise.reject(new Error("Rejected")) : Promise.resolve();
       }
     }
-    windowEvents["aero-wrt-service"]({ detail: Service });
+    windowEvents["qtizen-wrt-service"]({ detail: Service });
   }
   return {
     A,
@@ -205,7 +205,7 @@ for (const version of ["10.0"]) {
     h.requests[2].reply(healthy);
     assert.equal(ready, 2);
     assert.equal(h.calls.length, 1);
-    assert.equal(h.windowEvents["aero-wrt-service"], undefined);
+    assert.equal(h.windowEvents["qtizen-wrt-service"], undefined);
     assert.equal(h.scripts[0].parentNode, null);
     assert.equal(h.timers.size, 0);
     assert.ok(h.logs.some((log) => log.event === "service.ready" && log.data.method === "wrt_service"));
@@ -282,7 +282,7 @@ test("module errors and timeouts clean up and reject late callbacks", () => {
       () => failed++,
     );
     h.requests[0].fail();
-    const late = h.windowEvents["aero-wrt-service"];
+    const late = h.windowEvents["qtizen-wrt-service"];
     if (timeout) h.advance(30000);
     else h.scripts[0].onerror();
     late({
@@ -293,7 +293,7 @@ test("module errors and timeouts clean up and reject late callbacks", () => {
     h.advance(31000);
     assert.equal(failed, 1);
     assert.equal(h.timers.size, 0);
-    assert.equal(h.windowEvents["aero-wrt-service"], undefined);
+    assert.equal(h.windowEvents["qtizen-wrt-service"], undefined);
   }
 });
 

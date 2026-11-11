@@ -1,10 +1,10 @@
-"""Restart a TV app with its web inspector for ``aerotizen inspect``."""
+"""Restart a TV app with its web inspector for ``qtizen inspect``."""
 
 import time
 import urllib.request
 
-from aerotizen.device import DeviceSession
-from aerotizen.sdb import SdbError
+from qtizen.device import DeviceSession
+from qtizen.sdb import SdbError
 
 ATTEMPTS = 4
 

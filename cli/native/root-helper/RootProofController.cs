@@ -9,9 +9,9 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AeroTizen.UntetheredProbe;
+using Qtizen.UntetheredProbe;
 
-namespace AeroTizen.SdbTest
+namespace Qtizen.SdbTest
 {
     // Managed-only code: this public app never invokes native libraries or a
     // privileged executable. Only the fixed localhost SDK operation can do so.
@@ -53,7 +53,7 @@ namespace AeroTizen.SdbTest
         internal RootPreparation(Bundle bundle)
         {
             Source = bundle;
-            Work = "/tmp/aerotizen-root-probe-" + Bundle.Hex(8);
+            Work = "/tmp/qtizen-root-probe-" + Bundle.Hex(8);
             if (Directory.Exists(Work) || File.Exists(Work)) throw new IOException("Proof work path exists");
             Directory.CreateDirectory(Work);
             try
@@ -97,7 +97,7 @@ namespace AeroTizen.SdbTest
             lines.Add("cleanup() {");
             lines.Add("result=$?; trap - EXIT");
             lines.Add("(\n" + bundle.Cleanup(work) + ") || result=91");
-            lines.Add("printf '\\nAEROTIZEN_ROOT_EXIT=%s\\n' \"$result\"");
+            lines.Add("printf '\\nQTIZEN_ROOT_EXIT=%s\\n' \"$result\"");
             lines.Add("exit \"$result\"\n}");
             lines.Add("trap cleanup EXIT");
             lines.Add("(\n" + bundle.Invocation(work, operation) + ")");
@@ -116,7 +116,7 @@ namespace AeroTizen.SdbTest
 
     internal static class RootProofController
     {
-        internal const string ResultPrefix = "AEROTIZEN_PROOF_RESULT=";
+        internal const string ResultPrefix = "QTIZEN_PROOF_RESULT=";
         internal static Dictionary<string, object> CheckFiles(Bundle bundle, out RootPreparation preparation)
         {
             preparation = new RootPreparation(bundle);
@@ -136,9 +136,9 @@ namespace AeroTizen.SdbTest
         {
             string[] lines = output.Replace("\r\n", "\n").Split('\n');
             string[] records = lines.Where(line => line.StartsWith(ResultPrefix, StringComparison.Ordinal)).ToArray();
-            if (records.Length != 1 || lines.Count(line => line == "AEROTIZEN_PROBE_DONE") != 1
-                || lines.Count(line => line == "AEROTIZEN_PROBE_CLEANED") != 1
-                || lines.Count(line => line == "AEROTIZEN_ROOT_EXIT=0") != 1)
+            if (records.Length != 1 || lines.Count(line => line == "QTIZEN_PROBE_DONE") != 1
+                || lines.Count(line => line == "QTIZEN_PROBE_CLEANED") != 1
+                || lines.Count(line => line == "QTIZEN_ROOT_EXIT=0") != 1)
                 throw new InvalidDataException("Proof completion or SDK cleanup was not confirmed");
             using (var document = JsonDocument.Parse(records[0].Substring(ResultPrefix.Length)))
             {

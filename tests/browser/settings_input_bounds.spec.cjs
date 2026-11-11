@@ -9,7 +9,7 @@ for (const glassSettings of [false, true]) {
     await page.addInitScript(
       (glassSettings) =>
         localStorage.setItem(
-          "aerotizen.settings.v1",
+          "qtizen.settings.v1",
           JSON.stringify({
             glassSettings,
             home: ["demo0"],
@@ -23,7 +23,7 @@ for (const glassSettings of [false, true]) {
     );
     await page.goto("/");
     await page.waitForFunction(
-      () => AeroTizen.apps.getSnapshot().ready && AeroTizen.inputs.getSnapshot().sources.length === 4,
+      () => Qtizen.apps.getSnapshot().ready && Qtizen.inputs.getSnapshot().sources.length === 4,
     );
     await openSettings(page);
     await page.locator('[data-key="section:sources"]').click();
@@ -47,7 +47,7 @@ for (const glassSettings of [false, true]) {
     await page.getByRole("textbox", { name: "HDMI 2 name", exact: true }).fill("Updated console");
     await page.getByRole("textbox", { name: "HDMI 2 name", exact: true }).press("Tab");
     await expect
-      .poll(() => page.evaluate(() => AeroTizen.settings.getSnapshot().inputNames["HDMI 2"]))
+      .poll(() => page.evaluate(() => Qtizen.settings.getSnapshot().inputNames["HDMI 2"]))
       .toBe("Updated console");
     await page.screenshot({ path: info.outputPath("hdmi-name-fields.png") });
   });

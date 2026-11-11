@@ -38,7 +38,7 @@ only `db/appfw/booting_appid_backup` to `DclHome001.Home`. Apply accepts that
 specific difference from the saved original. A new backup requires original values.
 See [backup behaviour](home-read-only.md#backup-behavior).
 
-The CLI saves `original-home.json` in `~/.config/aerotizen/backups/<TV identity>/`.
+The CLI saves `original-home.json` in `~/.config/qtizen/backups/<TV identity>/`.
 Keep the **whole folder**, including the `transactions/` directory. Later backups
 keep the original file and report if the current settings differ.
 

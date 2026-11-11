@@ -8,9 +8,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using AeroTizen.UntetheredProbe;
+using Qtizen.UntetheredProbe;
 
-namespace AeroTizen.Root
+namespace Qtizen.Root
 {
     internal static class SetupTransfer
     {
@@ -37,7 +37,7 @@ namespace AeroTizen.Root
                     certificate != null && Bundle.Digest(certificate.GetRawCertData()) == pin))
                 {
                     await tls.AuthenticateAsClientAsync(new SslClientAuthenticationOptions {
-                        TargetHost = "aerotizen-setup", EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13,
+                        TargetHost = "qtizen-setup", EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13,
                         CertificateRevocationCheckMode = X509RevocationMode.NoCheck,
                     }, stop.Token);
                     await tls.WriteAsync(Encoding.ASCII.GetBytes(token + "\n").AsMemory(), stop.Token);

@@ -14,8 +14,8 @@ from pathlib import Path
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.serialization import pkcs12
 
-from aerotizen import sdk
-from aerotizen.device import DeviceSessionError
+from qtizen import sdk
+from qtizen.device import DeviceSessionError
 
 
 def server_context(pfx, certificate_sha256):
@@ -29,7 +29,7 @@ def server_context(pfx, certificate_sha256):
         raise ValueError("Private setup certificate does not match its saved pin")
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
-    with tempfile.TemporaryDirectory(prefix="aerotizen-root-tls-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="qtizen-root-tls-") as temporary:
         values = {
             "certificate.pem": certificate.public_bytes(serialization.Encoding.PEM),
             "key.pem": key.private_bytes(
@@ -84,7 +84,7 @@ def run(session, files, payload, pfx, certificate_sha256):
                 result = sdk.run(
                     session,
                     files,
-                    "AeroTizenRootBridge.dll",
+                    "QtizenRootBridge.dll",
                     (
                         "--bootstrap-fetch",
                         callback,

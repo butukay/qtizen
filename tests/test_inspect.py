@@ -4,9 +4,9 @@ from contextlib import nullcontext
 
 import pytest
 
-from aerotizen import cli, inspect_app, releases
-from aerotizen.device import DeviceSessionError
-from aerotizen.sdb import SdbError
+from qtizen import cli, inspect_app, releases
+from qtizen.device import DeviceSessionError
+from qtizen.sdb import SdbError
 
 
 @pytest.fixture
@@ -69,7 +69,7 @@ def test_inspect_restarts_and_forwards_the_selected_app(
         return [{"ip": "discovered-tv"}]
 
     monkeypatch.setattr(cli.discover, "discover", discover)
-    monkeypatch.setattr("sys.argv", ["aerotizen", *arguments])
+    monkeypatch.setattr("sys.argv", ["qtizen", *arguments])
     cli.main()
     assert discoveries == ([] if host == "selected-tv" else [True])
     assert events == [
@@ -87,7 +87,7 @@ def test_inspect_restarts_and_forwards_the_selected_app(
 def test_inspect_can_start_when_the_stop_request_fails(monkeypatch, inspector):
     events, failures = inspector
     failures["stop"] = OSError("app was not running")
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--tv", "tv", "inspect", "launcher"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "--tv", "tv", "inspect", "launcher"])
     cli.main()
     assert ("debug", releases.APP_ID) in events
     assert events[-1] == ("close",)
@@ -96,7 +96,7 @@ def test_inspect_can_start_when_the_stop_request_fails(monkeypatch, inspector):
 def test_inspect_reports_forwarding_errors_and_closes_the_session(monkeypatch, inspector):
     events, failures = inspector
     failures["forward"] = OSError("port already in use")
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--tv", "tv", "inspect", "launcher"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "--tv", "tv", "inspect", "launcher"])
     with pytest.raises(SystemExit, match="Inspect failed: port already in use"):
         cli.main()
     assert events[-1] == ("close",)
@@ -106,11 +106,11 @@ def test_busy_device_does_not_stop_the_app(monkeypatch, inspector):
     events, _ = inspector
 
     def busy(*args, **kwargs):
-        raise DeviceSessionError("Another AeroTizen session owns this TV")
+        raise DeviceSessionError("Another Qtizen session owns this TV")
 
     monkeypatch.setattr(inspect_app, "DeviceSession", busy)
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--tv", "tv", "inspect", "launcher"])
-    with pytest.raises(SystemExit, match="Another AeroTizen"):
+    monkeypatch.setattr("sys.argv", ["qtizen", "--tv", "tv", "inspect", "launcher"])
+    with pytest.raises(SystemExit, match="Another Qtizen"):
         cli.main()
     assert events == []
 
@@ -128,7 +128,7 @@ def test_inspect_rejects_invalid_arguments_before_discovery(monkeypatch, argumen
         pytest.fail("Invalid arguments must not start TV discovery")
 
     monkeypatch.setattr(cli.discover, "discover", unexpected_discovery)
-    monkeypatch.setattr("sys.argv", ["aerotizen", *arguments])
+    monkeypatch.setattr("sys.argv", ["qtizen", *arguments])
     with pytest.raises(SystemExit, match=message):
         cli.main()
 
@@ -136,7 +136,7 @@ def test_inspect_rejects_invalid_arguments_before_discovery(monkeypatch, argumen
 def test_inspect_retries_when_the_watcher_reopens_the_app_first(monkeypatch, inspector):
     events, failures = inspector
     failures["debug"] = [SdbError("debug launch failed: app is running")]
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--tv", "tv", "inspect", "launcher"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "--tv", "tv", "inspect", "launcher"])
     cli.main()
     stop = ("stop", f"http://tv:8001/api/v2/applications/{releases.APP_ID}", "DELETE", 5)
     assert events[:6] == [
@@ -153,7 +153,7 @@ def test_inspect_retries_when_the_watcher_reopens_the_app_first(monkeypatch, ins
 def test_inspect_gives_up_after_repeated_failures(monkeypatch, inspector):
     events, failures = inspector
     failures["debug"] = [SdbError("debug launch failed") for _ in range(inspect_app.ATTEMPTS)]
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--tv", "tv", "inspect", "launcher"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "--tv", "tv", "inspect", "launcher"])
     with pytest.raises(SystemExit, match="Inspect failed: debug launch failed"):
         cli.main()
     assert events.count(("debug", releases.APP_ID)) == inspect_app.ATTEMPTS

@@ -6,8 +6,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AeroTizen.AutoRoot;
-using AeroTizen.UntetheredProbe;
+using Qtizen.AutoRoot;
+using Qtizen.UntetheredProbe;
 
 internal static class ReadinessTests
 {

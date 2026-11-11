@@ -6,7 +6,7 @@ exports.createTestSettings = (defaults = {}, options = {}) => {
   const data = new Map();
   return createSettingsService({
     defaults,
-    storageKey: "aerotizen.settings.v1",
+    storageKey: "qtizen.settings.v1",
     legacyStorageKeys: [],
     speedRange: { MIN: 0.25, MAX: 3 },
     locale: { timeFormat: () => "24", tempUnit: () => "C" },
@@ -18,7 +18,7 @@ exports.createTestSettings = (defaults = {}, options = {}) => {
 // Platform tests use the same TypeScript preference service as the widget.
 exports.installSettings = (context, defaults) => {
   const host = context.window;
-  const runtime = host.AeroTizen;
+  const runtime = host.Qtizen;
   const settings = createSettingsService({
     defaults,
     storage: context.localStorage,

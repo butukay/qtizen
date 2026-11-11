@@ -8,8 +8,8 @@ import socket
 import ssl
 import uuid
 
-from aerotizen.root_state import APP_ID
-from aerotizen.sdb import AUTH, CNXN, MAX_DATA, NAMES, VERSION, Sdb, SdbError
+from qtizen.root_state import APP_ID
+from qtizen.sdb import AUTH, CNXN, MAX_DATA, NAMES, VERSION, Sdb, SdbError
 
 MAX_REPLY = 8192
 
@@ -88,7 +88,7 @@ class BridgeSdb(Sdb):
 
     def _connect_once(self):
         self.sock, self.root_status = BridgeClient(self.host, self.receipt, timeout=self.timeout).open("sdb")
-        self._send(CNXN, VERSION, MAX_DATA, b"host::aerotizen\0")
+        self._send(CNXN, VERSION, MAX_DATA, b"host::qtizen\0")
         command, _, limit, payload = self._recv()
         if command == AUTH or command != CNXN:
             raise BridgeError(f"SDB rejected the bridge handshake: {NAMES.get(command, command)}")

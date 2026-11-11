@@ -3,7 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <UseAppHost>false</UseAppHost>
-    <StartupObject>AeroTizen.UntetheredProbe.ProbeTests</StartupObject>
+    <StartupObject>Qtizen.UntetheredProbe.ProbeTests</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../cli/native/untethered-probe/*.cs" Link="Probe/%(Filename)%(Extension)" />

@@ -5,7 +5,7 @@ from contextlib import contextmanager
 
 import pytest
 
-from aerotizen import cli
+from qtizen import cli
 
 
 @pytest.mark.parametrize("answer", ["", "invalid"])

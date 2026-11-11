@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace AeroTizen.UntetheredProbe
+namespace Qtizen.UntetheredProbe
 {
     internal sealed class Bundle
     {
@@ -21,7 +21,7 @@ namespace AeroTizen.UntetheredProbe
         internal string ProofOperation => Service == null ? "--run-proof" : "--run-service";
         internal string Stage => StagingRoot + "/" + Package;
         internal string Archive => Package + ".tar.gz";
-        internal string ProofDirectory => StagingRoot + "/aerotizen-probe-proof-" + Nonce;
+        internal string ProofDirectory => StagingRoot + "/qtizen-probe-proof-" + Nonce;
         internal string ProofPath => ProofDirectory + "/proof.json";
         internal string PayloadHash => Hashes["SamsungTvArchiveRoot.dll"];
         internal static string Digest(byte[] data)
@@ -73,7 +73,7 @@ namespace AeroTizen.UntetheredProbe
                     || !Regex.IsMatch(Nonce ?? "", @"\A[a-f0-9]{32}\z") || (Runtime != "3.1" && Runtime != "6.0"))
                     throw new InvalidDataException("Invalid probe identity");
                 var names = new HashSet<string> {
-                    "AeroTizenRootProbe.dll", "AeroTizenRootProbe.runtimeconfig.json", "AeroTizenRootProbe.deps.json",
+                    "QtizenRootProbe.dll", "QtizenRootProbe.runtimeconfig.json", "QtizenRootProbe.deps.json",
                     "SamsungTvArchiveRoot.dll", "SamsungTvArchiveRoot.runtimeconfig.json", "SamsungTvArchiveRoot.deps.json",
                     "public.pem", "passwd", Archive, Archive + ".signature"
                 };
@@ -158,7 +158,7 @@ namespace AeroTizen.UntetheredProbe
         internal static string Quote(string value) { return "'" + value.Replace("'", "'\\''") + "'"; }
         private static string Claim(string work)
         {
-            if (!Regex.IsMatch(work ?? "", @"\A/tmp/aerotizen-root-probe-[a-f0-9]{16}\z"))
+            if (!Regex.IsMatch(work ?? "", @"\A/tmp/qtizen-root-probe-[a-f0-9]{16}\z"))
                 throw new InvalidDataException("Invalid probe work directory");
             return work.Substring(work.Length - 16);
         }
@@ -191,9 +191,9 @@ namespace AeroTizen.UntetheredProbe
                 lines.Add("(set -C; cat " + Quote(work + "/" + name) + " > " + Quote(destination) + ")");
             }
             // Stock upstream accepts exactly one argument: the package identity.
-            lines.Add("/usr/bin/dotnet " + Quote(Stage + "/AeroTizenRootProbe.dll") + " " + operation
+            lines.Add("/usr/bin/dotnet " + Quote(Stage + "/QtizenRootProbe.dll") + " " + operation
                 + (operation == "--check" ? "" : " " + Quote(claim)));
-            lines.Add("printf '%s\\n' AEROTIZEN_PROBE_DONE");
+            lines.Add("printf '%s\\n' QTIZEN_PROBE_DONE");
             return string.Join("\n", lines) + "\n";
         }
         internal string Cleanup(string work)
@@ -221,7 +221,7 @@ namespace AeroTizen.UntetheredProbe
                 lines.Add("test ! -e " + Quote(target)); lines.Add("test ! -L " + Quote(target));
             }
             lines.Add("fi");
-            lines.Add("printf '%s\\n' AEROTIZEN_PROBE_CLEANED");
+            lines.Add("printf '%s\\n' QTIZEN_PROBE_CLEANED");
             return string.Join("\n", lines) + "\n";
         }
         internal static string Injection(string command, string gate)

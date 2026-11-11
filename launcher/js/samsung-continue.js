@@ -97,7 +97,7 @@
     try {
       // app_id alone is not a cache key. Keep each source and retry fresh.
       var key = source.storeId + "-" + Date.now() + "-" + ++requestId;
-      xhr.open("GET", ENDPOINT + "&_aerotizen=" + encodeURIComponent(key), true);
+      xhr.open("GET", ENDPOINT + "&_qtizen=" + encodeURIComponent(key), true);
       xhr.timeout = 5000;
       xhr.setRequestHeader("app_id", source.storeId);
       xhr.send();
@@ -150,4 +150,4 @@
 
   A.continueWatchingProviders = A.continueWatchingProviders || [];
   A.continueWatchingProviders.push({ discover: discover, read: read, open: open, cancel: cancel });
-})(window.AeroTizen);
+})(window.Qtizen);

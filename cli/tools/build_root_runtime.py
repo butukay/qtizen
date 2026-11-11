@@ -14,10 +14,10 @@ from build_release import cli_version
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = {
-    "AeroTizenRootHelper": ("native/root-helper/RootHelper.csproj", "bin"),
-    "AeroTizenRootBridge": ("native/root-bridge/RootBridge.csproj", "bin"),
-    "AeroTizenRootProbe": ("native/untethered-probe/RootProbe.csproj", "res/runner"),
-    "AeroTizenBootWriter": ("native/boot-registration/BootWriter.csproj", "res/setup"),
+    "QtizenRootHelper": ("native/root-helper/RootHelper.csproj", "bin"),
+    "QtizenRootBridge": ("native/root-bridge/RootBridge.csproj", "bin"),
+    "QtizenRootProbe": ("native/untethered-probe/RootProbe.csproj", "res/runner"),
+    "QtizenBootWriter": ("native/boot-registration/BootWriter.csproj", "res/setup"),
 }
 
 
@@ -27,7 +27,7 @@ def main():
     parser.add_argument(
         "--framework", type=Path, help="optional local TV compile references; otherwise use pinned Tizen.NET"
     )
-    parser.add_argument("--output", type=Path, default=ROOT / "src/aerotizen/helpers/root-runtime.json")
+    parser.add_argument("--output", type=Path, default=ROOT / "src/qtizen/helpers/root-runtime.json")
     args = parser.parse_args()
     if not args.dotnet:
         parser.error("Install .NET SDK 6 or pass --dotnet PATH")
@@ -36,7 +36,7 @@ def main():
     if "@CLI_VERSION@" not in template:
         raise ValueError("The root helper manifest must use @CLI_VERSION@")
     values = {}
-    with tempfile.TemporaryDirectory(prefix="aerotizen-root-runtime-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="qtizen-root-runtime-") as temporary:
         for name, (project, destination) in PROJECTS.items():
             output = Path(temporary) / name
             command = [
@@ -52,7 +52,7 @@ def main():
                 "-p:UseSharedCompilation=false",
                 f"-p:Version={version}",
             ]
-            if args.framework and name == "AeroTizenRootHelper":
+            if args.framework and name == "QtizenRootHelper":
                 command.append("-p:TvFrameworkDir=" + str(args.framework.resolve()))
             subprocess.run(command, check=True, env={**os.environ, "DOTNET_CLI_TELEMETRY_OPTOUT": "1"})
             for suffix in (".dll", ".runtimeconfig.json", ".deps.json"):

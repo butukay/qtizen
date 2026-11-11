@@ -25,14 +25,13 @@ classifiers = [
 dev = ["pytest>=8", "ruff>=0.6", "lxml>=5", "build>=1", "setuptools>=77"]
 
 [project.scripts]
-qtizen = "aerotizen.cli:main"
-aerotizen = "aerotizen.cli:main"
+qtizen = "qtizen.cli:main"
 
 [tool.setuptools.dynamic]
-version = { attr = "aerotizen.__version__" }
+version = { attr = "qtizen.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-aerotizen = ["ca/*", "helpers/*.json", "helpers/*.ps1"]
+qtizen = ["ca/*", "helpers/*.json", "helpers/*.ps1"]

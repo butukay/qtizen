@@ -4,15 +4,15 @@ interface AppCommon {
 }
 
 interface ScreenSaverHost extends Pick<Window, "addEventListener" | "removeEventListener"> {
-  AeroTizen: { tizen?: unknown };
   document: Document;
   location?: Pick<Location, "protocol">;
+  Qtizen: { tizen?: unknown };
   webapis?: { appcommon?: AppCommon };
 }
 
 // AppCommon controls this app's screen-saver request, not the panel-care settings.
 export const mountScreenSaverControl = (host: ScreenSaverHost) => {
-  if (!host.AeroTizen.tizen) {
+  if (!host.Qtizen.tizen) {
     return () => undefined;
   }
   const document = host.document;

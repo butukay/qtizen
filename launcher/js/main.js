@@ -62,7 +62,7 @@
   });
 
   // ---- boot ----------------------------------------------------------------------
-  var startup = window.AeroStartup;
+  var startup = window.QtizenStartup;
   startup.mark("settings-loaded");
   A.applyBackground();
   A.clock.start();
@@ -115,4 +115,4 @@
       startup.afterLoad(discover);
     });
   });
-})(window.AeroTizen);
+})(window.Qtizen);

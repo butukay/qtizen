@@ -165,7 +165,7 @@ function browser(options = {}) {
     c = clock();
   let writes = 0;
   const window = {
-    AeroDiagnosticsPrivacy: require("../launcher/js/diagnostics-privacy"),
+    QtizenDiagnosticsPrivacy: require("../launcher/js/diagnostics-privacy"),
     document: {
       hidden: false,
       addEventListener: (name, fn) => {
@@ -177,7 +177,7 @@ function browser(options = {}) {
     },
     setTimeout: c.later,
     clearTimeout: c.cancel,
-    AeroDiagnosticsStorage: (ready) =>
+    QtizenDiagnosticsStorage: (ready) =>
       ready({
         load: (done) => c.later(() => done(null, stored.get("snapshot")), options.loadDelay || 0),
         save: (value, done) => {
@@ -246,13 +246,13 @@ test("desktop preview logs lifecycle locally without service requests", () => {
   assert.equal(h.writes(), 0);
   h.advance(500);
   assert.equal(h.requests.length, 0);
-  assert.equal(h.window.AeroDiagnostics.snapshot().records.at(-1).event, "ui.visibility");
+  assert.equal(h.window.QtizenDiagnostics.snapshot().records.at(-1).event, "ui.visibility");
   assert.ok(h.stored.get("snapshot"));
 });
 
 test("UI sends bounded event batches with sanitized error context", () => {
   const h = browser({ tv: true });
-  for (let i = 0; i < 100; i++) h.window.AeroDiagnostics.record("ui.test", { reason: "界".repeat(150) });
+  for (let i = 0; i < 100; i++) h.window.QtizenDiagnostics.record("ui.test", { reason: "界".repeat(150) });
   h.listeners.load();
   h.listeners.appcontrol();
   h.listeners.error({
@@ -272,7 +272,7 @@ test("UI sends bounded event batches with sanitized error context", () => {
     assert.ok(JSON.parse(request.body).records.length <= 24);
     assert.ok(Buffer.byteLength(request.body) < 16384);
   }
-  const raw = JSON.stringify(h.window.AeroDiagnostics.snapshot());
+  const raw = JSON.stringify(h.window.QtizenDiagnostics.snapshot());
   assert.ok(!raw.includes("PRIVATE-"));
   assert.ok(raw.includes("TypeError"));
   const failed = browser({ tv: true, fail: true });
@@ -322,7 +322,7 @@ test("startup notifications share one retry schedule instead of exhausting it ea
   const h = browser({ tv: true, fail: true });
   h.listeners.load();
   h.advance(0);
-  for (let i = 0; i < 20; i++) h.window.AeroDiagnostics.flush();
+  for (let i = 0; i < 20; i++) h.window.QtizenDiagnostics.flush();
   assert.equal(h.requests.length, 1);
   h.advance(1000);
   assert.equal(h.requests.length, 2);
@@ -340,7 +340,7 @@ test("hiding the launcher cancels delivery retries; returning starts a fresh bou
   h.listeners.visibilitychange();
   h.advance(60000);
   assert.equal(h.requests.length, 1);
-  h.window.AeroDiagnostics.flush();
+  h.window.QtizenDiagnostics.flush();
   assert.equal(h.requests.length, 1);
   h.window.document.hidden = false;
   h.listeners.visibilitychange();
@@ -355,7 +355,7 @@ test("legacy 200 responses do not discard queued events or start retry loops", (
   assert.equal(h.requests.length, 1);
   assert.equal(h.timers.size, 0);
   h.options.badAck = false;
-  h.window.AeroDiagnostics.flush();
+  h.window.QtizenDiagnostics.flush();
   h.advance(0);
   assert.equal(h.requests.length, 2);
   assert.ok(JSON.parse(h.requests[1].body).records.some((item) => item.event === "ui.start"));
@@ -371,7 +371,7 @@ test("legacy 200 responses do not discard queued events or start retry loops", (
 });
 
 test("service log storage uses only async file APIs and preserves Home recovery on any host", async () => {
-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "aerotizen-logs-"));
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "qtizen-logs-"));
   const prefix = "/virtual/private";
   const local = (name) => path.join(directory, name.slice(prefix.length + 1));
   const adapter = {
@@ -405,7 +405,7 @@ test("service log storage uses only async file APIs and preserves Home recovery 
         store = value;
       },
     );
-    const home = path.join(directory, "aerotizen-home-routing-v1.json");
+    const home = path.join(directory, "qtizen-home-routing-v1.json");
     fs.writeFileSync(home, "RECOVERY");
     const save = (value) =>
       new Promise((resolve, reject) => store.save(value, (error) => (error ? reject(error) : resolve())));
@@ -611,7 +611,7 @@ test("no personal strings reach memory, async saves or uploads, including legacy
   ];
   const h = browser({ tv: true });
   for (const value of values) {
-    h.window.AeroDiagnostics.record("app.launch_requested", {
+    h.window.QtizenDiagnostics.record("app.launch_requested", {
       app_id: value,
       action: value,
       mode: value,
@@ -627,7 +627,7 @@ test("no personal strings reach memory, async saves or uploads, including legacy
     });
     h.listeners.error({ message: value, filename: "/mnt/" + value + ".js", lineno: 9, colno: 3 });
   }
-  h.window.AeroDiagnostics.ingest([
+  h.window.QtizenDiagnostics.ingest([
     {
       id: "alex-example",
       session: "bedroom-tv",
@@ -645,12 +645,12 @@ test("no personal strings reach memory, async saves or uploads, including legacy
   h.listeners.load();
   h.advance(500);
   const raw = JSON.stringify({
-    memory: h.window.AeroDiagnostics.snapshot(),
+    memory: h.window.QtizenDiagnostics.snapshot(),
     saves: [...h.stored],
     uploads: h.requests.map((request) => request.body),
   });
   for (const value of values.concat(["alex-example", "bedroom-tv"])) assert.ok(!raw.includes(value), value);
-  const request = h.window.AeroDiagnostics.snapshot().records.find((item) => item.event === "app.launch_requested");
+  const request = h.window.QtizenDiagnostics.snapshot().records.find((item) => item.event === "app.launch_requested");
   assert.match(request.data.app_id, /^app-[0-9]+$/);
 });
 

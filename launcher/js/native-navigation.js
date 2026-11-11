@@ -12,7 +12,7 @@
     viewerRequest = 0;
 
   function report(name, action, operation, reason, errorName) {
-    var log = window.AeroDiagnostics;
+    var log = window.QtizenDiagnostics;
     if (!log) {
       return null;
     }
@@ -86,7 +86,7 @@
     }
     try {
       tz.filesystem.resolve(
-        "wgt-private/aerotizen-home-routing-v1.json",
+        "wgt-private/qtizen-home-routing-v1.json",
         function (file) {
           if (settled) {
             return;
@@ -186,7 +186,7 @@
     }
   }
 
-  // If the handoff paused the watcher, it stays paused until AeroTizen returns
+  // If the handoff paused the watcher, it stays paused until Qtizen returns
   // to the foreground. The existing visibility handler then re-arms /home.
 
   function openSamsungHome() {
@@ -388,4 +388,4 @@
   if (window.addEventListener) {
     window.addEventListener("load", rearmWatcher);
   }
-})(window.AeroTizen);
+})(window.Qtizen);

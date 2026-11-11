@@ -28,12 +28,11 @@ const runSettingsUi = async (page, { baselineUrl, screenshotPath }) => {
     });
     await page.reload();
     await page.waitForFunction(
-      () =>
-        window.AeroTizen && (AeroTizen.apps.getSnapshot ? AeroTizen.apps.getSnapshot() : AeroTizen.apps).all.length > 0,
+      () => window.Qtizen && (Qtizen.apps.getSnapshot ? Qtizen.apps.getSnapshot() : Qtizen.apps).all.length > 0,
     );
     const check = await page.evaluate(async (variant) => {
       const focusSelector = variant === "preact" ? "[data-focused=true]" : ".focused";
-      const A = AeroTizen,
+      const A = Qtizen,
         K = A.config.KEY;
       const preferences = () => (variant === "preact" ? A.settings.getSnapshot() : A.settings);
       const updatePreferences = (patch) => {
@@ -325,12 +324,12 @@ const runSettingsUi = async (page, { baselineUrl, screenshotPath }) => {
       };
     }, variant);
     results.push(check);
-    await page.evaluate(() => AeroTizen.settingsUi.open());
+    await page.evaluate(() => Qtizen.settingsUi.open());
     await page.screenshot({ path: screenshotPath(variant) });
     await page.reload();
     if (
       !(await page.evaluate((variant) => {
-        const state = variant === "preact" ? AeroTizen.settings.getSnapshot() : AeroTizen.settings;
+        const state = variant === "preact" ? Qtizen.settings.getSnapshot() : Qtizen.settings;
         return state.timeFormat === "24" && state.weatherShowLocation === false;
       }, variant))
     ) {
@@ -347,7 +346,7 @@ const runSettingsUi = async (page, { baselineUrl, screenshotPath }) => {
     }),
   );
   await page.evaluate(() => {
-    const A = AeroTizen;
+    const A = Qtizen;
     const original = A.tiles.app;
     window.settingsArtworkConstructions = 0;
     A.tiles.app = (app) => {
@@ -363,7 +362,7 @@ const runSettingsUi = async (page, { baselineUrl, screenshotPath }) => {
   await page.waitForFunction(
     () =>
       document.querySelectorAll("#all-apps [data-artwork-loaded=true]").length ===
-      (AeroTizen.apps.getSnapshot ? AeroTizen.apps.getSnapshot() : AeroTizen.apps).all.length,
+      (Qtizen.apps.getSnapshot ? Qtizen.apps.getSnapshot() : Qtizen.apps).all.length,
   );
   const artwork = await page.evaluate(() => {
     const tile = document.querySelector("#all-apps [data-app-option]");
@@ -378,8 +377,8 @@ const runSettingsUi = async (page, { baselineUrl, screenshotPath }) => {
   });
   // External legacy writes publish into the same Settings store.
   await page.evaluate(() => {
-    AeroTizen.settings.update({ timeFormat: "24" });
-    AeroTizen.settings.update({ inputNames: { "HDMI 1": "External name" } });
+    Qtizen.settings.update({ timeFormat: "24" });
+    Qtizen.settings.update({ inputNames: { "HDMI 1": "External name" } });
   });
   await page.waitForFunction(
     () =>
@@ -387,7 +386,7 @@ const runSettingsUi = async (page, { baselineUrl, screenshotPath }) => {
       document.querySelector('[data-key="name:HDMI 1"] input').value === "External name",
   );
   const lifecycle = await page.evaluate(async () => {
-    const A = AeroTizen;
+    const A = Qtizen;
     const find = (key) => document.querySelector('#editor [data-key="' + key + '"]');
     const field = find("name:HDMI 1").querySelector("input");
     document.querySelector('[data-key="section:sources"]').click();
@@ -409,7 +408,7 @@ const runSettingsUi = async (page, { baselineUrl, screenshotPath }) => {
     if (field !== find("name:HDMI 1").querySelector("input")) throw new Error("Reopen rebuilt the cached form");
     // A pending reply delivered after close + reopen must remain cancelled.
     const replies = [];
-    AeroTizen.weather.searchLocations = (query, done) => {
+    Qtizen.weather.searchLocations = (query, done) => {
       replies.push(done);
       return () => {};
     };

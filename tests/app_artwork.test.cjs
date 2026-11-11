@@ -9,8 +9,8 @@ const root = path.join(__dirname, "../launcher");
 function runtime(tv = false) {
   const A = { tizen: tv ? {} : null };
   const context = vm.createContext({
-    window: { AeroTizen: A, LOGOS: { netflix: "M0 0", youtube: "M0 0" } },
-    AeroTizen: A,
+    window: { Qtizen: A, LOGOS: { netflix: "M0 0", youtube: "M0 0" } },
+    Qtizen: A,
   });
   for (const file of ["config.js", "app-catalog.js", "app-lookup.js", "artwork.js", "brands.js"]) {
     vm.runInContext(fs.readFileSync(path.join(root, "js", file), "utf8"), context);

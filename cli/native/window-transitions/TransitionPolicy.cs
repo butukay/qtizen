@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace AeroTizen.Transitions
+namespace Qtizen.Transitions
 {
     internal static class TransitionPolicy
     {
@@ -26,7 +26,7 @@ namespace AeroTizen.Transitions
         internal static bool Manage(Window window, string appId) => window.Pid > 0 && window.Layer == 200 && window.Width >= 1280 && window.Height >= 720
             && !string.IsNullOrEmpty(appId) && (appId == "DclHome001.Home" || appId == "com.samsung.tv.cobalt-yt" || appId == "com.samsung.tv.cobalt" ||
                 (!appId.StartsWith("org.tizen.", StringComparison.Ordinal) && !appId.StartsWith("com.samsung.", StringComparison.Ordinal) &&
-                 !appId.StartsWith("org.aerotizen.", StringComparison.Ordinal) && !appId.StartsWith("adplatform.", StringComparison.Ordinal)));
+                 !appId.StartsWith("org.qtizen.", StringComparison.Ordinal) && !appId.StartsWith("adplatform.", StringComparison.Ordinal)));
         internal static Dictionary<string, string> Values(string mode, IReadOnlyDictionary<string, Hint> original)
         {
             if (mode != "none" && mode != "fade" && mode != "standard") throw new ArgumentException("Invalid transition mode");

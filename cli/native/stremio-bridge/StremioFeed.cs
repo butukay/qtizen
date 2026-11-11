@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AeroTizen.Root;
+using Qtizen.Root;
 
 // This feed has its own loopback listener and credential. It has no CLI or SDB operations.
 internal sealed class StremioFeed : IDisposable
@@ -166,13 +166,13 @@ internal sealed class StremioFeed : IDisposable
         {
             request.Headers.TryGetValue("Access-Control-Request-Method", out string method);
             request.Headers.TryGetValue("Access-Control-Request-Headers", out string headers);
-            if (origin == null || method != "GET" || !string.Equals(headers, "X-AeroTizen-Token", StringComparison.OrdinalIgnoreCase))
+            if (origin == null || method != "GET" || !string.Equals(headers, "X-Qtizen-Token", StringComparison.OrdinalIgnoreCase))
                 Reply(stream, 403, origin, new { error = "preflight_refused" });
             else Reply(stream, 204, origin, null, preflight: true);
             return;
         }
         if (request.Method != "GET") { Reply(stream, 405, origin, new { error = "method_refused" }); return; }
-        request.Headers.TryGetValue("X-AeroTizen-Token", out string observed);
+        request.Headers.TryGetValue("X-Qtizen-Token", out string observed);
         if (!TokenEquals(observed, token)) { Reply(stream, 401, origin, new { error = "unauthorized" }); return; }
         bool root = RootPaths.geteuid() == 0, installed = false, readable = false;
         try { installed = Installed(); readable = root && installed && StremioData.CanRead(); } catch (Exception) { }
@@ -191,7 +191,7 @@ internal sealed class StremioFeed : IDisposable
         if (data.Length > 1024 * 1024) throw new InvalidDataException("Response too large.");
         string header = "HTTP/1.1 " + status + " Response\r\nContent-Type: application/json\r\nCache-Control: no-store\r\nConnection: close\r\nX-Content-Type-Options: nosniff\r\nContent-Length: " + data.Length + "\r\n";
         if (origin != null) header += "Access-Control-Allow-Origin: " + origin + "\r\nVary: Origin\r\n";
-        if (preflight) header += "Access-Control-Allow-Methods: GET\r\nAccess-Control-Allow-Headers: X-AeroTizen-Token\r\n";
+        if (preflight) header += "Access-Control-Allow-Methods: GET\r\nAccess-Control-Allow-Headers: X-Qtizen-Token\r\n";
         byte[] headers = Encoding.ASCII.GetBytes(header + "\r\n");
         stream.Write(headers, 0, headers.Length); stream.Write(data, 0, data.Length);
     }

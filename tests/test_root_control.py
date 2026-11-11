@@ -10,9 +10,9 @@ from unittest.mock import Mock
 
 import pytest
 
-from aerotizen import cli, root_package, root_state
-from aerotizen import root_control as control
-from aerotizen.device import DeviceSessionError
+from qtizen import cli, root_package, root_state
+from qtizen import root_control as control
+from qtizen.device import DeviceSessionError
 
 
 @pytest.fixture
@@ -54,6 +54,9 @@ def rig(tmp_path, monkeypatch):
         @contextmanager
         def ownership(self):
             yield self
+
+        def applist(self):
+            return state.get("legacy_helper", "")
 
         def duid(self):
             return "fixture-duid"
@@ -118,11 +121,11 @@ def rig(tmp_path, monkeypatch):
         mode = args[0]
         if mode == "--preflight":
             if state.get("preflight_error"):
-                failed = result("AEROTIZEN_ROOT_PREFLIGHT=", {"error": "systemd-run unavailable"})
+                failed = result("QTIZEN_ROOT_PREFLIGHT=", {"error": "systemd-run unavailable"})
                 failed["exit_code"] = 1
                 return failed
             return result(
-                "AEROTIZEN_ROOT_PREFLIGHT=",
+                "QTIZEN_ROOT_PREFLIGHT=",
                 {
                     "schema_version": 1,
                     "runtime": "6.0.9",
@@ -140,13 +143,13 @@ def rig(tmp_path, monkeypatch):
                     "svcapp",
                     "true" if state["automatic"] else "false",
                     "false",
-                    f"/opt/usr/apps/{root_state.APP_ID}/bin/AeroTizenRootHelper.dll",
+                    f"/opt/usr/apps/{root_state.APP_ID}/bin/QtizenRootHelper.dll",
                 ]
                 if state["installed"]
                 else None
             )
             return result(
-                "AEROTIZEN_ROOT_REGISTRY=",
+                "QTIZEN_ROOT_REGISTRY=",
                 {
                     "row": row,
                     "installation_id": state.get("installation"),
@@ -155,7 +158,7 @@ def rig(tmp_path, monkeypatch):
                 },
             )
         if mode == "--clean-upload":
-            return result("AEROTIZEN_ROOT_UPLOAD=", {"removed": True})
+            return result("QTIZEN_ROOT_UPLOAD=", {"removed": True})
         assert mode == "--bootstrap"
         request = json.loads(files["setup-request.json"])
         manifest = json.loads(base64.b64decode(request["files"]["probe.json"]))
@@ -178,7 +181,7 @@ def rig(tmp_path, monkeypatch):
             state["fail"] = None
             raise OSError("completion reply lost")
         return result(
-            "AEROTIZEN_ROOT_BOOTSTRAP=",
+            "QTIZEN_ROOT_BOOTSTRAP=",
             {
                 "passed": True,
                 "protected_proof_verified": True,
@@ -215,7 +218,7 @@ def rig(tmp_path, monkeypatch):
         control.root_transfer,
         "run",
         lambda session, files, payload, pfx, pin: sdk_run(
-            session, {"setup-request.json": payload}, "AeroTizenRootBridge.dll", ("--bootstrap",)
+            session, {"setup-request.json": payload}, "QtizenRootBridge.dll", ("--bootstrap",)
         ),
     )
     monkeypatch.setattr(root_package, "runtime_files", lambda path=None: (managed, b"xml", b"icon"))
@@ -288,7 +291,7 @@ def test_status_wait_uses_latest_attempt_and_cli_exit(rig, tmp_path, monkeypatch
     monkeypatch.setattr(cli, "STATE_DIR", str(tmp_path))
     monkeypatch.setattr(
         "sys.argv",
-        ["aerotizen", "--tv", state["host"], "root", "status", "--wait", "4" if recovers else "2", "--json"],
+        ["qtizen", "--tv", state["host"], "root", "status", "--wait", "4" if recovers else "2", "--json"],
     )
     if recovers:
         cli.main()
@@ -400,7 +403,7 @@ def test_foreign_helper_is_not_uninstalled(rig):
 @pytest.mark.parametrize("operation", ["setup", "upgrade", "remove"])
 def test_cli_mutation_is_preview_only_by_default(tmp_path, monkeypatch, capsys, operation):
     monkeypatch.setattr(cli, "STATE_DIR", str(tmp_path))
-    monkeypatch.setattr("sys.argv", ["aerotizen", "--tv", "192.0.2.20", "root", operation, "--json"])
+    monkeypatch.setattr("sys.argv", ["qtizen", "--tv", "192.0.2.20", "root", operation, "--json"])
     monkeypatch.setattr(control, "setup", lambda *a, **k: pytest.fail("preview wrote TV"))
     monkeypatch.setattr(control, "upgrade", lambda *a, **k: pytest.fail("preview wrote TV"))
     monkeypatch.setattr(control, "remove", lambda *a, **k: pytest.fail("preview wrote TV"))
@@ -415,7 +418,7 @@ def ready_for_upgrade(rig, monkeypatch):
     state["boot"], state["origin"], state["developer"] = str(uuid.uuid4()), "boot", "127.0.0.1"
     assert setup()["setup_complete"] is True
     original = root_state.load(path)
-    state["managed"]["bin/AeroTizenRootBridge.dll"] = b"new managed bridge fixture"
+    state["managed"]["bin/QtizenRootBridge.dll"] = b"new managed bridge fixture"
     monkeypatch.setattr(root_package, "new_pairing", lambda *a: pytest.fail("upgrade replaced pairing"))
     return (
         state,
@@ -490,3 +493,13 @@ def test_upgrade_rejects_a_different_build_with_the_same_version(rig, monkeypatc
     with pytest.raises(DeviceSessionError, match="same version but does not match this build"):
         upgrade()
     assert state["installs"] == 1 and "upgrade" not in root_state.load(path)
+
+
+def test_old_helper_is_not_overlapped_or_removed_by_new_setup(rig):
+    state, _path, setup, _ = rig
+    state["legacy_helper"] = "org.aerotizen.roothelper"
+    with pytest.raises(DeviceSessionError, match="Remove the old"):
+        setup()
+    assert state["installs"] == 0
+    assert state["removed_apps"] == []
+    assert state["root_calls"] == []

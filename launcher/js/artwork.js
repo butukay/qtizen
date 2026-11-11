@@ -26,4 +26,4 @@
   }
 
   A.artwork = { sources: sources };
-})(window.AeroTizen);
+})(window.Qtizen);

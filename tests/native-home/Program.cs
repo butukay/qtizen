@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
-using AeroTizen.Home;
+using Qtizen.Home;
 
 sealed class Fake : IPlatform
 {
@@ -142,7 +142,7 @@ static class Program
         foreach (string key in Policy.Keys) settings[key] = new { type = "string", value = original.Strings[key] };
         settings["db/menu/smart_hub/ontvsetting/auto_start"] = new { type = "int", value = original.AutoStart };
         byte[] raw = JsonSerializer.SerializeToUtf8Bytes(new {
-            schema_version = 1, kind = "aerotizen.home-baseline",
+            schema_version = 1, kind = "qtizen.home-baseline",
             device = new { model = model, firmware_build = firmware },
             home = new { operation = "http://tizen.org/appcontrol/operation/main", default_app = original.Main, settings = settings }
         });

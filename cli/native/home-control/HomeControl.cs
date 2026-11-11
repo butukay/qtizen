@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using AeroTizen.Home;
+using Qtizen.Home;
 
 internal sealed class NativePlatform : IPlatform, IDisposable
 {
@@ -85,7 +85,7 @@ internal sealed class NativePlatform : IPlatform, IDisposable
     {
         using (var message = new HttpRequestMessage(HttpMethod.Post, "http://127.0.0.1:47790/control/home"))
         {
-            message.Headers.Add("X-AeroTizen-Home", "1");
+            message.Headers.Add("X-Qtizen-Home", "1");
             message.Content = new StringContent(JsonSerializer.Serialize(new {
                 expected_mode = expected.Mode, expected_transaction = expected.Transaction,
                 expected_baseline_sha256 = expected.BaselineHash, mode = mode,
@@ -144,7 +144,7 @@ internal static class HomeControl
             using (var baseline = JsonDocument.Parse(original))
             {
                 var saved = baseline.RootElement;
-                if (saved.GetProperty("schema_version").GetInt32() != 1 || saved.GetProperty("kind").GetString() != "aerotizen.home-baseline" ||
+                if (saved.GetProperty("schema_version").GetInt32() != 1 || saved.GetProperty("kind").GetString() != "qtizen.home-baseline" ||
                     string.IsNullOrWhiteSpace(saved.GetProperty("device").GetProperty("model").GetString()) ||
                     string.IsNullOrWhiteSpace(saved.GetProperty("device").GetProperty("firmware_build").GetString()))
                     throw new Exception("Invalid device metadata or baseline schema.");
@@ -183,11 +183,11 @@ internal static class HomeControl
                 throw new Exception("Expected one request file and 32-bit SDK UID 901; root is not used.");
             var request = ReadRequest(args[0]);
             action = request.Action;
-            using (var guard = new FileStream("/home/owner/share/tmp/sdk_tools/.aerotizen-home-control.lock", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+            using (var guard = new FileStream("/home/owner/share/tmp/sdk_tools/.qtizen-home-control.lock", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
             using (var platform = new NativePlatform()) result = Policy.Execute(platform, request);
         }
         catch (Exception error) { result = new Result { Error = error.Message }; }
-        Console.WriteLine("AEROTIZEN_HOME_CONTROL=" + JsonSerializer.Serialize(new { schema_version = 1, uid = uid, action = action, result = result }));
+        Console.WriteLine("QTIZEN_HOME_CONTROL=" + JsonSerializer.Serialize(new { schema_version = 1, uid = uid, action = action, result = result }));
         return result.Success ? 0 : 1;
     }
 }

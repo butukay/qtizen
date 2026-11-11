@@ -12,7 +12,7 @@ async (page) => {
       await page.evaluate(() => {
         localStorage.clear();
         localStorage.setItem(
-          "aerotizen.settings.v1",
+          "qtizen.settings.v1",
           JSON.stringify({
             background: "black",
             speed: 1,
@@ -26,14 +26,12 @@ async (page) => {
       });
       await page.reload();
       await page.waitForFunction(
-        () =>
-          window.AeroTizen &&
-          (AeroTizen.apps.getSnapshot ? AeroTizen.apps.getSnapshot() : AeroTizen.apps).all.length > 0,
+        () => window.Qtizen && (Qtizen.apps.getSnapshot ? Qtizen.apps.getSnapshot() : Qtizen.apps).all.length > 0,
       );
       const timing = await page.evaluate(async () => {
         await document.fonts.ready;
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-        const A = AeroTizen;
+        const A = Qtizen;
         const duration = (fn) => {
           const start = performance.now();
           fn();

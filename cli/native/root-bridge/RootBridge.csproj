@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework><OutputType>Exe</OutputType><UseAppHost>false</UseAppHost>
-    <AssemblyName>AeroTizenRootBridge</AssemblyName><DebugType>none</DebugType><Deterministic>true</Deterministic>
-    <StartupObject>AeroTizen.Root.BridgeProgram</StartupObject>
+    <AssemblyName>QtizenRootBridge</AssemblyName><DebugType>none</DebugType><Deterministic>true</Deterministic>
+    <StartupObject>Qtizen.Root.BridgeProgram</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../hdmi-wake/*.cs" Link="Hdmi/%(Filename)%(Extension)" />

@@ -15,12 +15,7 @@ export interface AppsTizen {
 }
 
 interface AppsHost {
-  AeroDiagnostics?: {
-    captureError(event: string, error: unknown, data: Record<string, unknown>): void;
-    flush?(): void;
-    record(event: string, data: Record<string, unknown>): string | null;
-  };
-  AeroTizen: {
+  Qtizen: {
     config: AppsConfig;
     homewatch: AppHandoff;
     tiles: { shortName(name: string): string };
@@ -28,13 +23,18 @@ interface AppsHost {
     toast(message: string): void;
     translate: Translate;
   };
+  QtizenDiagnostics?: {
+    captureError(event: string, error: unknown, data: Record<string, unknown>): void;
+    flush?(): void;
+    record(event: string, data: Record<string, unknown>): string | null;
+  };
 }
 
 const cancelled = (error: unknown) =>
   !!error && typeof error === "object" && "cancelled" in error && error.cancelled === true;
 
 export const createAppsPlatform = (host: AppsHost): AppsPlatform => {
-  const runtime = host.AeroTizen;
+  const runtime = host.Qtizen;
   const config = runtime.config;
   const tizen = runtime.tizen;
   const application = tizen?.application;
@@ -164,7 +164,7 @@ export const createAppsPlatform = (host: AppsHost): AppsPlatform => {
       if (disposed) {
         return;
       }
-      const log = host.AeroDiagnostics;
+      const log = host.QtizenDiagnostics;
       const operation = log?.record("app.launch_requested", { app_id: app.id }) || null;
       const outcome = (status: string, error?: unknown) => {
         if (!log || disposed) {

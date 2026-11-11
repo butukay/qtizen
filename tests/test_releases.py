@@ -9,7 +9,7 @@ import zipfile
 
 import pytest
 
-from aerotizen import releases
+from qtizen import releases
 
 REPO = "butukay/qtizen"
 API = f"https://api.github.com/repos/{REPO}/releases"
@@ -154,7 +154,7 @@ def test_cli_check_uses_release_page_when_no_platform_archive_exists(
 
 
 def test_cli_check_uses_an_explicit_fork_for_both_links_and_metadata(cli_github):
-    fork = "example/AeroTizen"
+    fork = "example/Qtizen"
     cli_github[0][f"{API.replace(REPO, fork)}?per_page=100&page=1"] = json.loads(
         json.dumps([cli_release()]).replace(REPO, fork)
     )
@@ -180,7 +180,7 @@ def test_cli_check_rejects_duplicate_matching_assets(cli_github):
 
 def test_cli_check_rejects_an_untrusted_archive_url(cli_github):
     item = cli_release()
-    item["assets"][0]["browser_download_url"] = "https://example.com/aerotizen.tar.gz"
+    item["assets"][0]["browser_download_url"] = "https://example.com/qtizen.tar.gz"
     cli_github[0][f"{API}?per_page=100&page=1"] = [item]
     with pytest.raises(releases.ReleaseError, match="Unexpected download URL"):
         releases.resolve_cli()
@@ -288,7 +288,7 @@ def test_invalid_repository_rejected_before_network(github, tmp_path, repo):
 
 def test_explicit_fork_is_used_for_both_metadata_and_assets(github, tmp_path):
     responses, calls = github
-    fork = "metacurb/AeroTizen"
+    fork = "metacurb/Qtizen"
     for url, value in list(responses.items()):
         if not isinstance(value, bytes):
             value = json.loads(json.dumps(value).replace(REPO, fork))

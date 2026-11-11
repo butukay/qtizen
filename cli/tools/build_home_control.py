@@ -12,12 +12,12 @@ from tempfile import TemporaryDirectory
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "native/home-control"
-OUTPUT = ROOT / "src/aerotizen/helpers/home-control.json"
+OUTPUT = ROOT / "src/qtizen/helpers/home-control.json"
 
 
 def build(dotnet):
     environment = {**os.environ, "DOTNET_CLI_TELEMETRY_OPTOUT": "1", "DOTNET_NOLOGO": "1"}
-    with TemporaryDirectory(prefix="aerotizen-home-control-") as temporary:
+    with TemporaryDirectory(prefix="qtizen-home-control-") as temporary:
         output = Path(temporary)
         subprocess.run(
             [
@@ -35,7 +35,7 @@ def build(dotnet):
             check=True,
         )
         files = {}
-        for name in ("AeroTizenHomeControl.dll", "AeroTizenHomeControl.runtimeconfig.json"):
+        for name in ("QtizenHomeControl.dll", "QtizenHomeControl.runtimeconfig.json"):
             data = (output / name).read_bytes()
             files[name] = {
                 "base64": base64.b64encode(data).decode(),

@@ -24,16 +24,16 @@ export interface InputsTizen extends PrivateFileTizen {
 
 interface InputsHost extends Pick<Window, "setTimeout" | "clearTimeout"> {
   addEventListener(type: string, listener: () => void): void;
-  AeroTizen: {
-    homewatch: {
-      openNativeViewer?(source: unknown, hdmi: { label: string; fallback(): void } | null): boolean;
-    };
-    tizen?: InputsTizen | null;
-  };
   document: {
     addEventListener(type: string, listener: () => void): void;
     readonly hidden: boolean;
     removeEventListener(type: string, listener: () => void): void;
+  };
+  Qtizen: {
+    homewatch: {
+      openNativeViewer?(source: unknown, hdmi: { label: string; fallback(): void } | null): boolean;
+    };
+    tizen?: InputsTizen | null;
   };
   removeEventListener(type: string, listener: () => void): void;
 }
@@ -48,7 +48,7 @@ const preview = Object.freeze([
 ]);
 
 export const createInputsPlatform = (host: InputsHost): InputsPlatform => {
-  const tizen = host.AeroTizen.tizen;
+  const tizen = host.Qtizen.tizen;
   const system = tizen?.systeminfo;
   const window = tizen?.tvwindow;
   let nativeSources = new Map<string, unknown>();
@@ -169,7 +169,7 @@ export const createInputsPlatform = (host: InputsHost): InputsPlatform => {
       };
     },
     openNative(source, hdmi) {
-      return host.AeroTizen.homewatch.openNativeViewer?.(nativeSource(source), hdmi) === true;
+      return host.Qtizen.homewatch.openNativeViewer?.(nativeSource(source), hdmi) === true;
     },
     setSource(source, done, failed) {
       window?.setSource(nativeSource(source), done, failed, "MAIN");
