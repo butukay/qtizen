@@ -70,15 +70,22 @@ test("the header has only Settings; section rules, Live caption and new sizes fi
   expect((await page.locator("#inputs").boundingBox()).y + 86).toBeLessThanOrEqual(984);
 });
 
-test("smaller Scroll sizes bring Inputs closer to the app row", async ({ page }) => {
+test("smaller Scroll sizes lower the app row while Inputs keeps its bottom clearance", async ({ page }) => {
   await prepare(page);
-  const gap = () =>
+  const geometry = () =>
     page.evaluate(() => {
       const app = document.querySelector("#grid > [data-id]").getBoundingClientRect();
       const inputs = document.querySelector('[data-home-section="inputs"]').getBoundingClientRect();
-      return inputs.top - app.bottom;
+      const viewport = document.querySelector("[data-home-viewport]").getBoundingClientRect();
+      const overview = document.querySelector("[data-home-overview]").getBoundingClientRect();
+      return {
+        overviewTop: overview.top,
+        appTop: app.top,
+        appGap: inputs.top - app.bottom,
+        bottomGap: viewport.bottom - inputs.bottom,
+      };
     });
-  const large = await gap();
+  const large = await geometry();
 
   for (const { columns, reduction } of [
     { columns: 4, reduction: 28 },
@@ -88,7 +95,16 @@ test("smaller Scroll sizes bring Inputs closer to the app row", async ({ page })
     await openCategory(page, "appearance");
     await page.locator(`[data-key="home-card-columns:${columns}"]`).click();
     await closeSettings(page);
-    expect(await gap()).toBe(large - reduction);
+    const smaller = await geometry();
+    expect(smaller.overviewTop).toBeGreaterThan(large.overviewTop);
+    expect(smaller.appTop).toBeGreaterThan(large.appTop);
+    expect(smaller.appGap).toBe(large.appGap - reduction);
+    expect(smaller.bottomGap).toBe(large.bottomGap);
+
+    await page.keyboard.press("ArrowDown");
+    await expect(page.locator('#inputs > [data-focused="true"]')).toHaveCount(1);
+    expect((await geometry()).bottomGap).toBe(large.bottomGap);
+    await page.keyboard.press("ArrowUp");
   }
 });
 

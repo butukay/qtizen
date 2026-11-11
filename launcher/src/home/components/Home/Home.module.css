@@ -76,11 +76,11 @@
   width: 100%;
 
   &[data-scroll-columns="4"] {
-    --home-input-lift: 42px;
+    --home-docked-top-padding: 42px;
   }
 
   &[data-scroll-columns="5"] {
-    --home-input-lift: 84px;
+    --home-docked-top-padding: 84px;
   }
 
   &[data-docked="true"] {
@@ -88,7 +88,8 @@
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto 1fr auto;
     min-height: 100%;
-    padding-bottom: calc(var(--home-bottom-fade) + 16px + var(--home-input-lift, 0px));
+    padding-top: var(--home-docked-top-padding, 0px);
+    padding-bottom: calc(var(--home-bottom-fade) + 16px);
     > [data-home-section="inputs"] {
       grid-row: 4;
     }
