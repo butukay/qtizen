@@ -23,6 +23,7 @@ export interface InputsPlatform {
   subscribeHome(listener: () => void): () => void;
   subscribeSources(listener: () => void): () => void;
   subscribeVisibility(listener: () => void): () => void;
+  wake(source: InputSource, done: () => void): () => void;
 }
 
 export interface InputsService extends Store<InputsSnapshot> {

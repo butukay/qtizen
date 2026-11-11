@@ -60,7 +60,7 @@ def main():
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
-    executable = "aerotizen.exe" if os.name == "nt" else "aerotizen"
+    executable = "qtizen.exe" if os.name == "nt" else "qtizen"
     report = {
         "platform": platform.platform(),
         "scenarios": [],

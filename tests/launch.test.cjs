@@ -50,6 +50,9 @@ function appHarness(metadata, options = {}) {
     homewatch: { watch: (id) => calls.watch.push(id) },
     toast: (message) => calls.toast.push(message),
   };
+  if (options.noControl === "constructor") delete A.tizen.ApplicationControl;
+  if (options.noControl === "data") delete A.tizen.ApplicationControlData;
+  if (options.noControl === "launch") delete application.launchAppControl;
   const context = vm.createContext({ window: { AeroTizen: A }, AeroTizen: A });
   for (const file of ["config.js", "app-catalog.js", "app-lookup.js"]) {
     vm.runInContext(fs.readFileSync(path.join(launcher, "js", file), "utf8"), context);
@@ -76,6 +79,7 @@ test("HbbTV metadata routes arbitrary apps through the shared host", () => {
       mime: null,
       category: null,
       data: [
+        { key: "__NO_LOADING_LAUNCH", value: ["enable"] },
         { key: "tizenid", value: [id] },
         { key: "hbbtv", value: [links[id]] },
         { key: "deeplink", value: ["true"] },
@@ -84,7 +88,7 @@ test("HbbTV metadata routes arbitrary apps through the shared host", () => {
   }
 });
 
-test("missing or unavailable HbbTV metadata retains normal app launch", () => {
+test("ordinary apps request no loading screen without changing their Home watcher", () => {
   const cases = [
     [],
     undefined,
@@ -99,15 +103,56 @@ test("missing or unavailable HbbTV metadata retains normal app launch", () => {
   for (const metadata of cases) {
     const { A, calls } = appHarness(metadata);
     A.apps.launch({ id: "normal.app", name: "Normal" });
-    assert.equal(calls.launch[0].id, "normal.app");
+    assert.equal(calls.control[0].id, "normal.app");
+    assert.deepEqual(calls.control[0].control, {
+      operation: "http://tizen.org/appcontrol/operation/default",
+      uri: null,
+      mime: null,
+      category: null,
+      data: [{ key: "__NO_LOADING_LAUNCH", value: ["enable"] }],
+    });
     assert.deepEqual(calls.watch, ["normal.app"]);
-    assert.equal(calls.control.length, 0);
+    assert.equal(calls.launch.length, 0);
+    calls.control[0].fail();
+    assert.equal(calls.launch[0].id, "normal.app");
     calls.launch[0].fail();
     assert.deepEqual(calls.toast, ["Could not open Normal"]);
   }
   const { A, calls } = appHarness(null, { noMetadata: true });
   A.apps.launch({ id: "older.app", name: "Older" });
-  assert.equal(calls.launch[0].id, "older.app");
+  assert.equal(calls.control[0].id, "older.app");
+});
+
+test("unavailable or rejected app controls retain direct launch with one fallback", () => {
+  for (const noControl of ["constructor", "data", "launch"]) {
+    const { A, calls } = appHarness([], { noControl });
+    A.apps.launch({ id: "normal.app", name: "Normal" });
+    assert.deepEqual(calls.watch, ["normal.app"]);
+    assert.equal(calls.launch.length, 1);
+    assert.equal(calls.launch[0].id, "normal.app");
+    assert.deepEqual(calls.toast, []);
+  }
+  for (const throwLaunch of [false, true]) {
+    const { A, calls } = appHarness([], { throwLaunch });
+    A.apps.launch({ id: "normal.app", name: "Normal" });
+    if (!throwLaunch) {
+      calls.control[0].fail();
+      calls.control[0].fail();
+    }
+    assert.equal(calls.launch.length, 1);
+    assert.deepEqual(calls.toast, []);
+    calls.launch[0].fail();
+    assert.deepEqual(calls.toast, ["Could not open Normal"]);
+  }
+});
+
+test("a late app-control failure cannot launch an app after disposal", () => {
+  const { A, calls } = appHarness([]);
+  A.apps.launch({ id: "normal.app", name: "Normal" });
+  A.apps.dispose();
+  calls.control[0].fail();
+  assert.equal(calls.launch.length, 0);
+  assert.deepEqual(calls.toast, []);
 });
 
 test("HbbTV failures are reported without a second launch attempt", () => {

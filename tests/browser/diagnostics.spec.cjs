@@ -44,7 +44,7 @@ test("diagnostics persist across reload without changing launcher navigation or 
     return route.fulfill({ body: "{}" });
   });
   await page.goto("/");
-  await expect(page).toHaveTitle(/AeroTizen/);
+  await expect(page).toHaveTitle(/qtizen/);
   await expect(page.locator("#grid > [data-id]").first()).toBeVisible();
   const first = await page.evaluate(
     () => window.AeroDiagnostics.snapshot().records.find((item) => item.event === "ui.start").id,

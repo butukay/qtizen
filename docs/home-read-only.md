@@ -25,8 +25,8 @@ add Native Home support for Tizen 5.5; other runtime entry points remain unverif
 ## Commands
 
 ```sh
-aerotizen --tv TV_IP home status
-aerotizen --tv TV_IP home backup
+qtizen --tv TV_IP home status
+qtizen --tv TV_IP home backup
 ```
 
 Add `--json` for machine-readable output. Optional `--root` explicitly selects the
@@ -50,7 +50,7 @@ An incomplete query cannot become a backup.
 
 ## Backup behavior
 
-By default, the baseline is saved under AeroTizen's local configuration folder:
+By default, the baseline is saved under qtizen's local configuration folder:
 
 ```text
 backups/<SHA-256-of-SDB-device-identity>/original-home.json
@@ -66,19 +66,19 @@ create-if-absent link. Missing parent folders are created automatically, includi
 for a custom `--output` path. Its file mode is 0600 on POSIX. Repeated backups preserve
 the first file's bytes and report whether its configuration and firmware still
 match. Existing corrupt files or files for another TV are refused, not replaced.
-AeroTizen assignments cannot be captured as a new original baseline.
+qtizen assignments cannot be captured as a new original baseline.
 
-Capture the first backup before opening AeroTizen. On the Q80B reported in
-[issue #76](https://github.com/helalaou/AeroTizen/issues/76), opening the launcher
+Capture the first backup before opening qtizen. On the Q80B reported in
+[issue #76](https://github.com/butukay/qtizen/issues/76), opening the launcher
 changes only `db/appfw/booting_appid_backup` to `DclHome001.Home`. If you already
 saved the original, keep that file; `matches current=False` is expected for this
 change, and apply accepts this specific difference. Without an original backup,
 return the TV to its stock state, confirm with `home status` that none of the
-saved values names AeroTizen, then capture the backup before opening it again.
+saved values names qtizen, then capture the backup before opening it again.
 The CLI does not guess the previous value or replace an existing original.
 
 Validation runs before folder creation. If the first backup is refused because
-AeroTizen is already in the values, no backup directory is created. That explains
+qtizen is already in the values, no backup directory is created. That explains
 an absent folder after that refusal, but does not explain the first `WinError 3`
 reported in issue #76.
 
@@ -89,7 +89,7 @@ and successful backup does not establish that restore or native Home routing wor
 
 CLI 2.4.0 already creates missing backup directories before writing the file.
 Its release commit `1715a3b` also passed the
-[Windows Home test job](https://github.com/helalaou/AeroTizen/actions/runs/40574188485/job/122436086717),
+[Windows Home test job](https://github.com/butukay/qtizen/actions/runs/40574188485/job/122436086717),
 which includes creating a first backup with no existing per-TV directory. This
 does not reproduce the reporter's Windows environment or test the frozen EXE's
 backup command; release EXE smoke checks cover help and offline previews.
@@ -113,7 +113,7 @@ restore. Do not delete or overwrite a valid original to test directory creation.
 The [ARN0 native query](https://github.com/NelsonEU/arn0-tv/blob/main/native/Query.cs)
 and [native control source](https://github.com/NelsonEU/arn0-tv/blob/main/native/Control.cs)
 document the Tizen getters and logical setting names used as research references.
-AeroTizen's helper is a separate getter-only implementation. The pinned upstream
+qtizen's helper is a separate getter-only implementation. The pinned upstream
 root agent's argument handling doubles backslashes, so the helper script crosses
 that boundary in a base64 envelope. Local shell tests verify checksums and cleanup
 on both successful and failed helper execution.

@@ -76,7 +76,7 @@ test("first-row navigation does not format the clock or measure layout", async (
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-performance-mode", "true");
     await expect(blob).toHaveCSS("animation-name", "none");
-    await expect(page).toHaveTitle("AeroTizen");
+    await expect(page).toHaveTitle("qtizen");
     await expect(page.locator("vite-error-overlay")).toHaveCount(0);
     await page.screenshot({ path: info.outputPath("performance-mode-home.png") });
     await openSettings(page);

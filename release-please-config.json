@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-  "bootstrap-sha": "ddbaf46130e9753ae4a04d929e6c1dec0d3f9512",
+  "bootstrap-sha": "c89e76dd2e1e930102199c59c32352b269ee388d",
   "separate-pull-requests": true,
   "always-update": true,
   "include-component-in-tag": true,
@@ -12,13 +12,13 @@
     "cli": {
       "release-type": "python",
       "component": "cli",
-      "package-name": "aerotizen",
+      "package-name": "qtizen",
       "changelog-path": "CHANGELOG.md"
     },
     "launcher": {
       "release-type": "simple",
       "component": "launcher",
-      "package-name": "aerotizen-launcher",
+      "package-name": "qtizen-launcher",
       "version-file": "version.txt",
       "changelog-path": "CHANGELOG.md",
       "extra-files": [

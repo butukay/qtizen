@@ -4,7 +4,7 @@
 
 Lists everyone who has had a pull request merged (bots excluded), in order of their first
 merged PR, with the repository owner first. Set GITHUB_TOKEN to avoid API rate limits.
-CI runs this after each merge and opens a pull request when someone new appears.
+The manually dispatched workflow opens a pull request when someone new appears.
 """
 
 import json
@@ -72,7 +72,7 @@ def update(text, logins):
 
 
 def main():
-    repo = sys.argv[1] if len(sys.argv) > 1 else "helalaou/AeroTizen"
+    repo = sys.argv[1] if len(sys.argv) > 1 else "butukay/qtizen"
     text = README.read_text()
     new = update(text, contributors(repo))
     if new != text:

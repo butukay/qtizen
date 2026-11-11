@@ -1,31 +1,31 @@
-"""aerotizen: clean up a Samsung Tizen TV from your computer.
+"""qtizen: clean up a Samsung Tizen TV from your computer.
 
-  aerotizen discover            find TVs on your network
-  aerotizen status              model, Developer Mode, sdb capabilities
-  aerotizen apps                list installed packages, classified
-  aerotizen debloat             pick packages to remove, then remove them
-  aerotizen debloat --remove PKGID[,PKGID...] [--yes]
-  aerotizen certs               sign in to Samsung, create signing certs for this TV
-  aerotizen install launcher    download, sign, and install the latest launcher
-  aerotizen install PATH        sign + install a local app folder or .wgt
-  aerotizen update launcher     update the installed launcher to the latest stable release
-  aerotizen update launcher --check  compare versions without installing
-  aerotizen update cli --check  compare CLI versions and show the release download link
-  aerotizen update cli          replace the standalone CLI with a newer release
-  aerotizen uninstall launcher  remove the launcher (or: uninstall APPID for another app you installed)
-  aerotizen key KEY_VOLUP [n]   press a remote button
-  aerotizen launch APPID        open an app and check that it came up
-  aerotizen inspect launcher    restart the launcher with Chrome DevTools
-  aerotizen inspect APPID       inspect another app (--port defaults to 9222)
-  aerotizen home status         read native Home state as the SDK user
-  aerotizen home probe          inventory runtime files without .NET or Home changes
-  aerotizen home backup         save an immutable local Home baseline
-  aerotizen home apply          preview native Home assignment (--yes writes)
-  aerotizen home restore        preview baseline restore (--yes writes)
-  aerotizen root setup          preview untethered root setup (--yes installs)
-  aerotizen root status         check the paired root helper
-  aerotizen root upgrade        upgrade the paired root helper (--yes installs)
-  aerotizen root remove         preview root helper removal (--yes removes)
+  qtizen discover            find TVs on your network
+  qtizen status              model, Developer Mode, sdb capabilities
+  qtizen apps                list installed packages, classified
+  qtizen debloat             pick packages to remove, then remove them
+  qtizen debloat --remove PKGID[,PKGID...] [--yes]
+  qtizen certs               sign in to Samsung, create signing certs for this TV
+  qtizen install launcher    download, sign, and install the latest launcher
+  qtizen install PATH        sign + install a local app folder or .wgt
+  qtizen update launcher     update the installed launcher to the latest stable release
+  qtizen update launcher --check  compare versions without installing
+  qtizen update cli --check  compare CLI versions and show the release download link
+  qtizen update cli          replace the standalone CLI with a newer release
+  qtizen uninstall launcher  remove the launcher (or: uninstall APPID for another app you installed)
+  qtizen key KEY_VOLUP [n]   press a remote button
+  qtizen launch APPID        open an app and check that it came up
+  qtizen inspect launcher    restart the launcher with Chrome DevTools
+  qtizen inspect APPID       inspect another app (--port defaults to 9222)
+  qtizen home status         read native Home state as the SDK user
+  qtizen home probe          inventory runtime files without .NET or Home changes
+  qtizen home backup         save an immutable local Home baseline
+  qtizen home apply          preview native Home assignment (--yes writes)
+  qtizen home restore        preview baseline restore (--yes writes)
+  qtizen root setup          preview untethered root setup (--yes installs)
+  qtizen root status         check the paired root helper
+  qtizen root upgrade        upgrade the paired root helper (--yes installs)
+  qtizen root remove         preview root helper removal (--yes removes)
 
 Add --tv IP to target a specific TV (otherwise the first one found is used).
 """
@@ -268,7 +268,7 @@ def _install_signed(session, src, temporary, host):
     tool_path = session.capability().get("sdk_toolpath", "/home/owner/share/tmp/sdk_tools")
     cdir = cert_dir_for(duid)
     if not os.path.exists(os.path.join(cdir, "distributor.p12")):
-        sys.exit(f"No certificates for this TV yet. Run: aerotizen --tv {host} certs")
+        sys.exit(f"No certificates for this TV yet. Run: qtizen --tv {host} certs")
     signed = Path(temporary) / f"{app_id.split('.')[0]}-signed.wgt"
     signer.sign_wgt(src, signed, cdir)
     with open(os.path.join(cdir, "device-profile.xml"), "rb") as f:
@@ -319,7 +319,7 @@ def cmd_update_cli(args):
             if release.download_url:
                 print(f"Download: {release.download_url}")
                 if args.check:
-                    print("Run 'aerotizen update cli' to install this release.")
+                    print("Run 'qtizen update cli' to install this release.")
             else:
                 print("No matching CLI archive is available for this platform.")
             print(f"Release: {release.release_url}")
@@ -355,7 +355,7 @@ def cmd_update(args):
                 app for app in catalog.parse_applist(session.applist()) if app["appid"] == releases.APP_ID
             ]
             if not installed:
-                sys.exit("The launcher is not installed. Run: aerotizen install launcher")
+                sys.exit("The launcher is not installed. Run: qtizen install launcher")
             if len(installed) != 1 or installed[0]["pkgid"] != releases.PACKAGE_ID:
                 raise ValueError("The TV reported an unexpected launcher package identity.")
             current = installed[0].get("version")
@@ -380,7 +380,7 @@ def cmd_update(args):
             if args.check:
                 return
             if current_key is None:
-                sys.exit("To install without a version comparison, run: aerotizen install launcher")
+                sys.exit("To install without a version comparison, run: qtizen install launcher")
             with TemporaryDirectory(prefix="aerotizen-update-") as temporary:
                 downloaded = release.download(Path(temporary))
                 print(f"Downloaded launcher {downloaded.version}.")
@@ -419,8 +419,8 @@ def cmd_uninstall(args):
                 for item in values
             ):
                 sys.exit(
-                    "AeroTizen is still assigned to native Home or startup. "
-                    "Run 'aerotizen home restore --yes', fully restart the TV, then retry uninstall."
+                    "qtizen is still assigned to native Home or startup. "
+                    "Run 'qtizen home restore --yes', fully restart the TV, then retry uninstall."
                 )
         out = s.uninstall(app_id).strip()
         if app_id in {a["appid"] for a in catalog.parse_applist(s.applist())}:
@@ -569,7 +569,7 @@ def cmd_home(args):
             else:
                 print(f"Home {args.home_command} completed and read back.")
                 if status.get("startup_settings_restored") is False:
-                    print("Both startup IDs point to AeroTizen. Smart Hub autostart is on.")
+                    print("Both startup IDs point to qtizen. Smart Hub autostart is on.")
             print(f"Original backup: {status['backup']}")
             print(f"Transaction receipt: {status['receipt']}")
             print("Home-button behavior and boot behavior still need separate physical tests.")
@@ -705,7 +705,7 @@ def bounded_wait(value):
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="aerotizen", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        prog="qtizen", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--tv", help="TV IP address")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")

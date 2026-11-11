@@ -28,7 +28,7 @@ def archive_bytes(files, suffix="tar.gz"):
 
 @pytest.fixture
 def update(tmp_path, monkeypatch):
-    executable = "aerotizen.exe" if os.name == "nt" else "aerotizen"
+    executable = "qtizen.exe" if os.name == "nt" else "qtizen"
     target = tmp_path / executable
     target.write_bytes(b"old-binary")
     target.chmod(0o755)

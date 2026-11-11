@@ -50,7 +50,7 @@ test("fixed names work with caller values, language changes and the English fall
   const version = "9.9.9 <test>";
   assert.equal(
     translations.getSnapshot().t("settings.about.installedVersion", { version }),
-    `AeroTizen version: ${version}`,
+    `qtizen version: ${version}`,
   );
   assert.equal(translations.getSnapshot().t("handoff.watcherHttp", { status: 503 }), "HomeWatcher HTTP 503");
   assert.equal(translations.getSnapshot().t("network.signalUnavailable"), "Wi-Fi (signal unavailable)");
@@ -59,7 +59,7 @@ test("fixed names work with caller values, language changes and the English fall
   assert.equal(translations.getSnapshot().t("common.samsungHome"), "Accueil Samsung");
   assert.equal(
     translations.getSnapshot().t("settings.about.installedVersion", { version }),
-    `Version d’AeroTizen\u00a0: ${version}`,
+    `Version d’qtizen\u00a0: ${version}`,
   );
 
   translations.setLanguage("ar");
@@ -69,6 +69,6 @@ test("fixed names work with caller values, language changes and the English fall
   translations.setLanguage("de");
   assert.equal(
     translations.getSnapshot().t("settings.about.installedVersion", { version }),
-    `AeroTizen version: ${version}`,
+    `qtizen version: ${version}`,
   );
 });

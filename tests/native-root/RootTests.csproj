@@ -4,6 +4,8 @@
     <StartupObject>RootTests</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../cli/native/hdmi-wake/*.cs" Link="Hdmi/%(Filename)%(Extension)" />
+    <Compile Include="../../cli/native/window-transitions/*.cs" Link="Transitions/%(Filename)%(Extension)" />
     <Compile Include="../../cli/native/root-bridge/*.cs" Link="Bridge/%(Filename)%(Extension)" />
     <Compile Include="../../cli/native/stremio-bridge/*.cs" Link="Stremio/%(Filename)%(Extension)" />
     <Compile Include="../../cli/native/root-common/*.cs" Link="Common/%(Filename)%(Extension)" />

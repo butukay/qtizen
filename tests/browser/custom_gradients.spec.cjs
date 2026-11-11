@@ -29,7 +29,7 @@ const openGradient = async (page) => {
     }
   });
   await page.goto("/");
-  await expect(page).toHaveTitle("AeroTizen");
+  await expect(page).toHaveTitle("qtizen");
   await expect(page.locator("#grid > [data-id]")).toHaveCount(2);
   await openSettings(page);
   await openCategory(page, "wallpaper");

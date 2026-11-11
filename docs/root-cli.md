@@ -7,18 +7,25 @@ supports [Stremio in Continue Watching](launcher.md#stremio).
 
 ## User flow
 
+Selecting a sleeping HDMI source sends a targeted HDMI-CEC stream-path command
+before opening the viewer. The launcher and root helper exchange short-lived
+requests in private app storage; discovery never wakes devices. Unsupported CEC
+or an unavailable helper falls back to normal source selection. Anynet+ and the
+device's HDMI-CEC support must be enabled. The command was verified with Apple TV
+on HDMI 1 of the S95F; automatic startup after a cold boot remains a separate check.
+
 1. Leave Developer Mode On with Host PC IP set to the computer. Run
-   `aerotizen --tv TV_IP root setup` to preview, then add `--yes` to install.
+   `qtizen --tv TV_IP root setup` to preview, then add `--yes` to install.
 2. Keep Developer Mode on and set Host PC IP to `127.0.0.1` as instructed.
    Disconnect TV or One Connect power for 60 seconds. Reconnect power and restart.
-3. Run `aerotizen --tv TV_IP root setup --yes --wait 240` to finish. Completion
+3. Run `qtizen --tv TV_IP root setup --yes --wait 240` to finish. Completion
    needs the paired root server from a new boot, a verified TV identity, the actual
    dedicated startup flag and completed SDK/app staging cleanup. Initial PC-driven
    root is reported as setup evidence and cannot satisfy automatic-boot verification.
-4. `aerotizen --tv TV_IP root status [--wait 240] [--json]` checks the live root
+4. `qtizen --tv TV_IP root status [--wait 240] [--json]` checks the live root
    process. An old saved proof is insufficient. Other CLI commands select the paired
    SDB bridge automatically while Developer Mode points at localhost.
-5. `aerotizen --tv TV_IP root remove --yes` disables future attempts and removes
+5. `qtizen --tv TV_IP root remove --yes` disables future attempts and removes
    private pairing state. Restore the saved PC host address and restart when
    instructed, then repeat the command to finish normal SDK uninstall.
 
@@ -38,7 +45,7 @@ original signing certificates. Keep Developer Mode Host PC IP at `127.0.0.1`
 and check that `root status` reports a live automatic root boot. Then run:
 
 ```sh
-aerotizen --tv TV_IP root upgrade --yes
+qtizen --tv TV_IP root upgrade --yes
 ```
 
 Restart the TV when prompted. Run the same command again to verify the new
@@ -77,6 +84,14 @@ receipt with `--receipt PATH` when needed. Keep its directory private.
   no permanent system service is installed. The per-boot root-attempt guard stays
   in place. The SDK preflight checks this executable before installation. The
   ordinary app cannot see that system path on some TVs, so it must not check it.
+- **App transitions:** the root process applies the launcher's saved None, Fade or
+  Standard choice to normal application windows. Settings exchanges a bounded mode
+  file and acknowledgement through the launcher's private directory; there is no
+  transition network endpoint. New windows inherit the choice, while Standard and
+  orderly service removal restore their original hints. The window-effects module
+  stays loaded. An unavailable helper is reported in Appearance. The live hint path
+  has been verified on the 2025 S95F running Tizen 9; automatic boot still needs the
+  setup verification below on each TV.
 - **Stremio reader:** the same process serves a read-only feed on IPv4 loopback.
   If the launcher detects Stremio and needs a credential, it requests one from
   the reader. The reader checks that Stremio is installed and writes the per-boot
@@ -105,7 +120,7 @@ the authorised SDB session. It never enters a shared SDB upload. The SDK process
 creates its own mode-0600 input inside a mode-0700 directory and removes it afterward.
 SDB uploads are owned by user 5001, so private SDB files cannot be read by SDK user 901.
 
-All AeroTizen PC access retains the per-device session lock, including bridge
+All qtizen PC access retains the per-device session lock, including bridge
 management. A bad certificate or token never falls back to direct SDB. Root pairing
 data is separate from the launcher and its settings. Native Home's existing saved
 configuration remains under its own backup workflow.

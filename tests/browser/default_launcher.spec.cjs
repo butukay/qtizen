@@ -243,3 +243,24 @@ test("Settings stays hidden until Up and returns to the last favorite after clos
   await expect(gear).toHaveCSS("opacity", "0");
   await expect(gear).toHaveCSS("pointer-events", "none");
 });
+
+test("Appearance transition choices support the remote and survive a reload", async ({ page }) => {
+  await prepare(page);
+  await openSettings(page);
+  await openCategory(page, "appearance");
+  const none = page.locator('[data-key="app-transition:none"]');
+  const fade = page.locator('[data-key="app-transition:fade"]');
+  const standard = page.locator('[data-key="app-transition:standard"]');
+  await expect(none).toHaveAttribute("aria-pressed", "true");
+  await fade.click();
+  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().appTransition)).toBe("fade");
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Enter");
+  await expect(standard).toHaveAttribute("aria-pressed", "true");
+  await page.reload();
+  await openSettings(page);
+  await openCategory(page, "appearance");
+  await expect(standard).toHaveAttribute("aria-pressed", "true");
+  await none.click();
+  expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().appTransition)).toBe("none");
+});

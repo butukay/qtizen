@@ -5,6 +5,7 @@ import type { SettingsDefaults } from "../../contracts/preferences";
 export const DEFAULT_SETTINGS: SettingsDefaults = {
   accentColour: "ice",
   appearanceMode: "dark",
+  appTransition: "none",
   home: null, // null selects first-launch defaults; [] retains an empty Home.
   performanceMode: false,
   homeCardColumns: 3,

@@ -910,7 +910,7 @@ def test_apply_starts_launcher_once_and_waits_before_journaling(launcher_startup
     h.writer.assert_called_once()
     assert h.backup.read_bytes() == h.raw
     captured = capsys.readouterr()
-    assert not captured.out and "Starting AeroTizen" in captured.err
+    assert not captured.out and "Starting qtizen" in captured.err
 
 
 def test_apply_uses_owned_sdk_connection_if_http_launch_is_unavailable(launcher_startup, tmp_path):
@@ -928,7 +928,7 @@ def test_apply_service_timeout_never_writes_even_when_launch_was_accepted(launch
     h.query.side_effect = lambda *args: h.offline
     with pytest.raises(home.HomeError, match="did not become ready") as raised:
         home_control.change(h.session, {}, "apply", state_dir=tmp_path)
-    assert "aerotizen launch DclHome001.Home" in str(raised.value)
+    assert "qtizen launch DclHome001.Home" in str(raised.value)
     assert "No Home settings were changed" in str(raised.value)
     assert h.now[0] == home_control.SERVICE_START_TIMEOUT
     h.launch.assert_called_once()
@@ -940,7 +940,7 @@ def test_apply_launch_transport_failure_never_writes(launcher_startup, tmp_path)
     h = launcher_startup
     h.launch.return_value = (False, "connection refused")
     h.session.shell_bounded.side_effect = SdbError("SDK launch failed")
-    with pytest.raises(home.HomeError, match="TV could not start AeroTizen"):
+    with pytest.raises(home.HomeError, match="TV could not start qtizen"):
         home_control.change(h.session, {}, "apply", state_dir=tmp_path)
     assert h.query.call_count == 1
     h.writer.assert_not_called()
@@ -1105,7 +1105,7 @@ def test_cli_startup_keeps_json_output_valid_and_read_only_commands_passive(
     captured = capsys.readouterr()
     result = json.loads(captured.out)
     if command == "apply":
-        assert result["success"] and "Starting AeroTizen" in captured.err
+        assert result["success"] and "Starting qtizen" in captured.err
     else:
         assert result["watcher"]["reachable"] is False and not captured.err
         h.launch.assert_not_called()

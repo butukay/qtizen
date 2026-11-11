@@ -1,7 +1,7 @@
 import { normalizeColour } from "../../backgrounds/colours";
 import { normalizeGradient } from "../../backgrounds/gradients";
 import type { SettingsDefaults, SettingsPreferences, WeatherLocation } from "../../contracts/preferences";
-import { HOME_WIDGETS } from "../../contracts/preferences";
+import { APP_TRANSITIONS, HOME_WIDGETS } from "../../contracts/preferences";
 import { ACCENT_IDS, NEUTRAL_ACCENTS } from "../../shared/appearance";
 
 const record = (value: unknown): Record<string, unknown> =>
@@ -64,6 +64,7 @@ export const normalizeSettings = (
   const accent = choice(data.accentColour, ACCENT_IDS, defaults.accentColour);
   return {
     appearanceMode,
+    appTransition: choice(data.appTransition, APP_TRANSITIONS, defaults.appTransition),
     accentColour: accent === "white" || accent === "black" ? NEUTRAL_ACCENTS[appearanceMode].value : accent,
     home: home === null ? null : validHome,
     performanceMode: boolean(data.performanceMode, defaults.performanceMode),

@@ -271,7 +271,7 @@ def test_global_version_exits_without_tv_access(monkeypatch, capsys):
     with pytest.raises(SystemExit) as exc:
         cli.main()
     assert exc.value.code == 0
-    assert capsys.readouterr().out.strip() == f"aerotizen {__version__}"
+    assert capsys.readouterr().out.strip() == f"qtizen {__version__}"
 
 
 def test_install_help_explains_release_and_local_sources(monkeypatch, capsys):
@@ -358,7 +358,7 @@ def test_update_skips_current_and_newer_versions_without_certificates(updating, 
 @pytest.mark.parametrize("inventory", [APP, f"app_id={APP} app_version=invalid"])
 def test_unknown_version_stops_and_directs_to_install(updating, inventory, capsys):
     updating.tv.before_update = inventory
-    with pytest.raises(SystemExit, match="aerotizen install launcher"):
+    with pytest.raises(SystemExit, match="qtizen install launcher"):
         cli.cmd_update(update_args())
     assert updating.events == ["resolve", "connect", "applist"]
     assert updating.tv.closed

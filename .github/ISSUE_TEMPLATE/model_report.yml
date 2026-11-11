@@ -1,5 +1,5 @@
 name: Tested on my TV
-description: Report how AeroTizen behaves on your model (the most useful contribution)
+description: Report how qtizen behaves on your model (the most useful contribution)
 labels: [model-report]
 body:
   - type: input
@@ -11,7 +11,7 @@ body:
   - type: textarea
     id: status
     attributes:
-      label: "`aerotizen status` output"
+      label: "`qtizen status` output"
       render: shell
   - type: checkboxes
     id: works

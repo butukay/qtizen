@@ -109,13 +109,34 @@ export const createAppsPlatform = (host: AppsHost): AppsPlatform => {
       throw new Error("AppControl is unavailable");
     }
     const Data = tizen.ApplicationControlData;
-    return new tizen.ApplicationControl(
-      operation,
-      null,
-      null,
-      null,
-      data.map((entry) => new Data(entry.key, [...entry.values])),
-    );
+    return new tizen.ApplicationControl(operation, null, null, null, [
+      // Samsung checks this before creating the loading dots and progress bar.
+      new Data("__NO_LOADING_LAUNCH", ["enable"]),
+      ...data.map((entry) => new Data(entry.key, [...entry.values])),
+    ]);
+  };
+  const launchApp = (id: string, done: (() => void) | null, failed: (error?: unknown) => void) => {
+    if (!application || disposed) {
+      return;
+    }
+    let fallbackStarted = false;
+    const fallback = () => {
+      if (disposed || fallbackStarted) {
+        return;
+      }
+      fallbackStarted = true;
+      try {
+        application.launch(id, done, failed);
+      } catch (error) {
+        failed(error);
+      }
+    };
+    try {
+      const request = control("http://tizen.org/appcontrol/operation/default", []);
+      application.launchAppControl(request, id, done, fallback);
+    } catch {
+      fallback();
+    }
   };
   return {
     preview: !application,
@@ -211,27 +232,13 @@ export const createAppsPlatform = (host: AppsHost): AppsPlatform => {
           if (disposed) {
             return;
           }
-          try {
-            application.launch(app.id, accepted, (error) =>
-              youtubeFailed("launch denied", runtime.translate("handoff.launchDenied"), error),
-            );
-          } catch (error) {
-            youtubeFailed("launch failed", runtime.translate("handoff.launchFailed"), error);
-          }
+          launchApp(app.id, accepted, (error) =>
+            youtubeFailed("launch denied", runtime.translate("handoff.launchDenied"), error),
+          );
         }, youtubeFailed);
         return;
       }
-      prepareWatch(
-        app.id,
-        () => {
-          try {
-            application.launch(app.id, accepted, failed);
-          } catch (error) {
-            failed(error);
-          }
-        },
-        failed,
-      );
+      prepareWatch(app.id, () => launchApp(app.id, accepted, failed), failed);
     },
     openStore() {
       if (disposed) {
@@ -251,17 +258,7 @@ export const createAppsPlatform = (host: AppsHost): AppsPlatform => {
           notify("apps.storeFailed");
           return;
         }
-        prepareWatch(
-          id,
-          () => {
-            try {
-              application.launch(id, null, next);
-            } catch {
-              next();
-            }
-          },
-          next,
-        );
+        prepareWatch(id, () => launchApp(id, null, next), next);
       };
       next();
     },

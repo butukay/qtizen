@@ -41,7 +41,7 @@ def test_bridge_route_holds_device_lock_and_checks_sdb_identity(tmp_path, monkey
     else:
         with session:
             assert session.managed_root is True
-            with pytest.raises(DeviceSessionError, match="Another AeroTizen"):
+            with pytest.raises(DeviceSessionError, match="Another qtizen"):
                 DeviceSession("192.0.2.20", lock_dir=tmp_path).connect()
             with pytest.raises(DeviceSessionError, match="direct SDB"):
                 session.root(None)

@@ -21,6 +21,7 @@ import type {
   WeatherLocation,
 } from "../contracts/preferences";
 import type { WeatherSnapshot } from "../contracts/status";
+import type { TransitionStatus } from "../contracts/transitions";
 import type { LauncherUpdateNotice } from "../contracts/updates";
 import type { MessageKey } from "../shared/i18n/catalogues";
 import type { Navigation } from "../shared/navigation/createNavigation";
@@ -54,6 +55,7 @@ export interface SettingsServices {
   previewBackground(preview: BackgroundPreview | null): void;
   searchLocations(query: string, done: (results: WeatherLocation[] | null) => void): () => void;
   showPreviewMessage(): void;
+  transitions: Store<TransitionStatus>;
   useSamsungHome(): void;
   weather: Store<WeatherSnapshot>;
 }
@@ -68,6 +70,7 @@ export interface SettingsActions {
   saveInputName(port: string, value: string): void;
   setAccentColour(colour: SettingsValues["accentColour"]): void;
   setAppearanceMode(mode: SettingsValues["appearanceMode"]): void;
+  setAppTransition(mode: SettingsValues["appTransition"]): void;
   setBackground(background: string): void;
   setContinueWatching(enabled: boolean): void;
   setDateFormat(format: DateFormat): void;

@@ -735,18 +735,24 @@ test("Home requests while no input is open do not hide the TV window", () => {
   assert.deepEqual(h.embedded, []);
 });
 
-test("HDMI selection refreshes a stale tile and blocks a disconnected port in either viewer", () => {
+test("HDMI selection refreshes a stale tile and allows a sleeping port to open in either viewer", () => {
   for (const native of [false, true]) {
     const h = harness({ visible: true });
     h.A.settings.update({ hdmiNativeViewer: native });
     const stale = { type: "HDMI", number: 1, connected: true };
-    h.tz.systeminfo.getPropertyValue = (_name, done) => done({ disconnected: [{ type: "HDMI", number: 1 }] });
+    h.tz.systeminfo.getPropertyValue = (_name, done) =>
+      done({ disconnected: [{ type: "HDMI", number: 1, editName: "Apple TV" }] });
     h.A.inputs.show(stale);
     assert.equal(h.A.inputs.getSnapshot().sources[0].connected, false);
-    assert.equal(h.A.inputs.getSnapshot().playback !== "idle", false);
-    assert.deepEqual(h.inputs, []);
-    assert.deepEqual(h.launches, []);
-    assert.deepEqual(h.toasts, ["Could not show HDMI 1"]);
+    if (native) {
+      h.requests[0].resolve(200);
+      assert.deepEqual(h.launches, [{ id: "org.tizen.tv-viewer", method: "launch" }]);
+    } else {
+      assert.equal(h.A.inputs.getSnapshot().playback, "opening");
+      assert.deepEqual(h.embedded, ["shown"]);
+    }
+    assert.equal(h.inputs.length, 1);
+    assert.deepEqual(h.toasts, []);
   }
 });
 

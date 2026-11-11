@@ -1,11 +1,13 @@
 import { needsWebGL } from "../../contracts/backgrounds";
 import type { LauncherPlatform, LauncherRuntime } from "../../platform/tizen/launcherRuntime";
+import { unavailableTransitions } from "../../services/createAppTransitions";
 import type { SettingsServices } from "../types";
 
 // All dependencies on unmigrated modules are kept at this boundary. Components
 // receive data/commands; none can call the legacy tile DOM constructors.
 export const createSettingsServices = (runtime: LauncherRuntime, platform: LauncherPlatform): SettingsServices => ({
   config: runtime.config,
+  transitions: runtime.transitions || unavailableTransitions,
   clock: runtime.clock,
   weather: runtime.weather,
   backgrounds: platform.backgrounds.list.map((background) => ({

@@ -3,7 +3,7 @@
 These controls are for launcher 2.7.0.
 
 Use **Home** for favourites and **All apps** for the installed apps. Hold **OK**
-on a tile to move it or add it to or remove it from Home. AeroTizen uses artwork
+on a tile to move it or add it to or remove it from Home. qtizen uses artwork
 from the TV. If artwork is unavailable, the tile shows the app icon and name.
 
 | All apps | Settings |
@@ -29,7 +29,7 @@ These browser previews use sample data.
   Use **Network indicator visibility** to show or hide Ethernet or Wi-Fi status.
 - **Inputs.** Rename HDMI inputs and choose whether to show disconnected ports
   or Live TV.
-- **Language.** Choose the language for AeroTizen.
+- **Language.** Choose the language for qtizen.
 
 You can open the Samsung app store or switch to Samsung Home from Settings.
 The app list can include HbbTV apps such as BBC iPlayer.
@@ -46,10 +46,10 @@ The launcher finds apps that declare a Samsung Continue Watching feed. It can re
 these feeds on the TV without opening the apps or using root. Empty feeds add no
 cards. The launcher disables choices whose app IDs it cannot match.
 
-The row refreshes on startup, on return to AeroTizen, and when you change app
+The row refreshes on startup, on return to qtizen, and when you change app
 selections. Empty feeds get two short retries during a normal refresh and up to
 five minutes of retries at startup. The retries stop when data arrives, when you
-leave AeroTizen, or when you switch the feature off. Viewing records stay in memory.
+leave qtizen, or when you switch the feature off. Viewing records stay in memory.
 
 Each app provides the activity times and launch data for its cards. Old records and
 approximate times can appear. Records with unknown times sort last, and different

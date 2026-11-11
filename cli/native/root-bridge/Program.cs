@@ -314,6 +314,7 @@ namespace AeroTizen.Root
                     Console.WriteLine("AEROTIZEN_ROOT_UPLOAD={\"removed\":true}"); return 0;
                 }
                 RootPaths.RequireTv(true);
+                if (args.Length == 1 && args[0] == "--launcher-services") return LauncherServices.Serve();
                 if (args.Length == 4 && args[0] == "--install") { Configure(args[1], RootSettings.Hex(args[2], 32), RootSettings.Hex(args[3], 32)); return 0; }
                 if (args.Length == 4 && args[0] == "--repair-startup") { RepairStartup(args[1], RootSettings.Hex(args[2], 32), RootSettings.Hex(args[3], 32)); return 0; }
                 if (args.Length == 4 && args[0] == "--cleanup")
@@ -336,6 +337,7 @@ namespace AeroTizen.Root
                 using (var server = new BridgeServer(settings, certificate, pairing.Token, () => {
                     var value = Identity(); value["origin"] = args[3]; value["launch_nonce"] = nonce; return value;
                 }, () => Remove(settings, pairing.Token), diagnostic: (phase, error) => Diagnostic(nonce, phase, error)))
+                using (var launcher = new LauncherServices())
                 using (var stremio = args[3] == "boot" ? new StremioFeed() : null)
                 {
                     Detach();
@@ -343,6 +345,7 @@ namespace AeroTizen.Root
                         ServerLifetime.Record(settings);
                         Ready(nonce);
                         stremio?.Start();
+                        launcher.Start();
                     }).GetAwaiter().GetResult();
                 }
                 return 0;

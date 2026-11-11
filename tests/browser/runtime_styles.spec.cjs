@@ -22,7 +22,7 @@ for (const [build, url] of [
       await page.clock.install();
       await page.emulateMedia({ reducedMotion: "no-preference" });
       await page.goto(url);
-      await expect(page).toHaveTitle("AeroTizen");
+      await expect(page).toHaveTitle("qtizen");
       const tile = page.locator('#grid > [data-id="demo0"]');
       await expect(tile).toBeFocused();
       await expect(tile).toHaveCSS("transition-duration", "0.15s");

@@ -1,7 +1,7 @@
 {
-  "name": "aerotizen-launcher",
+  "name": "qtizen-launcher",
   "private": true,
-  "description": "AeroTizen launcher build, lint, format, and test tooling.",
+  "description": "qtizen: a minimal Samsung Tizen home screen and TV tools.",
   "scripts": {
     "lint": "npm run lint:js && npm run lint:css",
     "format": "prettier --write \"launcher/**/*.{js,ts,tsx,css,html,json}\" \"tests/**/*.{js,cjs,html,md}\" \"*.{js,cjs,mjs,mts,json}\" \"tools/*.{mjs,cjs}\" .github/workflows/ci.yml CONTRIBUTING.md launcher/AGENTS.md",

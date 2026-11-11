@@ -85,6 +85,7 @@ export const createSettingsActions = (
       });
     },
     setAccentColour: (accentColour) => commit({ accentColour }),
+    setAppTransition: (appTransition) => commit({ appTransition }),
     setAppearanceMode: (appearanceMode) => commit({ appearanceMode }),
     setPerformanceMode: (performanceMode) => commit({ performanceMode }, services.applyBackground),
     setWeatherPhoto: (weatherPhoto) => commit({ weatherPhoto }, services.applyBackground),

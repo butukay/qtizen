@@ -3,13 +3,13 @@ requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "aerotizen"
+name = "qtizen"
 dynamic = ["version"]
 description = "Debloat a Samsung Tizen TV, block ads, and install a clean, fast home screen, from your computer."
-readme = { text = "AeroTizen CLI: debloat Samsung Tizen TVs, install and update the AeroTizen launcher, and inspect apps. See https://github.com/helalaou/AeroTizen for installation and usage.", content-type = "text/markdown" }
+readme = { text = "qtizen CLI: debloat Samsung Tizen TVs, install and update the qtizen launcher, and inspect apps. See https://github.com/butukay/qtizen for installation and usage.", content-type = "text/markdown" }
 license = "MIT"
 license-files = ["LICENSE"]
-authors = [{ name = "Hamza El Alaoui" }]
+authors = [{ name = "Vlad Lisov" }, { name = "Hamza El Alaoui" }]
 requires-python = ">=3.10"
 dependencies = ["websocket-client>=1.6", "cryptography>=41"]
 keywords = ["samsung", "tizen", "smart-tv", "launcher", "debloat", "sdb"]
@@ -25,6 +25,7 @@ classifiers = [
 dev = ["pytest>=8", "ruff>=0.6", "lxml>=5", "build>=1", "setuptools>=77"]
 
 [project.scripts]
+qtizen = "aerotizen.cli:main"
 aerotizen = "aerotizen.cli:main"
 
 [tool.setuptools.dynamic]

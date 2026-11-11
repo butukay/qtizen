@@ -9,8 +9,8 @@ from aerotizen import cli, releases, self_update
 def cli_check(monkeypatch):
     selected = releases.CLIRelease(
         version="2.2.0",
-        release_url="https://github.com/helalaou/AeroTizen/releases/tag/cli-v2.2.0",
-        download_url="https://github.com/helalaou/AeroTizen/releases/download/cli-v2.2.0/aerotizen-2.2.0-macos-arm64.tar.gz",
+        release_url="https://github.com/butukay/qtizen/releases/tag/cli-v2.2.0",
+        download_url="https://github.com/butukay/qtizen/releases/download/cli-v2.2.0/aerotizen-2.2.0-macos-arm64.tar.gz",
     )
     repositories = []
 

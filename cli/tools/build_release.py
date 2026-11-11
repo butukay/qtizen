@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSION = re.compile(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)")
-ENTRYPOINTS = {"aerotizen": "cli"}
+ENTRYPOINTS = {"qtizen": "cli"}
 
 
 def check_version(value):
@@ -168,7 +168,7 @@ def build_cli(root, output, tag=None):
             binaries.append(work / "bin" / f"{name}{suffix}")
         smoke_binaries(binaries, version)
         assets = [*binaries, root / "LICENSE"]
-        filename = f"aerotizen-{version}-{target}"
+        filename = f"qtizen-{version}-{target}"
         if platform.system() == "Windows":
             package = output / f"{filename}.zip"
             with zipfile.ZipFile(package, "w", compression=zipfile.ZIP_DEFLATED) as archive:

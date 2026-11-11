@@ -30,7 +30,7 @@ for (const [name, url] of [
       );
     });
     await page.goto(url);
-    await expect(page).toHaveTitle("AeroTizen");
+    await expect(page).toHaveTitle("qtizen");
     await expect(page.locator("#grid > [data-id]")).toHaveCount(1);
     await expect(page.locator("#grid")).toHaveAttribute("data-columns", "5");
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("aerotizen.settings.v1")));

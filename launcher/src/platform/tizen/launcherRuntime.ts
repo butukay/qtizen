@@ -12,10 +12,13 @@ import type {
 } from "../../contracts/launcher";
 import type { SettingsService } from "../../contracts/preferences";
 import type { NetworkService, WeatherService } from "../../contracts/status";
+import type { TransitionStatus } from "../../contracts/transitions";
 import type { Translate } from "../../shared/i18n/createTranslations";
+import type { Store } from "../../shared/state/createStore";
 
 import type { AppsTizen } from "./createAppsPlatform";
 import type { InputsTizen } from "./createInputsPlatform";
+import type { TransitionTizen } from "./createTransitionPlatform";
 
 // The unmigrated TV services are accessed through this boundary, not a screen's types.
 export interface LauncherRuntime {
@@ -38,8 +41,9 @@ export interface LauncherRuntime {
   settings: SettingsService;
   settingsUi?: SettingsBridge;
   tiles: { describe(app: InstalledApp): AppPresentation; shortName(name: string): string };
-  tizen?: (AppsTizen & InputsTizen) | null;
+  tizen?: (AppsTizen & InputsTizen & TransitionTizen) | null;
   toast(message: string): void;
+  transitions?: Store<TransitionStatus>;
   translate: Translate;
   weather: WeatherService;
 }

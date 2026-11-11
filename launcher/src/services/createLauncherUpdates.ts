@@ -1,9 +1,9 @@
 import type { LauncherUpdateNotice, LauncherUpdateSnapshot } from "../contracts/updates";
 import { createStore } from "../shared/state/createStore";
 
-const RELEASES = "https://api.github.com/repos/helalaou/AeroTizen/releases?per_page=100";
-const CACHE_KEY = "aerotizen.launcherUpdate.check";
-const ACKNOWLEDGEMENT_KEY = "aerotizen.launcherUpdate.acknowledgement";
+const RELEASES = "https://api.github.com/repos/butukay/qtizen/releases?per_page=100";
+const CACHE_KEY = "qtizen.launcherUpdate.check";
+const ACKNOWLEDGEMENT_KEY = "qtizen.launcherUpdate.acknowledgement";
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const TIMEOUT_MS = 8000;
 const VERSION = /^(0|[1-9]\d{0,8})\.(0|[1-9]\d{0,8})\.(0|[1-9]\d{0,8})$/;

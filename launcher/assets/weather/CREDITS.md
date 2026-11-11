@@ -1,7 +1,7 @@
 # Weather wallpaper provenance and redistribution
 
 All nine JPEGs in this directory are **AI-generated images made using OpenAI**,
-contributed by **motorgrid-ita** for AeroTizen. They are synthetic landscape
+contributed by **motorgrid-ita** for qtizen. They are synthetic landscape
 illustrations in a photorealistic style, not photographs documenting real weather
 or a verified real location. They are not Samsung-provided artwork.
 
@@ -19,9 +19,9 @@ or a verified real location. They are not Samsung-provided artwork.
 | `sun.jpg` | AI-generated using OpenAI; contributed by motorgrid-ita | MIT, to the extent of contributor-held rights |
 | `sunset.jpg` | AI-generated using OpenAI; contributed by motorgrid-ita | MIT, to the extent of contributor-held rights |
 
-The contributor identifies these as the images generated for their AeroTizen Custom
+The contributor identifies these as the images generated for their qtizen Custom
 reference implementation. Original repository source:
-[`reference/v99256/launcher/assets/weather/`](https://github.com/motorgrid-ita/AeroTizen/tree/c9c34bf0b8478bf1c156b41c0568f475f008d272/launcher/assets/weather).
+[`reference/v99256/launcher/assets/weather/`](https://github.com/motorgrid-ita/qtizen/tree/c9c34bf0b8478bf1c156b41c0568f475f008d272/launcher/assets/weather).
 `MANIFEST.json` records each reference SHA-256 and optimized-file SHA-256.
 The reference files were compared byte for byte before optimization.
 
@@ -34,7 +34,7 @@ contributor; those missing details have not been reconstructed or invented.
 The contributor submits these nine files under the repository's [MIT license](../../../LICENSE),
 **to the extent that the contributor holds rights capable of being licensed**.
 That permission includes use, copying, modification and redistribution, including
-bundling in AeroTizen source and release packages, under that license. Preserve
+bundling in qtizen source and release packages, under that license. Preserve
 this provenance notice and the MIT license when redistributing these assets.
 
 This is **not a CC0 dedication**, a declaration that the images are public domain,

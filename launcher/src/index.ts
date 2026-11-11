@@ -17,10 +17,12 @@ import { createClockPlatform } from "./platform/tizen/createClockPlatform";
 import { createContinueWatchingPlatform } from "./platform/tizen/createContinueWatchingPlatform";
 import { createInputsPlatform } from "./platform/tizen/createInputsPlatform";
 import { createNetworkPlatform } from "./platform/tizen/createNetworkPlatform";
+import { createTransitionPlatform } from "./platform/tizen/createTransitionPlatform";
 import { createWeatherPlatform } from "./platform/tizen/createWeatherPlatform";
 import { defaultTemperatureUnit } from "./platform/tizen/defaultTemperatureUnit";
 import { mountScreenSaverControl } from "./platform/tizen/mountScreenSaverControl";
 import { createAppsService } from "./services/createAppsService";
+import { createAppTransitions } from "./services/createAppTransitions";
 import { createClockService } from "./services/createClockService";
 import { createContinueWatchingService } from "./services/createContinueWatchingService";
 import { createInputsService } from "./services/createInputsService";
@@ -160,8 +162,16 @@ const disposeInputPlayback = mountInputPlayback(inputPlaybackHost, {
   applyBackground: backgrounds.apply,
   suspendBackground: backgrounds.bridge.suspend,
 });
+const transitions = createAppTransitions({
+  settings,
+  platform: createTransitionPlatform(runtime.tizen, window),
+  timers: window,
+  now: () => Date.now(),
+});
+runtime.transitions = transitions;
 const disposeScreenSaver = mountScreenSaverControl(window);
 const dispose = () => {
+  transitions.dispose();
   disposeScreenSaver();
   disposeInputPlayback();
   Object.assign(runtime, previousCommands);

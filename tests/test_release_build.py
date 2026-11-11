@@ -106,7 +106,7 @@ def test_launcher_is_unsigned_deterministic_and_has_verified_manifest(launcher, 
         "min_cli_version": "2.2.0",
         "app_id": "DclHome001.Home",
         "package_id": "DclHome001",
-        "asset": "aerotizen-launcher-2.3.0.wgt",
+        "asset": "qtizen-launcher-2.3.0.wgt",
         "sha256": hashlib.sha256(first.read_bytes()).hexdigest(),
     }
     for line in (first.parent / "SHA256SUMS").read_text().splitlines():
@@ -116,7 +116,7 @@ def test_launcher_is_unsigned_deterministic_and_has_verified_manifest(launcher, 
 
 def test_built_launcher_passes_download_verification(launcher, tmp_path, monkeypatch):
     package = build.build_launcher(launcher, tmp_path / "assets", "launcher-v2.3.0")
-    base = "https://github.com/helalaou/AeroTizen/releases/download/launcher-v2.3.0/"
+    base = "https://github.com/butukay/qtizen/releases/download/launcher-v2.3.0/"
     metadata = {
         "tag_name": "launcher-v2.3.0",
         "assets": [
@@ -298,7 +298,7 @@ def test_cli_options_do_not_contact_tv(arguments, tmp_path):
         check=True,
         timeout=5,
     )
-    assert "aerotizen" in result.stdout
+    assert "qtizen" in result.stdout
 
 
 def test_cli_release_requires_the_home_helper_before_freezing(tmp_path):

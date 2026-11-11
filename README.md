@@ -1,152 +1,137 @@
-# AeroTizen — S95F fork
+# qtizen
 
-[![CI](https://github.com/helalaou/AeroTizen/actions/workflows/ci.yml/badge.svg)](https://github.com/helalaou/AeroTizen/actions/workflows/ci.yml)
+[![CI](https://github.com/butukay/qtizen/actions/workflows/ci.yml/badge.svg)](https://github.com/butukay/qtizen/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-AeroTizen is a home screen for Samsung TVs. It puts your favourite apps and HDMI
-inputs in one place. The `aerotizen` command-line tool installs it from your computer.
+A minimal home screen for Samsung Tizen TVs. Your applications, sources and a
+quiet space to land — with a flat interface, dark and light palettes, and no
+recommendation feed on Home.
 
-This personal fork uses one [Default interface](docs/default-interface.md): a flat,
-true-black Home screen with favorites, inputs and a schematic Solar System.
-The original Classic/Glass interfaces and page tabs have been removed.
-Based on [helalaou/AeroTizen](https://github.com/helalaou/AeroTizen).
+qtizen is an independent project maintained by [butukay](https://github.com/butukay),
+built on [AeroTizen](https://github.com/helalaou/AeroTizen). It includes the launcher,
+computer-side installation tools and optional on-TV root services. The original
+history, authorship and MIT notices are retained; see [Credits](CREDITS.md).
 
-![Default Home with favorite apps and inputs](docs/screenshots/default.png)
+![qtizen Home on Samsung S95F](docs/screenshots/default.png)
 
-*Browser preview with sample apps and programmes.*
+Actual 1920×1080 capture from Samsung QE65S95FAUXCE, with the widget disabled.
 
-## Quick Start
+## What is included
 
-For this fork, build the `codex/s95f` branch with `npm ci && npm run build`, then
-install `./dist/launcher` using the existing TV signing profile. The upstream
-`install launcher` command below downloads the upstream release rather than this fork.
+- One Default interface with **Applications** and **Sources**, a discreet Settings
+  button, adjustable card sizes and grid or scroll layouts.
+- Light and dark appearance, full-theme accents, solid colours and animated backgrounds.
+- Solar System and Moon widgets, with a separate foreground video layer that
+  keeps the launcher active when a widget is static or disabled.
+- Clock, weather, source names, application management and Continue Watching.
+- Native Home integration on compatible TVs, with a watcher fallback.
+- App launches that request suppression of Samsung's loading overlay.
+- Optional root services for **None / Fade / Standard** application transitions and
+  HDMI-CEC wake when selecting a sleeping source, tested with Apple TV.
 
-This guide uses CLI 3.0.0 and launcher 2.7.0. You need a Samsung account and a
-computer on the same network as the TV. The CLI includes its dependencies.
-Developer Mode is sufficient for setup.
+The OLED-oriented design uses true black and restrained decoration. It does not
+change Samsung's panel-maintenance routines. Keeping Home visible is a user choice,
+not a guarantee against OLED image retention.
 
-1. **Download the CLI.** Open [GitHub Releases](https://github.com/helalaou/AeroTizen/releases).
-   Select the latest stable release whose tag starts with `cli-v`. Extract the archive
-   for macOS (Apple silicon or Intel), Windows x64, or Linux x64. Open a terminal in
-   the extracted folder.
+## Status and compatibility
 
-2. **Find your TV.** Turn it on and run `./aerotizen discover` on macOS or Linux, or
-   `.\aerotizen.exe discover` in PowerShell. Note the TV's IP address. If discovery
-   finds nothing, look up the IP address in the TV's network settings.
+This is the source release of a personal project. There are no qtizen binary
+releases yet: build and install the local launcher using the instructions below.
+`install launcher` and the update checker now target **butukay/qtizen** releases.
 
-3. **Enable Developer Mode.** On the TV, open **Apps** and enter `12345` with the
-   remote or on-screen number pad. On some TVs, enter it in **Apps → App Settings**
-   instead. Turn on Developer Mode. Set **Host PC IP** to your
-   [computer's local IP address](docs/diagnostics.md#developer-connection) and check all
-   four numbers. Disconnect power from the TV or One Connect box for 60 seconds.
-   Then reconnect power and turn the TV on.
+The custom interface, Home, app launches, all three transition modes and Apple TV
+wake were tested on **Samsung QE65S95FAUXCE**, Tizen 9, firmware **1301.0**.
+Automatic root reacquisition after a full power disconnect is **not yet verified**
+on this TV. See the [exact-device report](docs/devices/s95f.md) for evidence and limits.
+Reports for other TVs inherited from AeroTizen are identified separately in the
+[compatibility guide](docs/tv-compatibility.md).
 
-4. **Check the connection, sign in, and install.** Replace `TV_IP` below with the
-   **TV's** IP address. Run the commands in order. Check that `status` shows
-   `developerMode=1` and an `sdb banner` before you continue. Complete the Samsung
-   sign-in in your browser when `certs` opens it. Keep the certificates for updates.
+## Build and install
 
-   macOS or Linux
+You need Python 3.10+, Node.js 22.12+ (or 20.19+), the .NET 6 SDK for native helpers,
+a Samsung account, and a computer on the same network as the TV.
 
-   ```sh
-   ./aerotizen --tv TV_IP status
-   ./aerotizen --tv TV_IP certs
-   ./aerotizen --tv TV_IP install launcher
-   ```
+```sh
+git clone https://github.com/butukay/qtizen.git
+cd qtizen
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+npm ci
+python cli/tools/build_home_query.py
+python cli/tools/build_home_control.py
+python cli/tools/build_root_runtime.py
+npm run build
+```
 
-   Windows PowerShell
+On Windows, activate the environment with `.venv\Scripts\Activate.ps1` in PowerShell.
 
-   ```powershell
-   .\aerotizen.exe --tv TV_IP status
-   .\aerotizen.exe --tv TV_IP certs
-   .\aerotizen.exe --tv TV_IP install launcher
-   ```
+1. On the TV, open **Apps**, enter **12345**, enable Developer Mode and set Host PC IP
+   to your computer's local IP. Disconnect TV / One Connect power for 60 seconds,
+   reconnect and turn it on.
+2. Replace `TV_IP` below with the TV's address. Complete Samsung sign-in when the
+   certificate command opens your browser. Keep the signing profile for future updates.
 
-   The CLI downloads, verifies, signs, and installs the latest stable launcher.
+```sh
+qtizen --tv TV_IP status
+qtizen --tv TV_IP certs
+qtizen --tv TV_IP install ./dist/launcher
+```
 
-5. **Open AeroTizen from Apps on your TV.** To use Native Home, start with the
-   [backup step below](#set-up-native-home) before you open AeroTizen. The gear
-   icon opens Settings.
+3. Open **qtizen** from the TV's Apps screen. For the remote's Home button and startup,
+   follow the [Native Home backup and setup guide](docs/home-pc-flow.md).
 
-To test before publication, [install a local build from `main`](docs/manage-installation.md#test-a-local-build).
+Root is optional. Install the ordinary launcher first; advanced transition and CEC
+features use the [separate root helper](docs/root-cli.md). Follow its model checks,
+backup and recovery steps; do not infer support from a similar model name.
 
-## Choose how Home works
+### Updating an existing AeroTizen installation
 
-- **Native Home** is preferred on compatible TVs. The TV sends Home presses directly
-  to AeroTizen. Setup also tries to open AeroTizen at power-on. Native Home is experimental
-  and requires the steps below.
-- **The watcher** is active by default. Use it if your TV does not support Native Home.
-  It reopens AeroTizen when it detects a return to Samsung Home. Some apps, including
-  YouTube and Prime Video, can leave you on Samsung Home. Use **Back** or open AeroTizen
-  from the Samsung app row.
+Use its original signing certificates and install the local build as above. qtizen
+retains `DclHome001`, existing settings keys, the `aerotizen` Python module and the
+legacy CLI alias so current Home assignments and saved settings remain compatible.
+The PC profile directory remains `~/.config/aerotizen`. These are compatibility
+identifiers; the public application, command and release repository are qtizen.
 
-Both options run on the TV after setup and work without root.
+## Development
 
-> **Tizen 10:** Native Home is reported not to work. Use the watcher instead.
+```sh
+npm run dev -- --host 0.0.0.0
+```
 
-### Set up Native Home
-
-Check the [TV reports](docs/tv-compatibility.md). Replace `TV_IP` with your TV's
-address. In PowerShell, use `.\aerotizen.exe` in place of `./aerotizen`.
-
-1. **Before opening AeroTizen**, run `./aerotizen --tv TV_IP home backup` to save the
-   original Home and startup settings. Keep the whole backup folder. If the backup
-   fails, use the watcher.
-2. Open AeroTizen on the TV. Preview the change with `./aerotizen home apply`, then
-   run `./aerotizen --tv TV_IP home apply --yes`. The CLI reports whether it set up
-   Home and automatic startup.
-3. Disconnect power from the TV or One Connect box for 60 seconds. Reconnect power,
-   check which app opens, then test the Home button from an app.
-
-See the [Home guide](docs/home-pc-flow.md) for compatibility checks, watcher limits,
-and how to restore the original settings before uninstalling AeroTizen.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for builds, tests and component ownership.
+Please include the exact model, firmware and observed behaviour in a
+[TV report or bug report](https://github.com/butukay/qtizen/issues/new/choose).
 
 ## Guides
 
-- [Default interface in this fork](docs/default-interface.md)
-- [TV compatibility and limits](docs/tv-compatibility.md)
-- [Use the launcher and Continue Watching](docs/launcher.md)
-- [Update or remove AeroTizen](docs/manage-installation.md)
-- [Set up with an AI assistant](docs/ai-setup.md)
-- [Troubleshoot and export logs](docs/diagnostics.md)
-- [Reduce ads and tracking in Samsung settings](docs/settings.md) and [DNS blocklists](dns/)
-- [Optional root setup and recovery](docs/root-cli.md)
+- [Default interface](docs/default-interface.md)
+- [Launcher, widgets and Continue Watching](docs/launcher.md)
+- [Installation, updates and removal](docs/manage-installation.md)
+- [Native Home and recovery](docs/home-pc-flow.md)
+- [Optional root helper](docs/root-cli.md)
+- [S95F findings and tested boundaries](docs/devices/s95f.md)
+- [Diagnostics](docs/diagnostics.md)
+- [Samsung privacy settings](docs/settings.md) and [optional DNS lists](dns/)
 
-## Contributing
-
-[Report what works on your TV](https://github.com/helalaou/AeroTizen/issues/new?template=model_report.yml)
-or see [CONTRIBUTING.md](CONTRIBUTING.md) for development and testing.
+## Contributors
 
 <!-- contributors:start -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/helalaou"><img src="https://github.com/helalaou.png?size=100" width="64" height="64" alt="helalaou"><br><sub>helalaou</sub></a></td>
-    <td align="center"><a href="https://github.com/metacurb"><img src="https://github.com/metacurb.png?size=100" width="64" height="64" alt="metacurb"><br><sub>metacurb</sub></a></td>
-    <td align="center"><a href="https://github.com/oflarcade"><img src="https://github.com/oflarcade.png?size=100" width="64" height="64" alt="oflarcade"><br><sub>oflarcade</sub></a></td>
-    <td align="center"><a href="https://github.com/motorgrid-ita"><img src="https://github.com/motorgrid-ita.png?size=100" width="64" height="64" alt="motorgrid-ita"><br><sub>motorgrid-ita</sub></a></td>
-    <td align="center"><a href="https://github.com/cvvspb"><img src="https://github.com/cvvspb.png?size=100" width="64" height="64" alt="cvvspb"><br><sub>cvvspb</sub></a></td>
-    <td align="center"><a href="https://github.com/tjmcleod8"><img src="https://github.com/tjmcleod8.png?size=100" width="64" height="64" alt="tjmcleod8"><br><sub>tjmcleod8</sub></a></td>
-    <td align="center"><a href="https://github.com/jamesmcnicholas"><img src="https://github.com/jamesmcnicholas.png?size=100" width="64" height="64" alt="jamesmcnicholas"><br><sub>jamesmcnicholas</sub></a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/cheack"><img src="https://github.com/cheack.png?size=100" width="64" height="64" alt="cheack"><br><sub>cheack</sub></a></td>
-    <td align="center"><a href="https://github.com/gabriel1larocca"><img src="https://github.com/gabriel1larocca.png?size=100" width="64" height="64" alt="gabriel1larocca"><br><sub>gabriel1larocca</sub></a></td>
-    <td align="center"><a href="https://github.com/DdotCDotP2015"><img src="https://github.com/DdotCDotP2015.png?size=100" width="64" height="64" alt="DdotCDotP2015"><br><sub>DdotCDotP2015</sub></a></td>
+    <td align="center"><a href="https://github.com/butukay"><img src="https://github.com/butukay.png?size=100" width="64" height="64" alt="butukay"><br><sub>butukay</sub></a></td>
   </tr>
 </table>
 <!-- contributors:end -->
 
-## Credits
+The original AeroTizen contributors are listed in [CREDITS.md](CREDITS.md).
 
-- [LTvLauncher](https://github.com/leanbitlab-org/LtvLauncher), which the layout is based on
-- [Apps2Samsung](https://github.com/Apps2Samsung/Apps2Samsung) and [tizen-sdb](https://github.com/PatrickSt1991/tizen-sdb), for how the developer connection, certificates and signing work
-- [samsung-tizen-tv-debloat](https://github.com/ardazeytin/samsung-tizen-tv-debloat), for which packages are safe to remove
-- App artwork is read from Samsung's cache on each TV; none is bundled or downloaded. Fallback logos
-  are from [Simple Icons](https://simpleicons.org). Artwork and trademarks belong to their owners
-- Weather and location search from [Open-Meteo](https://open-meteo.com), automatic location from [ipapi](https://ipapi.co)
+## Credits and license
 
-This project isn't affiliated with Samsung. Use it at your own risk.
+MIT. Copyright notices for Hamza El Alaoui, Vlad Lisov and contributors are retained
+in [LICENSE](LICENSE). qtizen is derived from AeroTizen; root acquisition uses the
+separate [samsung-tv-root](https://github.com/chris-ritsen/samsung-tv-root) project.
+See [CREDITS.md](CREDITS.md) for dependencies and original contributors.
 
-## License
-
-[MIT](LICENSE)
+This project is not affiliated with Samsung or Apple. Application artwork and
+trademarks belong to their respective owners.

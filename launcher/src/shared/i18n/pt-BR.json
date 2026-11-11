@@ -288,5 +288,11 @@
   "accent.rose": "Rosa",
   "accent.amber": "Âmbar",
   "accent.mint": "Menta",
-  "accent.default": "{{defaultTheme}}"
+  "accent.default": "{{defaultTheme}}",
+  "transitions.title": "Transições entre aplicativos",
+  "transitions.none": "Nenhuma",
+  "transitions.fade": "Esmaecer",
+  "transitions.standard": "Padrão",
+  "transitions.applying": "Aplicando…",
+  "transitions.unavailable": "Salvo. O controle de transições está indisponível."
 }

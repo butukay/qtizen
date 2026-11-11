@@ -76,7 +76,7 @@ test("HDMI playback preference survives reload and changes how the Inputs tile o
     };
   });
   await page.goto("/");
-  await expect(page).toHaveTitle("AeroTizen");
+  await expect(page).toHaveTitle("qtizen");
   const hdmiTile = page.getByRole("button", { name: "HDMI 2", exact: true });
   await hdmiTile.click();
   await expect.poll(() => page.evaluate(() => window.hdmiCalls)).toEqual(["HDMI 2", "embedded"]);
@@ -84,7 +84,7 @@ test("HDMI playback preference survives reload and changes how the Inputs tile o
   await page.reload();
   await openSettings(page);
   await openCategory(page, "sources");
-  await expect(page.getByRole("button", { name: "Inside AeroTizen" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: "Inside qtizen" })).toHaveAttribute("aria-pressed", "true");
   const samsungViewer = page.getByRole("button", { name: "Samsung viewer", exact: true });
   await samsungViewer.click();
   await expect(samsungViewer).toHaveAttribute("aria-pressed", "true");
@@ -203,7 +203,7 @@ async function mockHdmi(page, { stage = "ready", hideDisconnected = false } = {}
     { stage, hideDisconnected },
   );
   await page.goto("/");
-  await expect(page).toHaveTitle("AeroTizen");
+  await expect(page).toHaveTitle("qtizen");
   await expect(page.locator("[data-input-card]")).toHaveAttribute("data-status", "active");
 }
 

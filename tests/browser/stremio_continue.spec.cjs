@@ -132,7 +132,11 @@ async function setup(page, options = {}) {
   await openSettings(page);
   await openCategory(page, "apps");
   expect(calls).toEqual([]);
-  expect(await page.evaluate(() => window.privateReads.length)).toBe(0);
+  expect(
+    await page.evaluate(
+      () => window.privateReads.filter((read) => read.path === "wgt-private/stremio-feed.json").length,
+    ),
+  ).toBe(0);
   await page.locator('[data-key="continue-watching:true"]').click();
   return { state, calls, errors };
 }
@@ -198,7 +202,11 @@ for (const variant of [{ root: false }, { installed: false }, { credential: fals
     await expect(page.locator('[data-key="continue-app:' + stremio + '"]')).toHaveCount(0);
     if (!h.state.installed) {
       expect(h.calls).toHaveLength(0);
-      expect(await page.evaluate(() => window.privateReads.length)).toBe(0);
+      expect(
+        await page.evaluate(
+          () => window.privateReads.filter((read) => read.path === "wgt-private/stremio-feed.json").length,
+        ),
+      ).toBe(0);
     }
     if (!h.state.credential) {
       await expect.poll(() => h.calls.map((call) => call.path)).toContain("/v1/credential");

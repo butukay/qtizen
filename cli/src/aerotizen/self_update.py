@@ -127,7 +127,7 @@ def verify_version(binary, version):
             os.killpg(process.pid, signal.SIGKILL)
         process.communicate()
         raise UpdateError("The downloaded CLI did not complete its version check.") from None
-    if process.returncode or stdout.decode(errors="replace").strip() != f"aerotizen {version}":
+    if process.returncode or stdout.decode(errors="replace").strip() != f"qtizen {version}":
         raise UpdateError("The downloaded CLI did not report the expected version.")
 
 
@@ -190,7 +190,7 @@ def download_binary(release):
     data = releases._read_url(release.download_url, MAX_ARCHIVE_BYTES)
     if hashlib.sha256(data).hexdigest() != match[1].lower():
         raise UpdateError("CLI checksum mismatch. The installed executable was not changed.")
-    executable = "aerotizen.exe" if os.name == "nt" else "aerotizen"
+    executable = "qtizen.exe" if os.name == "nt" else "qtizen"
     return unpack_binary(data, name, executable)
 
 
@@ -205,7 +205,7 @@ def _windows_handoff(target, stage, backup, old_hash, new_hash, version, receipt
         json.dumps(
             {
                 "target": str(target),
-                "candidate": str(stage / "aerotizen.exe"),
+                "candidate": str(stage / "qtizen.exe"),
                 "backup": str(backup),
                 "old_hash": old_hash,
                 "new_hash": new_hash,
@@ -273,7 +273,7 @@ def install(release, *, repository=releases.DEFAULT_REPOSITORY):
         backup = target.with_name(backup_name)
         receipt = target.with_name(target.name + ".update-" + token + ".json")
         try:
-            candidate = stage / ("aerotizen.exe" if os.name == "nt" else "aerotizen")
+            candidate = stage / ("qtizen.exe" if os.name == "nt" else "qtizen")
             with candidate.open("xb") as destination:
                 destination.write(download_binary(release))
                 destination.flush()

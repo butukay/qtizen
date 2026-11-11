@@ -76,7 +76,7 @@ development hot reload so existing TV-service subscriptions remain active.
 ## App inventory ownership
 
 `services/createAppsService.ts` owns the installed-app inventory, visible app records,
-watcher IDs and the existing `aerotizen.apps.v1` label cache. Home, Settings and Continue
+watcher IDs and the existing `qtizen.apps.v1` label cache. Home, Settings and Continue
 Watching read one immutable app snapshot. Unchanged discovery retains the snapshot and
 array identities; a changed app retains the other app records. Views do not copy app data.
 `subscribeDiscovery()` reports each successful discovery to Continue Watching, including
@@ -119,6 +119,12 @@ twice does not duplicate work. It survives hot reload; disposal removes subscrip
 and timers, cancels pending delivery and rejects late source/playback callbacks.
 HDMI selection refreshes cable state before either viewer. Disconnects, Back, native
 Home and resume retain their existing recovery behaviour.
+Selecting a port without a video signal first requests HDMI-CEC wake through the
+private root helper. Refreshing the inventory never sends wake commands. Pending
+handoffs are cancelled by a new selection, Home, hiding the launcher or disposal.
+Native viewing can open a sleeping port; embedded playback waits up to eight seconds
+for its initial signal before restoring Home. Missing CEC support retains the normal
+source-selection path.
 An HDMI signal loss during playback returns to Home with a disconnected notice;
 failed selections and playback errors retain their separate launch-failure message.
 

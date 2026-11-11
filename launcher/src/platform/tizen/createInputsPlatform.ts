@@ -2,7 +2,10 @@ import type { InputsPlatform } from "../../contracts/inputs";
 import type { InputSource } from "../../contracts/launcher";
 import { hasRecognizedDevice, sourceKey } from "../../shared/inputs/inputSources";
 
-export interface InputsTizen {
+import type { PrivateFileTizen } from "./createPrivateFiles";
+import { wakeHdmiSource } from "./wakeHdmiSource";
+
+export interface InputsTizen extends PrivateFileTizen {
   application?: {
     getCurrentApplication(): { getRequestedAppControl(): { appControl?: { operation?: string } } | null };
   };
@@ -19,7 +22,7 @@ export interface InputsTizen {
   };
 }
 
-interface InputsHost {
+interface InputsHost extends Pick<Window, "setTimeout" | "clearTimeout"> {
   addEventListener(type: string, listener: () => void): void;
   AeroTizen: {
     homewatch: {
@@ -57,6 +60,13 @@ export const createInputsPlatform = (host: InputsHost): InputsPlatform => {
       return typeof system?.getPropertyValue === "function";
     },
     isHidden: () => host.document.hidden,
+    wake(source, done) {
+      if (!tizen?.filesystem || source.type !== "HDMI" || typeof source.number !== "number") {
+        done();
+        return () => {};
+      }
+      return wakeHdmiSource(tizen, host, source.number, done);
+    },
     read(done) {
       let active = true;
       const finish = (sources: readonly InputSource[] | null) => {

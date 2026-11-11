@@ -35,14 +35,14 @@ function CheckVersion([string]$Path, [string]$Version) {
             throw 'The replacement CLI version check timed out.'
         }
         $text = $process.StandardOutput.ReadToEnd().Trim()
-        if ($process.ExitCode -ne 0 -or $text -ne "aerotizen $Version") {
+        if ($process.ExitCode -ne 0 -or $text -ne "qtizen $Version") {
             throw 'The replacement CLI did not report the expected version.'
         }
     } finally { $process.Dispose() }
 }
 
 try {
-    if ([IO.Path]::GetFullPath($updatePlan.candidate) -ne [IO.Path]::Combine($updateStage, 'aerotizen.exe')) {
+    if ([IO.Path]::GetFullPath($updatePlan.candidate) -ne [IO.Path]::Combine($updateStage, 'qtizen.exe')) {
         throw 'Invalid update staging path.'
     }
     [IO.File]::WriteAllText([IO.Path]::Combine($updateStage, 'ready'), 'ready')

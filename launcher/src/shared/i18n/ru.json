@@ -288,5 +288,11 @@
   "accent.rose": "Розовый",
   "accent.amber": "Янтарный",
   "accent.mint": "Мятный",
-  "accent.default": "{{defaultTheme}}"
+  "accent.default": "{{defaultTheme}}",
+  "transitions.title": "Переходы между приложениями",
+  "transitions.none": "Без анимации",
+  "transitions.fade": "Затемнение",
+  "transitions.standard": "Стандартные",
+  "transitions.applying": "Применение…",
+  "transitions.unavailable": "Сохранено. Управление переходами сейчас недоступно."
 }

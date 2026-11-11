@@ -6,7 +6,7 @@ or a TV app install. It does not run any runtime it finds, load native libraries
 read Home databases, change Home/boot/watcher settings, or launch apps.
 
 ```sh
-./aerotizen --tv TV_IP home probe --output home-probe.json
+./qtizen --tv TV_IP home probe --output home-probe.json
 ```
 
 The TV must be on, with Developer Mode set to this computer's IP. Allow the TV to
@@ -46,7 +46,7 @@ release stays available:
 ```sh
 python3 -m venv .venv-home-probe
 .venv-home-probe/bin/python -m pip install \
-  'git+https://github.com/metacurb/AeroTizen.git@feat/native-home-read-only-probe-84'
+  'git+https://github.com/metacurb/qtizen.git@feat/native-home-read-only-probe-84'
 .venv-home-probe/bin/aerotizen --tv TV_IP home probe --output home-probe.json
 ```
 

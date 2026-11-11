@@ -1,6 +1,6 @@
 # Dynamic weather wallpapers
 
-Related to [#19 — More wallpapers, and use wallpapers already on the TV](https://github.com/helalaou/AeroTizen/issues/19).
+Related to [#19 — More wallpapers, and use wallpapers already on the TV](https://github.com/butukay/qtizen/issues/19).
 This implements additional bundled wallpapers only, not reading Samsung Ambient
 Mode or Frame Art images already stored on the TV. Issue #19 remains open.
 
@@ -58,7 +58,7 @@ Check image legibility, sunset and night transitions, and operation with the hea
 weather widget hidden. If a recent forecast lacks solar data at night, the chosen
 background should stay visible until the night scene loads. Repeated toggles should
 reuse valid data and avoid repeated forecast requests. The browser regression in
-[#72](https://github.com/helalaou/AeroTizen/pull/72) covers this case without a TV clock change.
+[#72](https://github.com/butukay/qtizen/pull/72) covers this case without a TV clock change.
 
 Select **Off** to restore the previous background and speed. When testing a new
 build, update in place with the same signing certificate and keep a known-good

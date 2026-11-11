@@ -1,9 +1,12 @@
 import type { ClockFormatter } from "../../contracts/launcher";
+import type { TransitionStatus } from "../../contracts/transitions";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { Store } from "../../shared/state/createStore";
 import { ChoiceGroup } from "../components/ChoiceGroup";
 import { SettingsSection } from "../components/SettingsSection/SettingsSection";
 import type { SettingsSectionProps } from "../types";
 
+import { AppTransitionSettings } from "./AppTransitionSettings";
 import { ClockSettings } from "./ClockSettings";
 import { PaletteSettings } from "./PaletteSettings/PaletteSettings";
 
@@ -31,8 +34,9 @@ const PERFORMANCE_OPTIONS = [
 interface Props extends SettingsSectionProps {
   clock: ClockFormatter;
   openedAt: number;
+  transitions: Store<TransitionStatus>;
 }
-export const AppearanceSettings = ({ settings, actions, clock, openedAt }: Props) => {
+export const AppearanceSettings = ({ settings, actions, clock, openedAt, transitions }: Props) => {
   const { t } = useTranslation();
   return (
     <>
@@ -64,6 +68,7 @@ export const AppearanceSettings = ({ settings, actions, clock, openedAt }: Props
           onSelect={actions.setHomeAppLayout}
         />
       </SettingsSection>
+      <AppTransitionSettings settings={settings} actions={actions} transitions={transitions} />
       <ClockSettings settings={settings} actions={actions} clock={clock} openedAt={openedAt} />
       <SettingsSection title={t("appearance.performanceMode")} description={t("appearance.performanceHint")}>
         <ChoiceGroup

@@ -288,5 +288,11 @@
   "accent.rose": "Rose",
   "accent.amber": "Amber",
   "accent.mint": "Mint",
-  "accent.default": "{{defaultTheme}}"
+  "accent.default": "{{defaultTheme}}",
+  "transitions.title": "App transitions",
+  "transitions.none": "None",
+  "transitions.fade": "Fade",
+  "transitions.standard": "Standard",
+  "transitions.applying": "Applying…",
+  "transitions.unavailable": "Saved. Transition control is currently unavailable."
 }

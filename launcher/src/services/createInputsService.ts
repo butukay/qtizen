@@ -30,9 +30,11 @@ export const createInputsService = ({
   let selection = 0;
   let playback = 0;
   let playingSource: InputSource | null = null;
+  let awaitingSignal = false;
   let timeout: number | undefined;
   let interval: number | undefined;
   let pending: (() => void) | undefined;
+  let cancelWake: (() => void) | undefined;
   let wasHidden = false;
   let unsubscribers: (() => void)[] = [];
   const alwaysVisible = (source: InputSource) =>
@@ -94,6 +96,7 @@ export const createInputsService = ({
     }
     const id = ++playback;
     playingSource = source;
+    awaitingSignal = false;
     publish(undefined, "opening");
     const failed = () => {
       if (!disposed && id === playback) {
@@ -117,8 +120,12 @@ export const createInputsService = ({
                 }
                 return;
               }
-              clearTimeout();
-              publish(undefined, "playing");
+              // A sleeping HDMI device may need a moment to produce video after CEC wake.
+              awaitingSignal = source.type === "HDMI" && source.connected === false;
+              if (!awaitingSignal) {
+                clearTimeout();
+                publish(undefined, "playing");
+              }
             }, failed);
           } catch {
             failed();
@@ -204,10 +211,14 @@ export const createInputsService = ({
             ? before.sources
             : Object.freeze(next);
         publish(sources);
-        if (store.getSnapshot().playback === "playing" && playingSource?.type === "HDMI") {
+        if (store.getSnapshot().playback !== "idle" && playingSource?.type === "HDMI") {
           const key = sourceKey(playingSource);
           const current = sources.find((source) => sourceKey(source) === key);
-          if (!current?.connected) {
+          if (awaitingSignal && current?.connected) {
+            awaitingSignal = false;
+            clearTimeout();
+            publish(undefined, "playing");
+          } else if (store.getSnapshot().playback === "playing" && !current?.connected) {
             const input = displayLabel(playingSource);
             service.leave();
             notify("inputs.disconnected", { input });
@@ -223,6 +234,8 @@ export const createInputsService = ({
       if (disposed || !source) {
         return;
       }
+      cancelWake?.();
+      cancelWake = undefined;
       const request = ++selection;
       if (source.type !== "HDMI" || !platform.refreshBeforeHdmi) {
         openSource(source, request);
@@ -233,11 +246,19 @@ export const createInputsService = ({
           return;
         }
         const current = store.getSnapshot().sources.find((item) => sourceKey(item) === sourceKey(source));
-        if (!success || !current?.connected) {
+        if (!success || !current || (!current.connected && !hasRecognizedDevice(current))) {
           notify("inputs.couldNotShow", { input: displayLabel(source) });
           return;
         }
-        openSource(current, request);
+        if (current.connected) {
+          openSource(current, request);
+          return;
+        }
+        cancelWake = platform.wake(current, () => {
+          if (!disposed && request === selection && !platform.isHidden()) {
+            openSource(current, request);
+          }
+        });
       });
     },
     leave() {
@@ -245,9 +266,12 @@ export const createInputsService = ({
         return;
       }
       selection++;
+      cancelWake?.();
+      cancelWake = undefined;
       playback++;
       clearTimeout();
       playingSource = null;
+      awaitingSignal = false;
       publish(undefined, "idle");
       platform.hide();
     },
@@ -259,12 +283,18 @@ export const createInputsService = ({
       unsubscribers = [
         platform.subscribeSources(() => service.load()),
         platform.subscribeHome(() => {
+          selection++;
+          cancelWake?.();
+          cancelWake = undefined;
           if (store.getSnapshot().playback !== "idle") {
             service.leave();
           }
         }),
         platform.subscribeVisibility(() => {
           if (platform.isHidden()) {
+            selection++;
+            cancelWake?.();
+            cancelWake = undefined;
             wasHidden = store.getSnapshot().playback !== "idle";
             return;
           }
@@ -292,6 +322,8 @@ export const createInputsService = ({
         service.leave();
       }
       disposed = true;
+      cancelWake?.();
+      cancelWake = undefined;
       selection++;
       playback++;
       pending?.();

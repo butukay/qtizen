@@ -42,7 +42,7 @@ def test_root_and_cli_build_the_same_wheel(distributions):
     assert root == wheel_files(distributions["cli"]["wheel"])
     metadata_bytes = next(value for name, value in root.items() if name.endswith("/METADATA"))
     metadata = email.message_from_bytes(metadata_bytes)
-    assert metadata["Name"] == "aerotizen"
+    assert metadata["Name"] == "qtizen"
     assert metadata["Version"] == __version__
     assert metadata["Requires-Python"] == ">=3.10"
     assert {value for value in metadata.get_all("Requires-Dist") if "extra ==" not in value} == {
@@ -50,6 +50,7 @@ def test_root_and_cli_build_the_same_wheel(distributions):
         "cryptography>=41",
     }
     entrypoints = next(value for name, value in root.items() if name.endswith("/entry_points.txt"))
+    assert b"qtizen = aerotizen.cli:main" in entrypoints
     assert b"aerotizen = aerotizen.cli:main" in entrypoints
     for filename in (
         "ca/vd_tizen_dev_public2.crt",
@@ -68,7 +69,7 @@ def test_sdist_builds_without_the_repository(package, distributions, tmp_path):
     with tarfile.open(distributions[package]["sdist"]) as archive:
         assert not any("/obj/" in name or "/bin/" in name for name in archive.getnames())
         archive.extractall(tmp_path, filter="data")
-    source = tmp_path / f"aerotizen-{__version__}"
+    source = tmp_path / f"qtizen-{__version__}"
     assert 'build-backend = "setuptools.build_meta"' in (source / "pyproject.toml").read_text()
     assert (source / "native/home-query/HomeQuery.cs").is_file()
     assert (source / "native/home-control/HomeControl.cs").is_file()

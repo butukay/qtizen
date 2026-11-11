@@ -26,7 +26,7 @@ test("opening About marks a stable launcher update as seen across restarts", asy
   await page.route("https://**/*", (route) => route.fulfill({ body: "{}" }));
   let checks = 0;
   let latest = update;
-  await page.route("https://api.github.com/repos/helalaou/AeroTizen/releases?*", async (route) => {
+  await page.route("https://api.github.com/repos/butukay/qtizen/releases?*", async (route) => {
     const params = new URL(route.request().url()).searchParams;
     if (params.get("page") === "1") {
       checks++;
@@ -55,7 +55,7 @@ test("opening About marks a stable launcher update as seen across restarts", asy
   const start = Date.now();
   await page.clock.setFixedTime(start);
   await page.goto("/");
-  await expect(page).toHaveTitle("AeroTizen");
+  await expect(page).toHaveTitle("qtizen");
   const gear = page.locator("#gear");
   const homeDot = gear.locator("[data-home-update-notice]");
   const about = page.locator('[data-section-pane="about"]');
@@ -72,7 +72,7 @@ test("opening About marks a stable launcher update as seen across restarts", asy
   await expect(categoryDot).toBeVisible();
   await page.keyboard.press("ArrowRight");
   await expect(about).toBeVisible();
-  await expect(about.getByText("AeroTizen version: " + installed)).toBeVisible();
+  await expect(about.getByText("qtizen version: " + installed)).toBeVisible();
   await expect(about.getByText("Update available: " + update)).toBeVisible();
   await expect(notes.locator("li")).toHaveText(["Add a clock layout", "Keep HDMI sources visible"]);
   await expect(notes).toBeVisible();
@@ -82,7 +82,7 @@ test("opening About marks a stable launcher update as seen across restarts", asy
   await expect(about.getByText("Update available: " + update)).toBeVisible();
   await expect(page.getByRole("button", { name: "Close settings" })).toBeFocused();
   await expect(notes).toBeVisible();
-  await expect(about.getByText("aerotizen update launcher")).toBeVisible();
+  await expect(about.getByText("qtizen update launcher")).toBeVisible();
   await page.keyboard.press("ArrowLeft");
   await expect(aboutCategory).toBeFocused();
   expect(checks).toBe(1);
@@ -129,10 +129,10 @@ test("a newer installed launcher re-arms the notice for a further release", asyn
   await page.addInitScript(
     ({ installedVersion, latestVersion, latest }) => {
       localStorage.setItem(
-        "aerotizen.launcherUpdate.acknowledgement",
+        "qtizen.launcherUpdate.acknowledgement",
         JSON.stringify({ installedVersion, latestVersion }),
       );
-      localStorage.setItem("aerotizen.launcherUpdate.check", JSON.stringify({ latest, attemptedAt: Date.now() }));
+      localStorage.setItem("qtizen.launcherUpdate.check", JSON.stringify({ latest, attemptedAt: Date.now() }));
     },
     { installedVersion: olderInstalled, latestVersion: installed, latest: update },
   );

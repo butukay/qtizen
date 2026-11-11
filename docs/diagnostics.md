@@ -1,17 +1,17 @@
 # Diagnostic logs
 
 Use a current CLI and launcher build. Replace `TV_IP` with your TV's address.
-In Windows PowerShell, use `.\aerotizen.exe` in place of `./aerotizen`.
+In Windows PowerShell, use `.\qtizen.exe` in place of `./qtizen`.
 Reproduce the problem, then run:
 
 ```sh
-./aerotizen --tv TV_IP logs export --output aerotizen-report.zip
+./qtizen --tv TV_IP logs export --output aerotizen-report.zip
 ```
 
 This creates a ZIP you can attach to a bug report. Existing files are never overwritten.
 Include the steps you took and what appeared on the TV. Logs cannot confirm what was
 visible on screen. No report is sent or uploaded automatically. If the TV is unavailable,
-run `./aerotizen logs export` for a report with computer logs only.
+run `./qtizen logs export` for a report with computer logs only.
 
 ## Developer connection
 
@@ -29,7 +29,7 @@ the TV address from its network settings.
 ## PC logs
 
 Each parsed CLI command writes a JSON-lines log under `~/.config/aerotizen/logs/`.
-`./aerotizen logs open` prints and opens the folder. Set `AEROTIZEN_LOG_DIR` to use
+`./qtizen logs open` prints and opens the folder. Set `AEROTIZEN_LOG_DIR` to use
 another folder. The CLI keeps the last 10 files, at most 256 KiB each. A failed command
 prints its log path. If log storage fails, the command keeps its normal behaviour.
 Help, version output and parser errors do not create logs.
@@ -66,7 +66,7 @@ Names, email addresses, TV friendly names, account data, credentials, network ad
 content titles and persistent TV/backup identifiers are outside the logging schema.
 Third-party app IDs become temporary aliases such as `app-1`; matching aliases within
 one session identify the same app. The alias map stays in memory and is bounded. Native
-Samsung Home, TV viewer, HbbTV and AeroTizen IDs remain visible for routing diagnosis.
+Samsung Home, TV viewer, HbbTV and qtizen IDs remain visible for routing diagnosis.
 Report exports also relabel session/event references. These references do not identify
 a TV or user. Include the affected app's name in your reproduction steps if relevant.
 
@@ -121,7 +121,7 @@ exporting if you need the newest UI events. This also occurred on the privacy bu
 
 ## Export and recovery
 
-`./aerotizen logs export` works without a TV connection. Both forms include recent PC logs,
+`./qtizen logs export` works without a TV connection. Both forms include recent PC logs,
 CLI/OS/Python versions, and summaries of up to 20 Home recovery records in the default PC
 backup folder. The TV form also includes the latest service/UI events if available.
 A separately copied backup folder is not searched automatically.
@@ -146,7 +146,7 @@ A separately copied backup folder is not searched automatically.
 For Home or startup problems, use:
 
 ```sh
-./aerotizen --tv TV_IP logs export --include-home --output aerotizen-home-report.zip
+./qtizen --tv TV_IP logs export --include-home --output aerotizen-home-report.zip
 ```
 
 This optional check stages the existing read-only SDK query helper and cleans it up.

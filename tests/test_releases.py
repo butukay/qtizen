@@ -11,7 +11,7 @@ import pytest
 
 from aerotizen import releases
 
-REPO = "helalaou/AeroTizen"
+REPO = "butukay/qtizen"
 API = f"https://api.github.com/repos/{REPO}/releases"
 
 
@@ -33,7 +33,7 @@ def widget(version="2.2.0", app_id=releases.APP_ID, extra=None):
 
 def release(version="2.2.0", prefix="launcher-v", **fields):
     tag = prefix + version
-    names = ["launcher-release.json", f"aerotizen-launcher-{version}.wgt"]
+    names = ["launcher-release.json", f"qtizen-launcher-{version}.wgt"]
     return {
         "tag_name": tag,
         "draft": False,
@@ -51,7 +51,7 @@ def release(version="2.2.0", prefix="launcher-v", **fields):
 
 def cli_release(version="2.2.0", target="macos-arm64", **fields):
     suffix = "zip" if target.startswith("windows-") else "tar.gz"
-    name = f"aerotizen-{version}-{target}.{suffix}"
+    name = f"qtizen-{version}-{target}.{suffix}"
     assets = [
         {
             "name": name,
@@ -68,7 +68,7 @@ def manifest(data, version="2.2.0", **fields):
         "min_cli_version": "2.2.0",
         "app_id": releases.APP_ID,
         "package_id": releases.PACKAGE_ID,
-        "asset": f"aerotizen-launcher-{version}.wgt",
+        "asset": f"qtizen-launcher-{version}.wgt",
         "sha256": hashlib.sha256(data).hexdigest(),
         **fields,
     }

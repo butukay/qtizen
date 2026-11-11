@@ -26,7 +26,7 @@ SERVICE_START_TIMEOUT = 15.0
 SERVICE_POLL_INTERVAL = 1.0
 LAUNCH_TIMEOUT = 8
 START_RECOVERY = (
-    f"Open AeroTizen on the TV or run 'aerotizen launch {home.releases.APP_ID}', then retry. "
+    f"Open qtizen on the TV or run 'qtizen launch {home.releases.APP_ID}', then retry. "
     "No Home settings were changed."
 )
 
@@ -49,9 +49,9 @@ def preview(action, backup=None):
         "target": home.releases.APP_ID if action == "apply" else "saved original Home",
         "watcher_after": "native"
         if action == "apply"
-        else "watcher if AeroTizen is installed; otherwise absent",
+        else "watcher if qtizen is installed; otherwise absent",
         "startup": (
-            "Assign both startup app IDs to AeroTizen, then enable Smart Hub autostart (1). "
+            "Assign both startup app IDs to qtizen, then enable Smart Hub autostart (1). "
             "If the TV rejects startup setup, try to keep Home with the saved startup settings."
         ),
     }
@@ -265,7 +265,7 @@ def _check_preflight(status, original):
     _check_compatibility(status)
     installed = status.get("launcher", {}).get("installed")
     if type(installed) is not bool:
-        raise home.HomeError("Cannot confirm whether AeroTizen is installed; no write was attempted.")
+        raise home.HomeError("Cannot confirm whether qtizen is installed; no write was attempted.")
     return installed
 
 
@@ -281,14 +281,14 @@ def _require_control_service(watcher):
         or control.get("mode") not in ("watcher", "native", "hold")
     ):
         raise home.HomeError(
-            "The Home control service is incompatible. Check 'aerotizen home status' "
+            "The Home control service is incompatible. Check 'qtizen home status' "
             "and use a matching launcher before retrying. "
             "No Home settings were changed."
         )
 
 
 def _start_launcher(session):
-    print("Starting AeroTizen and waiting for its control service...", file=sys.stderr)
+    print("Starting qtizen and waiting for its control service...", file=sys.stderr)
     diagnostics.event("app.launch_requested", app_id=home.releases.APP_ID)
     accepted, _ = remote.rest_launch(session.host, home.releases.APP_ID)
     if not accepted:
@@ -298,7 +298,7 @@ def _start_launcher(session):
                 f"0 was_execute {home.releases.APP_ID}", timeout=LAUNCH_TIMEOUT, max_output=8192
             )
         except (OSError, SdbError) as exc:
-            raise home.HomeError("The TV could not start AeroTizen. " + START_RECOVERY) from exc
+            raise home.HomeError("The TV could not start qtizen. " + START_RECOVERY) from exc
 
 
 def _wait_for_control_service(session, info, original):
@@ -306,7 +306,7 @@ def _wait_for_control_service(session, info, original):
     while time.monotonic() < deadline:
         status = home.read_status(session, None, info)
         if not _check_preflight(status, original):
-            raise home.HomeError("AeroTizen installation changed during startup; no write was attempted.")
+            raise home.HomeError("qtizen installation changed during startup; no write was attempted.")
         if status["watcher"].get("reachable") is True:
             _require_control_service(status["watcher"])
             if time.monotonic() <= deadline:
@@ -315,7 +315,7 @@ def _wait_for_control_service(session, info, original):
         if remaining > 0:
             time.sleep(min(SERVICE_POLL_INTERVAL, remaining))
     raise home.HomeError(
-        "AeroTizen's control service did not become ready within "
+        "qtizen's control service did not become ready within "
         f"{SERVICE_START_TIMEOUT:g} seconds after launch. " + START_RECOVERY
     )
 
@@ -344,7 +344,7 @@ def change(session, info, action, *, backup=None, state_dir=None):
     if installed and status["watcher"].get("reachable") is not True:
         if action != "apply":
             raise home.HomeError(
-                "AeroTizen is installed but its control service is unavailable; start it and retry."
+                "qtizen is installed but its control service is unavailable; start it and retry."
             )
         _start_launcher(session)
         status = _wait_for_control_service(session, info, original)

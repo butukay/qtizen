@@ -57,7 +57,7 @@ for (const [name, url] of [
       };
     });
     await page.goto(url);
-    await expect(page).toHaveTitle("AeroTizen");
+    await expect(page).toHaveTitle("qtizen");
     const card = page.locator("#continue-items > [data-key]");
     await expect(card).toHaveText(/Continue Watching lifecycle/);
     await page.evaluate(() => {

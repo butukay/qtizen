@@ -5,6 +5,8 @@
     <StartupObject>AeroTizen.Root.BridgeProgram</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../hdmi-wake/*.cs" Link="Hdmi/%(Filename)%(Extension)" />
+    <Compile Include="../window-transitions/*.cs" Link="Transitions/%(Filename)%(Extension)" />
     <Compile Include="../root-common/*.cs" Link="Common/%(Filename)%(Extension)" />
     <Compile Include="../stremio-bridge/*.cs" Link="Stremio/%(Filename)%(Extension)" />
     <Compile Include="../untethered-probe/Bundle.cs" Link="Bundle.cs" />

@@ -21,7 +21,7 @@ body:
       label: Steps to reproduce
       description: Include the remote buttons or CLI commands you used, and whether this followed a restart or update.
       placeholder: |-
-        1. Open AeroTizen.
+        1. Open qtizen.
         2. ...
     validations:
       required: true
@@ -43,9 +43,9 @@ body:
     attributes:
       label: Diagnostic report
       description: |
-        Reproduce the problem, then run `aerotizen --tv TV_IP logs export` and attach the ZIP here.
+        Reproduce the problem, then run `qtizen --tv TV_IP logs export` and attach the ZIP here.
         For a Home or startup issue, add `--include-home` to collect a read-only routing snapshot (can take up to 35 seconds).
-        If the TV is unavailable, `aerotizen logs export` still exports PC logs.
+        If the TV is unavailable, `qtizen logs export` still exports PC logs.
         On the tested Frame, cold-start UI events may stay queued until you open another app and return Home.
         Logs omit console output and raw messages; third-party app IDs use temporary aliases. Name the affected app in your steps.
         Review the ZIP before sharing it. Do not attach certificates, login tokens or your original Home backup folder.

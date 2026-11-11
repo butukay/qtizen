@@ -1,16 +1,16 @@
 # Contributing
 
-Thanks for taking a look. The most useful contribution is trying AeroTizen on your TV and
+Thanks for taking a look. The most useful contribution is trying qtizen on your TV and
 opening a "Tested on my TV" issue: every model and firmware year behaves a bit differently, and
 only a handful of models have been tested so far.
 
 ## Development setup
 
 ```bash
-git clone https://github.com/butukay/AeroTizen
-cd AeroTizen
+git clone https://github.com/butukay/qtizen
+cd qtizen
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"     # the aerotizen CLI + pytest + ruff
+pip install -e ".[dev]"     # the qtizen CLI + pytest + ruff
 npm ci                      # launcher build, lint and formatting tools
 ```
 
@@ -65,7 +65,7 @@ Changes limited to `README.md`, `CONTRIBUTING.md`, and `docs/` skip the test sui
 CI still checks README contributor markers and contributor guide formatting when
 those files change. Store data that tests read in `tests/fixtures/`.
 
-The active browser suite targets this fork's single Default interface and retained
+The active browser suite targets qtizen's single Default interface and retained
 services. `tests/upstream-browser/` archives the upstream theme, tab and status-widget
 scenarios as historical reference; they are not a suite for the current UI.
 `tests/browser/default_launcher.spec.cjs` covers their surviving Home responsibilities,
@@ -225,11 +225,11 @@ test integration. See [style rules](docs/styles.md) for the cascade and CSS chec
 - Preview the compiled launcher: `python3 -m http.server -d dist/launcher`, then
   open http://localhost:8000 at 1920×1080. The old comparison page is isolated in
   `tests/fixtures/legacy-launcher/` and is served by the browser test runner.
-- For TV development, run `npm run build:dev`, then `aerotizen install ./dist/launcher-dev`.
+- For TV development, run `npm run build:dev`, then `qtizen install ./dist/launcher-dev`.
   The app name and orange icon badge show the first eight characters of the content
-  build ID, for example `AeroTizen Dev 12AB34CD`. The build prints the app name.
+  build ID, for example `qtizen Dev 12AB34CD`. The build prints the app name.
   It keeps the package ID, so installing it replaces a copy with that same ID.
-- Run `aerotizen inspect launcher` to inspect the TV build.
+- Run `qtizen inspect launcher` to inspect the TV build.
   This restarts the launcher in debug mode and exposes Chrome DevTools at
   http://localhost:9222/json. Press Ctrl+C to stop forwarding.
 - Keep legacy scripts ES5-compatible. Compiled Settings targets Chromium 69, the 2020
@@ -237,14 +237,14 @@ test integration. See [style rules](docs/styles.md) for the cascade and CSS chec
 
 Inspection is included in both the Python package and standalone CLI. It uses the
 same automatic TV discovery as other commands. To select a TV, use
-`aerotizen --tv <tv-ip> inspect launcher`. To inspect another app or choose a local
-port, use `aerotizen inspect APPID --port 9223`.
-The separate `aerotizen-inspect` Python command has been replaced by `aerotizen inspect`.
+`qtizen --tv <tv-ip> inspect launcher`. To inspect another app or choose a local
+port, use `qtizen inspect APPID --port 9223`.
+The separate `aerotizen-inspect` Python command has been replaced by `qtizen inspect`.
 
-`aerotizen install launcher` installs the latest published launcher, even when a
-`launcher` directory exists in the current directory. Use `aerotizen install ./dist/launcher`
+`qtizen install launcher` installs the latest published launcher, even when a
+`launcher` directory exists in the current directory. Use `qtizen install ./dist/launcher`
 for a local build without the badge. For a fork's published app, use
-`aerotizen install launcher --release-repo OWNER/REPO`.
+`qtizen install launcher --release-repo OWNER/REPO`.
 
 ## Releases
 

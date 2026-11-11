@@ -1,6 +1,6 @@
 // Keep these names unchanged in every language. Translate the surrounding phrase.
 export const FIXED_NAMES = {
-  appName: "AeroTizen",
+  appName: "qtizen",
   defaultTheme: "Default",
   samsung: "Samsung",
   wifi: "Wi-Fi",

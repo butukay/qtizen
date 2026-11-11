@@ -6,7 +6,7 @@ current syntax. No Home commands are added in this change.
 
 The session holds an OS file lock for the host and port until it closes. This
 includes the interval when the direct socket is released for root acquisition.
-A second AeroTizen process gets a busy error before it opens a connection or
+A second qtizen process gets a busy error before it opens a connection or
 restarts an inspected app. Other SDK tools do not honor this lock; close external
 debug sessions before using this test.
 
@@ -17,7 +17,7 @@ The optional `SamsungTvRoot` adapter uses the `archive-root` route in upstream
 The executable and its TV payloads must come from a verified upstream archive.
 The adapter checks the version but does not download or verify release archives.
 Samsung's `sdb` executable and OpenSSL must also be available on the host. Basic
-AeroTizen operations still use the built-in Python transport.
+qtizen operations still use the built-in Python transport.
 
 The session performs these steps in order:
 

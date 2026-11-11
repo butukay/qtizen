@@ -112,7 +112,7 @@ def build_launcher(root, output, tag=None):
         raise ValueError("Compiled launcher is missing the shared UI stylesheet link")
 
     output.mkdir(parents=True, exist_ok=True)
-    package = output / f"aerotizen-launcher-{version}.wgt"
+    package = output / f"qtizen-launcher-{version}.wgt"
     with zipfile.ZipFile(package, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for source in sorted(files):
             # Fixed timestamps, permissions and ordering make the unsigned WGT reproducible.

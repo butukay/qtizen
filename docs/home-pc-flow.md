@@ -4,14 +4,14 @@ Both Home options run on the TV after setup and work without root.
 
 | Option                         | What happens when you press Home                                                                                |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| **Watcher (default)**          | The background service detects a return to Samsung Home and reopens AeroTizen.                                  |
-| **Native Home (experimental)** | The TV routes Home directly to AeroTizen and the watcher stops. Startup support depends on the TV and firmware. |
+| **Watcher (default)**          | The background service detects a return to Samsung Home and reopens qtizen.                                  |
+| **Native Home (experimental)** | The TV routes Home directly to qtizen and the watcher stops. Startup support depends on the TV and firmware. |
 
 ## Watcher limits
 
 - Return works from Samsung Home and Netflix on tested TVs. YouTube, Prime Video,
   Stremio, Spotify and HbbTV apps can leave the TV on Samsung Home because they
-  do not report visibility. Use **Back** or open AeroTizen from the Samsung app row.
+  do not report visibility. Use **Back** or open qtizen from the Samsung app row.
 - The watcher pauses in Live TV and YouTube. On the tested Frame, Native Home
   returned from both.
 - The watcher waits while Art Mode is active or if the TV does not report its Art
@@ -19,21 +19,21 @@ Both Home options run on the TV after setup and work without root.
 
 ## Native Home setup
 
-Install the CLI and launcher from the [Quick Start](../README.md#quick-start).
-Check your model in the [TV reports](tv-compatibility.md). Run `aerotizen --version`
-to identify your CLI. If you run from the extracted folder, use `./aerotizen` on
-macOS or Linux, or `.\aerotizen.exe` in PowerShell. Replace `TV_IP` with the TV address.
+Install the CLI and launcher from [Build and install](../README.md#build-and-install).
+Check your model in the [TV reports](tv-compatibility.md). Run `qtizen --version`
+to identify your CLI. If you run from the extracted folder, use `./qtizen` on
+macOS or Linux, or `.\qtizen.exe` in PowerShell. Replace `TV_IP` with the TV address.
 
 ### Before first launch
 
-Before you open AeroTizen, save the original Home and startup settings:
+Before you open qtizen, save the original Home and startup settings:
 
 ```sh
-aerotizen --tv TV_IP home status
-aerotizen --tv TV_IP home backup
+qtizen --tv TV_IP home status
+qtizen --tv TV_IP home backup
 ```
 
-Keep any existing valid original backup. On some TVs, opening AeroTizen changes
+Keep any existing valid original backup. On some TVs, opening qtizen changes
 only `db/appfw/booting_appid_backup` to `DclHome001.Home`. Apply accepts that
 specific difference from the saved original. A new backup requires original values.
 See [backup behaviour](home-read-only.md#backup-behavior).
@@ -45,11 +45,11 @@ keep the original file and report if the current settings differ.
 ### Apply Native Home
 
 Preview the change, then apply it. If the installed launcher's control service is
-unavailable, `home apply --yes` opens AeroTizen once and waits for its service:
+unavailable, `home apply --yes` opens qtizen once and waits for its service:
 
 ```sh
-aerotizen home apply
-aerotizen --tv TV_IP home apply --yes
+qtizen home apply
+qtizen --tv TV_IP home apply --yes
 ```
 
 The CLI validates the original backup and device before launch, then checks the
@@ -62,7 +62,7 @@ stops before Home changes and reports how to retry manually. Progress goes to
 stderr so `--json` output remains valid JSON.
 
 Automatic startup is limited to `home apply --yes`. Preview, status, and backup
-remain passive. For restore with an installed launcher, open AeroTizen first if
+remain passive. For restore with an installed launcher, open qtizen first if
 its control service is unavailable.
 
 CLI 3.0.0 sets both Home bindings and tries to assign both startup app IDs. When
@@ -70,24 +70,24 @@ both IDs match, it enables Smart Hub autostart. If startup setup fails, it keeps
 the Home bindings only if it can verify the original startup settings. Check the
 result in the CLI.
 
-For the old `--boot` workflow, see the [CLI 2.6.0 instructions](https://github.com/helalaou/AeroTizen/blob/cli-v2.6.0/README.md#choose-how-home-works).
+For the old `--boot` workflow, see the [CLI 2.6.0 instructions](https://github.com/butukay/qtizen/blob/cli-v2.6.0/README.md#choose-how-home-works).
 
 ### Verify on the TV
 
 Disconnect TV or One Connect power for 60 seconds, then restart. Check which app
 opens. Press Home from YouTube, Prime Video and Samsung Home. On the tested Frame,
-AeroTizen took about 30 seconds to appear with native startup enabled. Home from
-Art Mode opened Samsung's Art page first. A second Home press opened AeroTizen.
-Samsung Home remains available in AeroTizen Settings.
+qtizen took about 30 seconds to appear with native startup enabled. Home from
+Art Mode opened Samsung's Art page first. A second Home press opened qtizen.
+Samsung Home remains available in qtizen Settings.
 
 ## Restore and transfer to another PC
 
-Restore before uninstalling AeroTizen. The CLI uses your saved Home and startup
-settings and re-enables the watcher if AeroTizen is installed:
+Restore before uninstalling qtizen. The CLI uses your saved Home and startup
+settings and re-enables the watcher if qtizen is installed:
 
 ```sh
-aerotizen home restore                                  # offline preview
-aerotizen --tv TV_IP home restore --yes
+qtizen home restore                                  # offline preview
+qtizen --tv TV_IP home restore --yes
 ```
 
 Disconnect TV or One Connect power for 60 seconds. Reconnect it and check that
@@ -114,13 +114,13 @@ and `transactions/`. Install the updated CLI and allow that PC's IP in the TV's
 Developer Mode settings, then use the copied baseline:
 
 ```sh
-aerotizen home restore --backup /path/to/copied-folder/original-home.json
-aerotizen --tv TV_IP home restore --backup /path/to/copied-folder/original-home.json --yes
+qtizen home restore --backup /path/to/copied-folder/original-home.json
+qtizen --tv TV_IP home restore --backup /path/to/copied-folder/original-home.json --yes
 ```
 
 Receipts are read and written beside the selected baseline, including on the new
 PC. That folder must be writable. The original device and firmware checks remain
-in force. Restore re-enables the watcher if AeroTizen remains installed; no watcher
+in force. Restore re-enables the watcher if qtizen remains installed; no watcher
 is needed after uninstall. Restart the TV fully so Art reloads its original target.
 Keep the PC backup after uninstall; it is independent of app storage on the TV.
 
@@ -172,7 +172,7 @@ Codes distinguish `timeout`, `connection_error`, `http_error`, `invalid_response
 start the service, retry a write or change Home settings.
 
 `watcher.reachable: false` means a service response was not confirmed. It does not establish
-that AeroTizen was removed. A service returning an HTTP error or malformed response is
+that qtizen was removed. A service returning an HTTP error or malformed response is
 reported as reachable with an error. Installation is still checked separately, and native
 changes still require the compatible control protocol. Do not bypass these guards.
 

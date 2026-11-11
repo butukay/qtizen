@@ -50,7 +50,7 @@ for (const [build, url] of [
       };
     });
     await page.goto(url);
-    await expect(page).toHaveTitle("AeroTizen");
+    await expect(page).toHaveTitle("qtizen");
     await page.waitForFunction(() => window.inputsTest?.replies.length === 1);
     await page.evaluate(() => {
       window.inputsTest.report = {

@@ -47,7 +47,7 @@ for (const [name, url] of [
       };
     });
     await page.goto(url);
-    await expect(page).toHaveTitle("AeroTizen");
+    await expect(page).toHaveTitle("qtizen");
     await page.waitForFunction(() => window.discoveryReplies.length === 1);
     const cached = await page.evaluate(() => AeroTizen.apps.getSnapshot());
     expect(cached.ready).toBe(false);

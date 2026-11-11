@@ -1,6 +1,6 @@
 # Release process
 
-AeroTizen has two release streams in one repository:
+qtizen has two release streams in one repository:
 
 | Component | Tag | Version files | Release notes |
 |---|---|---|---|
@@ -8,8 +8,10 @@ AeroTizen has two release streams in one repository:
 | Launcher and watcher | `launcher-vX.Y.Z` | `launcher/version.txt`, `launcher/config.xml` | `launcher/CHANGELOG.md` |
 
 Release Please manages both versions from `.release-please-manifest.json`. The existing
-`CHANGELOG.md` records earlier combined history. The initial component baseline is 2.1.0.
-The first CLI with release downloads is 2.2.0; launcher metadata requires that version.
+`CHANGELOG.md` records earlier combined history. qtizen starts from the inherited
+CLI 3.0.0 and launcher 2.7.0 source versions; no qtizen binary release is published yet.
+Release Please and contributor updates are manually dispatched to keep the initial
+import from creating release or contributor PRs automatically.
 
 ## Repository setup
 
@@ -37,7 +39,7 @@ workflow files differ from the default branch, the optional token can also need
 **Workflows** write permission.
 
 The workflow runs in the repository where it is enabled. Test releases in a fork stay
-in that fork. The CLI defaults to `helalaou/AeroTizen`; use `--release-repo OWNER/REPO`
+in that fork. The CLI defaults to `butukay/qtizen`; use `--release-repo OWNER/REPO`
 to select a fork explicitly. It never selects a repository from local Git remotes.
 
 ### Squash merges and branch protection
@@ -85,9 +87,9 @@ and [required status checks](https://docs.github.com/en/repositories/configuring
 ## Normal release
 
 1. Squash-merge changes into `main` using the validated Conventional Commit PR title.
-2. Release Please opens a separate release PR for each changed component. Review its
+2. Run **Release Please** from Actions. It opens a separate release PR for each changed component. Review its
    version and notes and let CI pass.
-3. Merge the release PR. Release Please creates its tag and a **draft** GitHub release.
+3. Merge the release PR and run **Release Please** again. It creates the tag and a **draft** GitHub release.
 4. The build workflow checks out that exact commit, runs CI, builds the assets, and
    smoke-tests the CLI binaries. It publishes the release only after all required jobs
    succeed and all assets have been uploaded.
@@ -106,7 +108,7 @@ scope such as `fix(launcher):` is useful context, but paths determine component 
 The manifest key for the CLI is `cli`; existing `cli-vX.Y.Z` tags and version history
 continue to identify the same component. Its workflow outputs use the `cli--` prefix.
 The root `pyproject.toml` forwards build hooks to `cli/`, so both
-`pip install git+https://github.com/helalaou/AeroTizen` and `pip install -e '.[dev]'`
+`pip install git+https://github.com/butukay/qtizen` and `pip install -e '.[dev]'`
 keep working. `pip install ./cli` builds the same package directly. Package metadata
 and dependencies are defined in `cli/pyproject.toml`.
 
@@ -117,20 +119,20 @@ the widget version; it must not change the Tizen `required_version` attribute.
 ## Assets and installation
 
 CLI releases contain archives for Linux x64, Windows x64, macOS Apple silicon, and
-macOS Intel. Each archive contains `aerotizen` and the license.
+macOS Intel. Each archive contains `qtizen` and the license.
 Python, dependencies, and Samsung CA files are included in the executable. Each
 archive has a `.sha256` checksum file. Linux builds use Ubuntu 22.04; older systems may
 need the Python installation method. The native build jobs establish each platform's
 build and startup checks; they do not test TV hardware.
 These workflows do not apply Windows code signing or Apple notarization.
 
-The web inspector is included as `aerotizen inspect launcher` in both standalone
+The web inspector is included as `qtizen inspect launcher` in both standalone
 and Python installations. It replaces the separate `aerotizen-inspect` Python command;
 see [Working on the launcher](../CONTRIBUTING.md#working-on-the-launcher).
 
 Launcher releases contain:
 
-- `aerotizen-launcher-X.Y.Z.wgt`: deterministic, unsigned runtime files, including the watcher.
+- `qtizen-launcher-X.Y.Z.wgt`: deterministic, unsigned runtime files, including the watcher.
 - `launcher-release.json`: schema version, launcher version, minimum CLI version, app and
   package IDs, package filename, and SHA-256 digest.
 - `SHA256SUMS`: checksums for the widget and manifest.
@@ -152,12 +154,12 @@ uses the existing local signing route rather than release-manifest validation.
 
 ### Launcher updates
 
-Run `aerotizen update launcher --check` to compare the TV's installed version with
+Run `qtizen update launcher --check` to compare the TV's installed version with
 the highest stable launcher release. It validates release metadata and shows the
 minimum CLI version without downloading the WGT, reading certificates, or writing
 to the TV. Add `--release-repo OWNER/REPO` to check a fork.
 
-Run `aerotizen update launcher` to install a newer release. Current and newer
+Run `qtizen update launcher` to install a newer release. Current and newer
 installed versions are left in place. The selected release stays pinned through
 download and installation, even if another release is published during the command.
 One device session covers the inventory check, signing and installation. The update
@@ -167,11 +169,11 @@ native Home assignments.
 
 If firmware omits the installed version or reports a version that cannot be compared,
 the command reports the limitation and stops before downloading the WGT. Use
-`aerotizen install launcher` to explicitly install without that comparison, or to
+`qtizen install launcher` to explicitly install without that comparison, or to
 reinstall the current release. The selected release may be older than an unversioned
-development build. A missing launcher also needs `aerotizen install launcher`.
+development build. A missing launcher also needs `qtizen install launcher`.
 Intentional version selection remains available with
-`aerotizen install launcher --version X.Y.Z`.
+`qtizen install launcher --version X.Y.Z`.
 
 Launcher updates do not replace the CLI executable. In launcher 2.7.0, open
 **Settings → About** to see the installed version and update details.
@@ -182,13 +184,13 @@ is unavailable.
 A yellow dot on the Settings icon and the About row marks an unread update.
 Open **About** to clear the dots. The update details stay visible. The dots
 return once a newer launcher is installed and a further update is available.
-**What’s new** shows a short list from the release notes. AeroTizen saves the list
+**What’s new** shows a short list from the release notes. qtizen saves the list
 with the update check so you can read it offline.
-Install updates from your computer with `aerotizen update launcher`.
+Install updates from your computer with `qtizen update launcher`.
 
 ### CLI updates
 
-Run `aerotizen update cli --check` to compare the running CLI version with the highest
+Run `qtizen update cli --check` to compare the running CLI version with the highest
 stable `cli-vX.Y.Z` release. It reads release metadata only, ignores launcher releases,
 drafts and prereleases, and needs no TV connection or signing certificates. Use
 `--release-repo OWNER/REPO` to check a fork.
@@ -201,7 +203,7 @@ If a newer CLI exists, the check shows the matching OS/CPU archive link and the
 release page. If no archive matches, it states that limitation and links to the
 release page. Current and newer versions are left unchanged.
 
-Run `aerotizen update cli` to replace a downloaded standalone executable. The updater
+Run `qtizen update cli` to replace a downloaded standalone executable. The updater
 requires the selected archive's `.sha256` asset, validates its named checksum, and
 accepts only the executable and LICENSE as regular archive files. It rejects paths,
 links, duplicate or unexpected files, oversized packages and incomplete archives.

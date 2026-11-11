@@ -50,7 +50,7 @@ def rig(tmp_path, monkeypatch):
             assert host == "127.0.0.1" and commands == ("id",)
             assert all(client.closed for client in clients)
             # The OS lock must remain held while no raw socket is open.
-            with pytest.raises(DeviceSessionError, match="Another AeroTizen"):
+            with pytest.raises(DeviceSessionError, match="Another qtizen"):
                 DeviceSession(host, lock_dir=tmp_path).connect()
             events.append("root")
             if "root" in failures:
@@ -132,7 +132,7 @@ def test_session_connects_and_releases_a_real_protocol_connection(fake_tv, tmp_p
     tv = fake_tv({"0 getduid": "TEST-DUID\n"})
     with DeviceSession("127.0.0.1", port=tv.port, lock_dir=tmp_path).connect() as session:
         assert session.duid() == "TEST-DUID"
-        with pytest.raises(DeviceSessionError, match="Another AeroTizen"):
+        with pytest.raises(DeviceSessionError, match="Another qtizen"):
             DeviceSession("127.0.0.1", port=tv.port, lock_dir=tmp_path).connect()
 
 

@@ -288,5 +288,11 @@
   "accent.rose": "وردي",
   "accent.amber": "كهرماني",
   "accent.mint": "نعناعي",
-  "accent.default": "{{defaultTheme}}"
+  "accent.default": "{{defaultTheme}}",
+  "transitions.title": "الانتقال بين التطبيقات",
+  "transitions.none": "بلا حركة",
+  "transitions.fade": "تلاشي",
+  "transitions.standard": "افتراضي",
+  "transitions.applying": "جارٍ التطبيق…",
+  "transitions.unavailable": "تم الحفظ. التحكم في الانتقالات غير متاح حاليًا."
 }

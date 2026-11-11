@@ -73,8 +73,9 @@ function harness(preferences = {}) {
       },
     },
   };
+  const platform = createInputsPlatform(host);
   const service = createInputsService({
-    platform: createInputsPlatform(host),
+    platform,
     settings,
     timers: {
       setInterval: (fn) => {
@@ -93,7 +94,21 @@ function harness(preferences = {}) {
     translate: translateEnglish,
     toast: (message) => toasts.push(message),
   });
-  return { service, settings, host, state, pending, native, toasts, events, visibility, watches, intervals, timeouts };
+  return {
+    service,
+    platform,
+    settings,
+    host,
+    state,
+    pending,
+    native,
+    toasts,
+    events,
+    visibility,
+    watches,
+    intervals,
+    timeouts,
+  };
 }
 
 test("inputs publish immutable view data, retain unchanged records and keep native objects private", () => {
@@ -260,4 +275,92 @@ test("Home return closes only active playback and ordinary appcontrol requests l
   h.state.hidden = false;
   [...h.visibility][0]();
   assert.equal(h.service.getSnapshot().playback, "idle");
+});
+
+test("selecting a sleeping HDMI wakes only that port before handing off to the native viewer", () => {
+  const h = harness({ hdmiNativeViewer: true });
+  const source = { type: "HDMI", number: 1, editName: "Apple TV" };
+  h.state.report = { disconnected: [source] };
+  let woke;
+  h.platform.wake = (value, done) => {
+    h.native.push("wake:" + value.number);
+    woke = done;
+    return () => {};
+  };
+  h.host.AeroTizen.homewatch.openNativeViewer = (value) => {
+    h.native.push(value);
+    return true;
+  };
+  h.service.load();
+  assert.deepEqual(h.native, [], "discovery must not wake sleeping devices");
+  h.service.show(source);
+  assert.deepEqual(h.native, ["wake:1"]);
+  woke();
+  assert.equal(h.native[1], source, "native handoff must retain the original TV source object");
+  assert.deepEqual(h.toasts, []);
+});
+
+for (const action of ["select another source", "leave", "dispose", "Home", "hide and return"]) {
+  test(`a pending HDMI wake cannot steal focus after ${action}`, () => {
+    const h = harness();
+    h.state.report = {
+      disconnected: [{ type: "HDMI", number: 1, editName: "Apple TV" }],
+      connected: [{ type: "TV", number: 1 }],
+    };
+    let woke;
+    let cancelled = 0;
+    h.platform.wake = (_, done) => {
+      woke = done;
+      return () => cancelled++;
+    };
+    h.service.start();
+    h.service.show({ type: "HDMI", number: 1, editName: "Apple TV" });
+    if (action === "select another source") h.service.show({ type: "TV", number: 1 });
+    else if (action === "leave") h.service.leave();
+    else if (action === "Home") h.events.get("appcontrol")();
+    else if (action === "hide and return") {
+      h.state.hidden = true;
+      [...h.visibility][0]();
+      h.state.hidden = false;
+      [...h.visibility][0]();
+    } else h.service.dispose();
+    const before = [...h.native];
+    woke();
+    assert.deepEqual(h.native, before);
+    assert.equal(cancelled, 1);
+  });
+}
+
+test("an awake HDMI opens immediately without a wake command", () => {
+  const h = harness();
+  h.platform.wake = () => assert.fail("awake devices should not receive a wake request");
+  h.service.show({ type: "HDMI", number: 1, editName: "Apple TV" });
+  assert.equal(h.service.getSnapshot().playback, "playing");
+});
+
+test("embedded HDMI waits for the waking device signal, then still detects a later disconnect", () => {
+  const h = harness();
+  h.state.report = { disconnected: [{ type: "HDMI", number: 1, editName: "Apple TV" }] };
+  h.service.show({ type: "HDMI", number: 1, editName: "Apple TV" });
+  assert.equal(h.service.getSnapshot().playback, "opening");
+  h.service.load();
+  assert.equal(h.service.getSnapshot().playback, "opening");
+  assert.deepEqual(h.toasts, []);
+  h.state.report = { connected: [{ type: "HDMI", number: 1, editName: "Apple TV" }] };
+  h.service.load();
+  assert.equal(h.service.getSnapshot().playback, "playing");
+  assert.equal(h.timeouts.size, 0);
+  h.state.report = { disconnected: [{ type: "HDMI", number: 1, editName: "Apple TV" }] };
+  h.service.load();
+  assert.equal(h.service.getSnapshot().playback, "idle");
+});
+
+test("an HDMI device that never produces video times out and restores Home", () => {
+  const h = harness();
+  h.state.report = { disconnected: [{ type: "HDMI", number: 1, editName: "Apple TV" }] };
+  h.service.show({ type: "HDMI", number: 1, editName: "Apple TV" });
+  [...h.timeouts.values()][0]();
+  assert.equal(h.service.getSnapshot().playback, "idle");
+  assert.equal(h.native.at(-1), "hide");
+  assert.equal(h.toasts.length, 1);
 });

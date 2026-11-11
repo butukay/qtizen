@@ -308,9 +308,7 @@ def setup(host, *, state_dir=None, receipt_path=None, runtime=None, release=None
                 raise DeviceSessionError("TV returned an invalid certificate identity")
             certificates = Path(state_dir or remote.CONFIG_DIR) / "certs" / duid
             if not (certificates / "distributor.p12").is_file():
-                raise DeviceSessionError(
-                    "Create signing certificates first: aerotizen --tv " + host + " certs"
-                )
+                raise DeviceSessionError("Create signing certificates first: qtizen --tv " + host + " certs")
             installation = secrets.token_hex(16)
             receipt = {
                 "schema_version": 1,

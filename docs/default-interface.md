@@ -1,11 +1,11 @@
 # Default interface
 
-This personal fork has one interface with Light and Dark appearance modes.
+qtizen has one interface with Light and Dark appearance modes.
 The old Classic, Glass and optional Nord interfaces are no longer shipped.
 
-![Default interface with sample apps and inputs](screenshots/default.png)
+![Default interface on Samsung S95F](screenshots/default.png)
 
-_Browser preview with sample apps and inputs, not a capture from a TV._
+_Actual 1920×1080 capture from Samsung QE65S95FAUXCE, with the widget disabled._
 
 The screen uses true black, flat blue-grey cards, a thin cyan focus outline and
 Inter typography. Settings is hidden at the top right until remote focus reaches it. Press Up from

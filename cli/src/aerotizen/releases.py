@@ -20,7 +20,7 @@ from pathlib import Path, PurePosixPath
 
 from aerotizen import __version__
 
-DEFAULT_REPOSITORY = "helalaou/AeroTizen"
+DEFAULT_REPOSITORY = "butukay/qtizen"
 APP_ID = "DclHome001.Home"
 PACKAGE_ID = "DclHome001"
 MAX_JSON_BYTES = 2 * 1024 * 1024
@@ -57,14 +57,14 @@ class LauncherRelease:
     def download(self, destination):
         if version_key(__version__) < version_key(self.min_cli_version):
             raise ReleaseError(
-                f"Launcher {self.version} needs AeroTizen CLI {self.min_cli_version} or newer. "
+                f"Launcher {self.version} needs qtizen CLI {self.min_cli_version} or newer. "
                 f"Your CLI is {__version__}; update it first."
             )
         data = _read_url(self.asset_url, MAX_PACKAGE_BYTES)
         if hashlib.sha256(data).hexdigest() != self.sha256:
             raise ReleaseError("Launcher checksum mismatch. The package was not installed; try again later.")
         _check_package(data, self.version)
-        path = Path(destination) / f"aerotizen-launcher-{self.version}.wgt"
+        path = Path(destination) / f"qtizen-launcher-{self.version}.wgt"
         path.write_bytes(data)
         return DownloadedLauncher(path=path, version=self.version)
 
@@ -131,7 +131,7 @@ def _release(repository, version, component="launcher"):
     if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) or any(
         part in (".", "..") for part in repository.split("/")
     ):
-        raise ReleaseError("Release repository must be OWNER/REPO, for example helalaou/AeroTizen.")
+        raise ReleaseError("Release repository must be OWNER/REPO, for example butukay/qtizen.")
     api = f"https://api.github.com/repos/{repository}/releases"
     prefix = f"{component}-v"
     label = "CLI" if component == "cli" else "launcher"
@@ -217,7 +217,7 @@ def resolve_cli(*, repository=DEFAULT_REPOSITORY, version=None):
     checksum_url = None
     if system and architecture:
         suffix = "zip" if system == "windows" else "tar.gz"
-        name = f"aerotizen-{version}-{system}-{architecture}.{suffix}"
+        name = f"qtizen-{version}-{system}-{architecture}.{suffix}"
         if any(isinstance(asset, dict) and asset.get("name") == name for asset in assets):
             download_url = _asset_url(release, repository, name)
             if any(isinstance(asset, dict) and asset.get("name") == name + ".sha256" for asset in assets):
@@ -295,7 +295,7 @@ def resolve_launcher(*, version=None, repository=DEFAULT_REPOSITORY):
     """Validate release metadata without downloading the widget or requiring a newer CLI."""
     release, version = _release(repository, version)
     manifest = _json_url(_asset_url(release, repository, "launcher-release.json"))
-    name = f"aerotizen-launcher-{version}.wgt"
+    name = f"qtizen-launcher-{version}.wgt"
     if (
         not isinstance(manifest, dict)
         or type(manifest.get("schema_version")) is not int

@@ -15,6 +15,8 @@ export interface WeatherLocation {
   readonly longitude: number;
   readonly name: string;
 }
+export const APP_TRANSITIONS = ["none", "fade", "standard"] as const;
+export type AppTransition = (typeof APP_TRANSITIONS)[number];
 export type AppearanceMode = "light" | "dark";
 export type AccentColour = "ice" | "blue" | "violet" | "rose" | "amber" | "mint" | "white" | "black";
 export const HOME_WIDGETS = ["solar", "moon", "off"] as const;
@@ -23,6 +25,7 @@ export type HomeWidget = (typeof HOME_WIDGETS)[number];
 export interface SettingsValues {
   accentColour: AccentColour;
   appearanceMode: AppearanceMode;
+  appTransition: AppTransition;
   background: string;
   continueWatching: boolean;
   continueWatchingApps: string[];

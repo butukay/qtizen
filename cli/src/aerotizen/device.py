@@ -25,7 +25,7 @@ class RootProvider(Protocol):
 
 
 class DeviceSession:
-    """Serialize AeroTizen access to a TV across threads and CLI processes.
+    """Serialize qtizen access to a TV across threads and CLI processes.
 
     A session holds its host lock until close, including while the raw connection
     is released for an external provider. Other SDK tools do not honor this lock.
@@ -112,7 +112,7 @@ class DeviceSession:
         except OSError as exc:
             handle.close()
             raise DeviceSessionError(
-                f"Another AeroTizen session owns {self.host}:{self.port}; close it and retry."
+                f"Another qtizen session owns {self.host}:{self.port}; close it and retry."
             ) from exc
         self._lock_file = handle
 

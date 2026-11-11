@@ -1,18 +1,23 @@
-# Update or remove AeroTizen
+# Update or remove qtizen
 
-Start with the [Quick Start](../README.md#quick-start) if this is your first install.
-Run commands from the extracted CLI folder. The examples use macOS and Linux
-syntax. In Windows PowerShell, use `.\aerotizen.exe` in place of `./aerotizen`.
+Start with [Build and install](../README.md#build-and-install) if this is your first install.
+qtizen currently ships source only. Activate its Python environment and use `qtizen`
+instead of `./qtizen` below. Until binary releases are published, update your source,
+rebuild and run `qtizen --tv TV_IP install ./dist/launcher` with the same signing profile.
+
+The release commands below describe future standalone builds. Run them from the
+extracted CLI folder. The examples use macOS and Linux
+syntax. In Windows PowerShell, use `.\qtizen.exe` in place of `./qtizen`.
 Replace `TV_IP` with the TV's IP address.
 
-Check the CLI version with `./aerotizen --version`. In launcher 2.7.0, open
+Check the CLI version with `./qtizen --version`. In launcher 2.7.0, open
 **Settings → About** to see the installed version and available updates.
 
 ## Update the launcher on the TV
 
 ```sh
-./aerotizen --tv TV_IP update launcher --check
-./aerotizen --tv TV_IP update launcher
+./qtizen --tv TV_IP update launcher --check
+./qtizen --tv TV_IP update launcher
 ```
 
 The check shows the installed version, latest stable launcher, and minimum CLI
@@ -20,16 +25,16 @@ version. The update uses the saved signing certificates and keeps launcher setti
 It leaves current and newer versions in place.
 
 If the TV omits the installed version, the update stops. To install the latest stable
-launcher without a version comparison, run `./aerotizen --tv TV_IP install launcher`.
+launcher without a version comparison, run `./qtizen --tv TV_IP install launcher`.
 This can replace a newer development build. To choose a release, add `--version X.Y.Z`
 and replace `X.Y.Z` with its version.
 
 ## Update the CLI on your computer
 
 ```sh
-./aerotizen update cli --check
-./aerotizen update cli
-./aerotizen --version
+./qtizen update cli --check
+./qtizen update cli
+./qtizen --version
 ```
 
 These commands work without a TV connection. The updater verifies the download
@@ -46,25 +51,25 @@ If you enabled Native Home, [restore the original Home settings](home-pc-flow.md
 and power-cycle the TV first. Then run:
 
 ```sh
-./aerotizen --tv TV_IP uninstall launcher
+./qtizen --tv TV_IP uninstall launcher
 ```
 
-The CLI asks for confirmation. Uninstall removes AeroTizen's settings from the TV.
+The CLI asks for confirmation. Uninstall removes qtizen's settings from the TV.
 Keep your PC signing certificates and the complete Home backup folder.
 
 ## List or remove other TV apps
 
-Run `./aerotizen --tv TV_IP apps` to list apps. Run `./aerotizen --tv TV_IP debloat`
+Run `./qtizen --tv TV_IP apps` to list apps. Run `./qtizen --tv TV_IP debloat`
 to select packages and review the list before confirming removal. See
 [TV limits](tv-compatibility.md#tv-limits) for Samsung's restrictions.
 
 ## Other installation methods
 
-- Add the extracted folder to `PATH` to run `aerotizen` from any directory.
+- Add the extracted folder to `PATH` to run `qtizen` from any directory.
 - With Python 3.10 or newer, you can install the CLI from the repository with
-  `pip install git+https://github.com/helalaou/AeroTizen`. This follows `main`.
+  `pip install git+https://github.com/butukay/qtizen`. This follows `main`.
   See [development setup](../CONTRIBUTING.md#development-setup) for the native helpers.
-- To install a local widget, run `./aerotizen --tv TV_IP install ./app.wgt`.
+- To install a local widget, run `./qtizen --tv TV_IP install ./app.wgt`.
 
 ## Test a local build
 
@@ -74,7 +79,7 @@ build its native helpers. Run `npm run build` in that checkout, then install the
 local launcher with the CLI from your development environment:
 
 ```sh
-aerotizen --tv TV_IP install ./dist/launcher
+qtizen --tv TV_IP install ./dist/launcher
 ```
 
 Use the explicit path for release testing. `install launcher` selects the latest

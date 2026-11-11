@@ -328,8 +328,8 @@ def validate_backup(document, identity):
             item["value"] == releases.APP_ID for item in home["settings"].values()
         ):
             raise ValueError(
-                "AeroTizen is already present in the Home/startup baseline. "
-                "Capture the original values before opening AeroTizen; keep any existing original backup."
+                "qtizen is already present in the Home/startup baseline. "
+                "Capture the original values before opening qtizen; keep any existing original backup."
             )
         evidence = document["evidence"]
         required = ["authenticated", "query_staging_cleaned"]

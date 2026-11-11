@@ -525,7 +525,6 @@ SOURCE_FILES = {
     "config.js",
     "index.html",
     "home_control.py",
-    "fireplace.js",
     "home-mode.js",
     "cdp.py",
     "photo-weather.js",

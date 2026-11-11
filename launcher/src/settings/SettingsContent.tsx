@@ -64,7 +64,13 @@ export const SettingsContent = ({
         <SettingsDrawer
           panes={{
             appearance: (
-              <AppearanceSettings settings={settings} actions={actions} clock={services.clock} openedAt={openedAt} />
+              <AppearanceSettings
+                settings={settings}
+                actions={actions}
+                clock={services.clock}
+                openedAt={openedAt}
+                transitions={services.transitions}
+              />
             ),
             apps: (
               <>
