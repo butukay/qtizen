@@ -70,6 +70,28 @@ test("the header has only Settings; section rules, Live caption and new sizes fi
   expect((await page.locator("#inputs").boundingBox()).y + 86).toBeLessThanOrEqual(984);
 });
 
+test("smaller Scroll sizes bring Inputs closer to the app row", async ({ page }) => {
+  await prepare(page);
+  const gap = () =>
+    page.evaluate(() => {
+      const app = document.querySelector("#grid > [data-id]").getBoundingClientRect();
+      const inputs = document.querySelector('[data-home-section="inputs"]').getBoundingClientRect();
+      return inputs.top - app.bottom;
+    });
+  const large = await gap();
+
+  for (const { columns, reduction } of [
+    { columns: 4, reduction: 28 },
+    { columns: 5, reduction: 56 },
+  ]) {
+    await openSettings(page);
+    await openCategory(page, "appearance");
+    await page.locator(`[data-key="home-card-columns:${columns}"]`).click();
+    await closeSettings(page);
+    expect(await gap()).toBe(large - reduction);
+  }
+});
+
 test("remote navigation reaches Settings, all favorites and inputs without removed controls", async ({ page }) => {
   await prepare(page);
   await page.keyboard.press("ArrowUp");

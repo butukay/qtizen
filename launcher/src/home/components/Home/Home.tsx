@@ -25,10 +25,11 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
     (id) => id === env.runtime.config.FIREPLACE_ID || !ready || apps.some((app) => app.id === id),
   );
   const showContinueWatching = settings.continueWatching && items.length > 0;
+  const columns = env.columns(settings);
   const dockInputs =
     inputs.length > 0 &&
     !showContinueWatching &&
-    (settings.homeAppLayout === "scroll" || visibleHome.length <= env.columns(settings));
+    (settings.homeAppLayout === "scroll" || visibleHome.length <= columns);
   useLayoutEffect(
     () => env.bridge.focus(),
     [
@@ -58,7 +59,12 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
               ref={env.rows}
               style={{ "--home-offset": -scroll + "px" }}
             >
-              <div class={styles.page} data-home-page data-docked={String(dockInputs)}>
+              <div
+                class={styles.page}
+                data-home-page
+                data-docked={String(dockInputs)}
+                data-scroll-columns={settings.homeAppLayout === "scroll" ? columns : undefined}
+              >
                 <HomeOverview env={env} active={active} />
                 <div class={styles.favorites} data-favorites-section>
                   <HomeSectionHeading title={t("home.homeApps")} />
