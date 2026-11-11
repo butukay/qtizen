@@ -10,7 +10,7 @@ export const InputDock = ({ env, inputs }: { env: HomeEnvironment; inputs: reado
   const { t } = useTranslation();
   return (
     <section id="inputs-section" data-home-section="inputs" hidden={!inputs.length}>
-      <HomeSectionHeading title={t("common.inputs")} />
+      <HomeSectionHeading title={t("home.sources")} />
       <div id="inputs" class={styles.dock} data-input-dock>
         {inputs.map((source) => (
           <InputCard key={env.runtime.inputs.portName(source)} env={env} source={source} />

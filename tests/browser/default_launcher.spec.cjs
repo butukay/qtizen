@@ -53,12 +53,11 @@ test("the header has only Settings; section rules, Live caption and new sizes fi
   await expect(page.locator('[data-home-header] [role="button"]')).toHaveCount(1);
   await expect(page.locator("#home-tab, #apps-tab, #samsung-home-shortcut, [data-header-status]")).toHaveCount(0);
   await expect(page.locator("[data-home-overview]")).not.toContainText(/Home|~/);
-  await expect(page.getByRole("heading", { name: "Favorites", exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Inputs", exact: true })).toBeVisible();
-  for (const title of ["Favorites", "Inputs"])
-    await expect(page.getByRole("heading", { name: title, exact: true }).locator('[aria-hidden="true"]')).toHaveCount(
-      1,
-    );
+  for (const title of ["Applications", "Sources"]) {
+    const heading = page.getByRole("heading", { name: title, exact: true });
+    await expect(heading).toBeVisible();
+    await expect(heading.locator('[aria-hidden="true"]')).toHaveCount(1);
+  }
   const television = page.locator("#inputs").getByRole("button", { name: "TV", exact: true });
   await expect(television.locator('[data-input-part="subtitle"]')).toHaveText("Live");
   await expect(television.locator('[data-input-part="subtitle"]')).toHaveCSS("font-size", "15px");
