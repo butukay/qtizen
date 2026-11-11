@@ -12,7 +12,7 @@ export const PaletteSettings = ({ settings, actions }: SettingsSectionProps) => 
   return (
     <SettingsSection title={t("appearance.accent")}>
       <ControlGroup id="accent-colours">
-        {APPEARANCE_PALETTES.map((palette) => (
+        {APPEARANCE_PALETTES[settings.appearanceMode].map((palette) => (
           <ChoiceOption
             key={palette.value}
             id={"accent:" + palette.value}

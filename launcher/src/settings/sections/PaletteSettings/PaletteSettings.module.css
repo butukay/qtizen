@@ -1,7 +1,6 @@
 .swatch {
   display: inline-block;
   background: var(--palette-swatch);
-  border: 1px solid var(--palette-swatch-border);
   width: 14px;
   height: 14px;
   flex: 0 0 14px;

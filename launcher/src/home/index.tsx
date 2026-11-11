@@ -24,6 +24,7 @@ export const mountHome = (
   // Apply the shell appearance before any Home focus geometry is measured.
   const syncShell = () => {
     const values = settings.getSnapshot();
+    document.documentElement.setAttribute("data-appearance", values.appearanceMode);
     document.documentElement.setAttribute("data-palette", values.accentColour);
     document.documentElement.setAttribute("data-theme", "default");
     document.documentElement.setAttribute("data-performance-mode", String(values.performanceMode));
@@ -61,6 +62,7 @@ export const mountHome = (
     render(null, mount);
     inventory.dispose();
     unsubscribeShell();
+    document.documentElement.removeAttribute("data-appearance");
     document.documentElement.removeAttribute("data-palette");
     document.documentElement.removeAttribute("data-theme");
     document.documentElement.removeAttribute("data-performance-mode");

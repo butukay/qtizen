@@ -275,12 +275,15 @@
   "weather.useAutomatic": "Определять автоматически",
   "weather.automaticHint": "Использовать приблизительное место по вашему интернет-адресу.",
   "weather.searchHelp": "Найдите город или почтовый индекс и выберите результат.",
-  "appearance.accent": "Цветовая тема",
+  "appearance.mode": "Внешний вид",
+  "appearance.light": "Светлый",
+  "appearance.dark": "Тёмный",
+  "appearance.accent": "Акцент",
   "accent.ice": "Лёд",
   "accent.blue": "Синий",
   "accent.violet": "Фиолетовый",
   "accent.rose": "Розовый",
   "accent.amber": "Янтарный",
   "accent.mint": "Мятный",
-  "accent.white": "Белый"
+  "accent.default": "{{defaultTheme}}"
 }

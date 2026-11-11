@@ -257,6 +257,16 @@ test("accent colours default, validate and persist without changing favorites", 
     assert.equal(loadSettings(store).settings.getSnapshot().accentColour, colour);
     assert.deepEqual(settings.getSnapshot().home, ["video.app"]);
   }
+  assert.equal(settings.getSnapshot().appearanceMode, "dark");
+  settings.update({ appearanceMode: "light" });
+  assert.equal(settings.getSnapshot().accentColour, "black");
+  assert.equal(loadSettings(store).settings.getSnapshot().appearanceMode, "light");
+  settings.update({ appearanceMode: "dark" });
+  assert.equal(settings.getSnapshot().accentColour, "white");
+
+  const legacyWhite = loadSettings({ [key]: JSON.stringify({ accentColour: "white" }) }).settings.getSnapshot();
+  assert.equal(legacyWhite.appearanceMode, "light");
+  assert.equal(legacyWhite.accentColour, "black");
   for (const value of ["invalid", "#ff0000", null, true, {}]) {
     const invalid = loadSettings({ [key]: JSON.stringify({ accentColour: value }) });
     assert.equal(invalid.settings.getSnapshot().accentColour, "ice");

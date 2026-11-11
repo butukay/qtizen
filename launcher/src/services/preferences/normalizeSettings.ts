@@ -1,7 +1,7 @@
 import { normalizeColour } from "../../backgrounds/colours";
 import { normalizeGradient } from "../../backgrounds/gradients";
 import type { SettingsDefaults, SettingsPreferences, WeatherLocation } from "../../contracts/preferences";
-import { APPEARANCE_PALETTES } from "../../shared/appearance";
+import { ACCENT_IDS, NEUTRAL_ACCENTS } from "../../shared/appearance";
 
 const record = (value: unknown): Record<string, unknown> =>
   value !== null && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
@@ -58,12 +58,11 @@ export const normalizeSettings = (
   const columns = data.homeCardColumns;
   const home = data.home;
   const validHome = Array.isArray(home) ? ids(home) : defaults.home;
+  const appearanceMode = choice(data.appearanceMode, ["light", "dark"], defaults.appearanceMode);
+  const accent = choice(data.accentColour, ACCENT_IDS, defaults.accentColour);
   return {
-    accentColour: choice(
-      data.accentColour,
-      APPEARANCE_PALETTES.map((palette) => palette.value),
-      defaults.accentColour,
-    ),
+    appearanceMode,
+    accentColour: accent === "white" || accent === "black" ? NEUTRAL_ACCENTS[appearanceMode].value : accent,
     home: home === null ? null : validHome,
     performanceMode: boolean(data.performanceMode, defaults.performanceMode),
     homeCardColumns: typeof columns === "number" && [3, 4, 5].includes(columns) ? columns : defaults.homeCardColumns,

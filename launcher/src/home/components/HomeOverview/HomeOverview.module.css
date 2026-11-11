@@ -22,7 +22,7 @@
   white-space: nowrap;
 }
 .colon {
-  color: var(--focus);
+  color: var(--home-accent);
   margin: 0 2px;
 }
 .period {

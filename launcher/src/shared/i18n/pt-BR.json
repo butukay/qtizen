@@ -275,12 +275,15 @@
   "weather.useAutomatic": "Localização automática",
   "weather.automaticHint": "Usa uma localização aproximada obtida pelo seu endereço de internet.",
   "weather.searchHelp": "Busque uma cidade ou um código postal e selecione um resultado.",
-  "appearance.accent": "Tema de cores",
+  "appearance.mode": "Aparência",
+  "appearance.light": "Claro",
+  "appearance.dark": "Escuro",
+  "appearance.accent": "Destaque",
   "accent.ice": "Gelo",
   "accent.blue": "Azul",
   "accent.violet": "Violeta",
   "accent.rose": "Rosa",
   "accent.amber": "Âmbar",
   "accent.mint": "Menta",
-  "accent.white": "Branco"
+  "accent.default": "{{defaultTheme}}"
 }

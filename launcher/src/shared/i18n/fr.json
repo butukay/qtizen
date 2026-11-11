@@ -275,12 +275,15 @@
   "weather.useAutomatic": "Localisation automatique",
   "weather.automaticHint": "Utiliser un lieu approximatif à partir de votre adresse Internet.",
   "weather.searchHelp": "Recherchez une ville ou un code postal, puis sélectionnez un résultat.",
-  "appearance.accent": "Palette de couleurs",
+  "appearance.mode": "Apparence",
+  "appearance.light": "Clair",
+  "appearance.dark": "Sombre",
+  "appearance.accent": "Accent",
   "accent.ice": "Glace",
   "accent.blue": "Bleu",
   "accent.violet": "Violet",
   "accent.rose": "Rose",
   "accent.amber": "Ambre",
   "accent.mint": "Menthe",
-  "accent.white": "Blanc"
+  "accent.default": "{{defaultTheme}}"
 }

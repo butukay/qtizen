@@ -7,6 +7,11 @@ import type { SettingsSectionProps } from "../types";
 import { ClockSettings } from "./ClockSettings";
 import { PaletteSettings } from "./PaletteSettings/PaletteSettings";
 
+const APPEARANCE_MODES = [
+  { value: "light", labelKey: "appearance.light" },
+  { value: "dark", labelKey: "appearance.dark" },
+] as const;
+
 const HOME_CARD_COLUMNS_OPTIONS = [
   { value: "5", labelKey: "appearance.small" },
   { value: "4", labelKey: "appearance.medium" },
@@ -31,6 +36,16 @@ export const AppearanceSettings = ({ settings, actions, clock, openedAt }: Props
   const { t } = useTranslation();
   return (
     <>
+      <SettingsSection title={t("appearance.mode")}>
+        <ChoiceGroup
+          id="appearance-mode"
+          label={t("appearance.mode")}
+          value={settings.appearanceMode}
+          options={APPEARANCE_MODES}
+          onSelect={actions.setAppearanceMode}
+        />
+      </SettingsSection>
+      <PaletteSettings settings={settings} actions={actions} />
       <SettingsSection title={t("appearance.size")}>
         <ChoiceGroup
           id="home-card-columns"
@@ -49,7 +64,6 @@ export const AppearanceSettings = ({ settings, actions, clock, openedAt }: Props
           onSelect={actions.setHomeAppLayout}
         />
       </SettingsSection>
-      <PaletteSettings settings={settings} actions={actions} />
       <ClockSettings settings={settings} actions={actions} clock={clock} openedAt={openedAt} />
       <SettingsSection title={t("appearance.performanceMode")} description={t("appearance.performanceHint")}>
         <ChoiceGroup

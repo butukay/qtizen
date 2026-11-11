@@ -275,12 +275,15 @@
   "weather.useAutomatic": "Use automatic location",
   "weather.automaticHint": "Use an approximate location from your internet address.",
   "weather.searchHelp": "Search for a town, city or postcode, then select a result.",
-  "appearance.accent": "Colour theme",
+  "appearance.mode": "Appearance",
+  "appearance.light": "Light",
+  "appearance.dark": "Dark",
+  "appearance.accent": "Accent",
   "accent.ice": "Ice",
   "accent.blue": "Blue",
   "accent.violet": "Violet",
   "accent.rose": "Rose",
   "accent.amber": "Amber",
   "accent.mint": "Mint",
-  "accent.white": "White"
+  "accent.default": "{{defaultTheme}}"
 }

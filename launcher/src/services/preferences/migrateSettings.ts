@@ -9,6 +9,11 @@ export const migrateSettings = (value: unknown): Record<string, unknown> => {
       ? Number(saved.homeCardColumns)
       : NaN;
   const migrated = { ...saved };
+  // White used to be the complete light palette.
+  if (!("appearanceMode" in saved) && saved.accentColour === "white") {
+    migrated.appearanceMode = "light";
+    migrated.accentColour = "black";
+  }
   if (!saved.home && saved.favorites) {
     migrated.home = saved.favorites;
   }

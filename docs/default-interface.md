@@ -1,6 +1,6 @@
 # Default interface
 
-This personal fork has one **Default** interface. There is no appearance switch.
+This personal fork has one interface with Light and Dark appearance modes.
 The old Classic, Glass and optional Nord interfaces are no longer shipped.
 
 ![Default interface with sample apps and inputs](screenshots/default.png)
@@ -49,11 +49,13 @@ Install updates with the existing signing profile and keep the `DclHome001.Home`
 identity so the TV's Home and startup assignments remain valid.
 
 Settings uses this order: Appearance, Backgrounds, Applications, Weather, Inputs,
-Language and About. Appearance includes app layout, seven colour palettes, time/date
-controls and Performance mode. Background choices start with Solid colors and end
-with Weather photos. Applications and Continue Watching providers use full-width
-rows with compact logos and inline selection marks. The sidebar footer has no
-remote-button help. Existing app IDs, saved favorites and input names are unchanged.
+Language and About. Appearance starts with Light/Dark and Accent. Default is the
+first accent and uses white in Dark mode and black in Light mode. App layout,
+time/date controls and Performance mode follow. Background choices start with
+Solid colors and end with Weather photos. Applications and Continue Watching
+providers use full-width rows with compact logos and inline selection marks. The
+sidebar footer has no remote-button help. Existing app IDs, saved favorites and
+input names are unchanged.
 
 Each palette colours the application cards, input rows, Settings surfaces, text and
 focus marks. The black canvas, selected wallpaper and solar media keep their own
