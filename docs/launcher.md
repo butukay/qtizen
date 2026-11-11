@@ -32,7 +32,7 @@ These browser previews use sample data.
 - **Language.** Choose the language for AeroTizen.
 
 You can open the Samsung app store or switch to Samsung Home from Settings.
-The app list can include HbbTV apps such as BBC iPlayer and an optional Fireplace tile.
+The app list can include HbbTV apps such as BBC iPlayer.
 See [Home button and startup](home-pc-flow.md) for remote button and Art Mode behaviour.
 
 ## Continue Watching

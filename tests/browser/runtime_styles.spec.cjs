@@ -16,24 +16,18 @@ for (const [build, url] of [
       await page.addInitScript((glassSettings) => {
         localStorage.setItem(
           "aerotizen.settings.v1",
-          JSON.stringify({ glassSettings, home: ["__fire"], background: "black", showWeather: false, language: "en" }),
+          JSON.stringify({ glassSettings, home: ["demo0"], background: "black", showWeather: false, language: "en" }),
         );
       }, glassSettings);
       await page.clock.install();
       await page.emulateMedia({ reducedMotion: "no-preference" });
       await page.goto(url);
       await expect(page).toHaveTitle("AeroTizen");
-      const tile = page.getByRole("button", { name: "Fireplace", exact: true });
+      const tile = page.locator('#grid > [data-id="demo0"]');
       await expect(tile).toBeFocused();
-      await page.keyboard.press("Enter");
-      await expect(page.locator("#fireplace")).toBeVisible();
-      const volume = page.locator("#fire-volume");
-      await expect(volume).toHaveCSS("transition-duration", "0.2s");
+      await expect(tile).toHaveCSS("transition-duration", "0.15s");
       await page.emulateMedia({ reducedMotion: "reduce" });
-      await expect(volume).toHaveCSS("transition-duration", "0s");
-      await page.keyboard.press("ArrowUp");
-      await expect(volume).toHaveText("Volume 7");
-      await expect(volume).toHaveCSS("opacity", "1");
+      await expect(tile).toHaveCSS("transition-duration", "0s");
       await page.evaluate(() => AeroTizen.toast("Overlay message"));
       const toast = page.locator("#toast");
       await expect(toast).toHaveText("Overlay message");
@@ -44,13 +38,11 @@ for (const [build, url] of [
         }),
       ).toBe(true);
       await page.clock.runFor(1600);
-      await expect(volume).toHaveCSS("opacity", "0");
       await expect(toast).toBeVisible();
       await page.clock.runFor(1000);
       await expect(toast).toBeHidden();
       await page.emulateMedia({ reducedMotion: "no-preference" });
-      await expect(volume).toHaveCSS("transition-duration", "0.2s");
-      await page.keyboard.press("Escape");
+      await expect(tile).toHaveCSS("transition-duration", "0.15s");
       await expect(tile).toBeFocused();
       await openSettings(page);
       const arrow = page.locator('[data-key="section:appearance"] .lucide-chevron-right');

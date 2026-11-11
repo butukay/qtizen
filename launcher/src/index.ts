@@ -10,7 +10,6 @@ import type { InputsService } from "./contracts/inputs";
 import type { ClockService } from "./contracts/launcher";
 import type { SettingsService } from "./contracts/preferences";
 import type { NetworkService, WeatherService } from "./contracts/status";
-import { mountFireplace } from "./fireplace/mountFireplace";
 import { mountHome } from "./home/index";
 import { mountInputPlayback } from "./inputs/mountInputPlayback";
 import { createAppsPlatform } from "./platform/tizen/createAppsPlatform";
@@ -36,17 +35,8 @@ const home = document.getElementById("home-root");
 const settingsHost = document.getElementById("settings-root");
 const toastHost = document.getElementById("toast-root");
 const weatherPhotoHost = document.getElementById("weather-photo-root");
-const fireplaceHost = document.getElementById("fireplace-root");
 const inputPlaybackHost = document.getElementById("input-playback-root");
-if (
-  !backgroundHost ||
-  !home ||
-  !settingsHost ||
-  !toastHost ||
-  !weatherPhotoHost ||
-  !fireplaceHost ||
-  !inputPlaybackHost
-) {
+if (!backgroundHost || !home || !settingsHost || !toastHost || !weatherPhotoHost || !inputPlaybackHost) {
   throw new Error("Launcher mount points are missing.");
 }
 const runtime = window.AeroTizen;
@@ -159,9 +149,6 @@ const backgrounds = mountBackgrounds(
 window.Backgrounds = backgrounds.bridge;
 const platform = { backgrounds: backgrounds.bridge, previewBackground: backgrounds.previewBackground };
 const toast = mountToast(toastHost);
-const fireplace = mountFireplace(fireplaceHost, (key, values) => runtime.translate(key, values));
-const previousFireplace = window.Fireplace;
-window.Fireplace = fireplace.bridge;
 const previousCommands = {
   applyBackground: runtime.applyBackground,
   toast: runtime.toast,
@@ -178,8 +165,6 @@ const dispose = () => {
   disposeScreenSaver();
   disposeInputPlayback();
   Object.assign(runtime, previousCommands);
-  window.Fireplace = previousFireplace;
-  fireplace.dispose();
   toast.dispose();
   backgrounds.dispose();
 };

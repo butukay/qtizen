@@ -198,7 +198,7 @@ export const createAppsService = ({ catalog, config, platform, storage }: AppsDe
           }
         });
       });
-      return [config.FIREPLACE_ID, ...picked];
+      return [...picked];
     },
     launch(app) {
       if (!disposed) {
@@ -208,11 +208,6 @@ export const createAppsService = ({ catalog, config, platform, storage }: AppsDe
     openStore() {
       if (!disposed) {
         platform.openStore();
-      }
-    },
-    playFireplace() {
-      if (!disposed) {
-        platform.playFireplace(store.getSnapshot().all);
       }
     },
     dispose() {

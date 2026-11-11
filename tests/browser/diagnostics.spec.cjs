@@ -89,6 +89,7 @@ test("cold-start UI events reach a late service without leaving the launcher", a
     });
   });
   await page.addInitScript(() => {
+    localStorage.setItem("aerotizen.settings.v1", JSON.stringify({ home: ["test.app"] }));
     window.tizen = {
       ApplicationControl: function (operation) {
         this.operation = operation;
@@ -245,6 +246,7 @@ test("personal text is excluded before IndexedDB persistence and loopback delive
     });
   });
   await page.addInitScript((poison) => {
+    localStorage.setItem("aerotizen.settings.v1", JSON.stringify({ home: ["test.app"] }));
     localStorage.setItem(
       "aerotizen.diagnostics.v1",
       JSON.stringify([

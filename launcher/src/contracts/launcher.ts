@@ -70,7 +70,6 @@ export type ClockFormatter = Pick<
 >;
 export interface LauncherConfig extends AppsConfig {
   DEFAULTS?: Partial<SettingsDefaults>;
-  FIREPLACE_ID: string;
   KEY: Record<"LEFT" | "RIGHT" | "UP" | "DOWN" | "ENTER" | "BACK" | "ESC" | "IME_DONE" | "IME_CANCEL", number>;
   LEGACY_STORAGE_KEYS: string[];
   LONG_PRESS_MS: number;

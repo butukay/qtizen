@@ -54,7 +54,6 @@ export const SettingsContent = ({
         actions={actions}
         active={active}
         describeApp={services.describeApp}
-        fireplaceId={services.config.FIREPLACE_ID}
       />
     ),
     [settings.home, apps, actions, active, services],

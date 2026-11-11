@@ -20,9 +20,7 @@ patterns. The build records retained icon modules in `dist/launcher-icons.json`,
 outside the TV runtime. Build tests check that selected modules remain, unused icons
 are removed and the UI bundle does not contain the full catalogue.
 
-App logos and artwork stay in the app catalogue and `AppLogoIcon`. The Fireplace
-flame is the existing custom motif in `FlameIcon`; it is not a general interface
-symbol. These custom SVGs also remain decorative. Input icons are components and
+App logos and artwork stay in the app catalogue and `AppLogoIcon`. Input icons are components and
 no longer require the runtime SVG string table. Decorative wave artwork lives in
 `backgrounds/WaveBackground/WaveBackground.tsx`, with its existing shapes and CSS animation.
 

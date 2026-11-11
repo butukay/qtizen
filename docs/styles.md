@@ -77,7 +77,7 @@ geometry for remote navigation but do not accept pointer input. `HomeOverview` o
 composition. Tests use `data-home-header`, `data-home-overview`, `data-home-section-heading`
 and `data-solar-system`; semantic IDs remain available for integrations.
 
-`HomeAppCard` owns the common app/Fireplace frame, focus, moving state and reorder
+`HomeAppCard` owns the common application frame, focus, moving state and reorder
 controls. `AppGrid` owns card heights, columns and spacing through
 explicit data attributes. `AppArtwork` owns image geometry; its inherited radius
 keeps images rounded when moving cards expose their overflow.
@@ -113,7 +113,7 @@ fade remains fixed on the viewport.
 App brand data supplies logo paths and native icons. Applications uses compact
 list logos instead of banner artwork. Keep state paint out of inline backgrounds.
 
-`SettingsAppRow` owns the full-width 76px app-choice row, focus and disabled states. App, Fireplace and Store options supply their own content. `AppFallback`
+`SettingsAppRow` owns the full-width 76px app-choice row, focus and disabled states. App and Store options supply their own content. `AppFallback`
 owns logo and label geometry, including the compact `list` and `badge` variants. Do not size its contents through a parent's tile or logo classes.
 Home artwork passes the `badge` variant for Continue Watching source icons.
 
@@ -138,7 +138,7 @@ Keep keyframes with their component until multiple components need the same
 effect. A shared CSS Module can then own the keyframes and reusable animation class.
 
 Settings, the Home header, app cards, viewport, scrollers, page reveals, app
-actions, Continue Watching, inputs and the Fireplace volume notice use this policy.
+actions, Continue Watching and inputs use this policy.
 Reorder arrows also stop moving
 under reduced motion.
 This removes their repeated media queries and reduced-motion `!important` rules.

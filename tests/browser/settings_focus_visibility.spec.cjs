@@ -64,7 +64,7 @@ for (const [build, url] of [
     await openCategory(page, "apps");
     await expect(page.locator('#all-apps [data-key="app:demo0"] [data-app-fallback] svg')).toBeVisible();
     await expectUncovered(page, page.locator('#all-apps [data-key="app:demo0"]'));
-    await expectUncovered(page, page.locator('[data-key="app:__fire"]'));
+    await expectUncovered(page, page.locator('#all-apps [data-key="app:demo1"]'));
     await openCategory(page, "wallpaper");
     await expectUncovered(page, page.locator('[data-key="wallpaper-categories:solid"]'));
     await page.keyboard.press("Enter");

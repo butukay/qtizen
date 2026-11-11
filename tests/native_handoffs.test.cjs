@@ -136,7 +136,6 @@ function harness(options = {}) {
       HBBTV_APP_ID: "org.tizen.hbbtv",
       HBBTV_LINK_METADATA: "hbbtv.link",
       DEFAULT_HOME_APPS: [],
-      FIREPLACE_ID: "__fire",
       STORE_APP_IDS: options.storeIds || [],
     },
     homewatch: {

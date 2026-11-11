@@ -58,7 +58,8 @@ export const normalizeSettings = (
   const data = { ...defaults, ...saved };
   const columns = data.homeCardColumns;
   const home = data.home;
-  const validHome = Array.isArray(home) ? ids(home) : defaults.home;
+  // Remove the retired built-in tile from saved lists and incoming updates.
+  const validHome = Array.isArray(home) ? ids(home).filter((id) => id !== "__fire") : defaults.home;
   const appearanceMode = choice(data.appearanceMode, ["light", "dark"], defaults.appearanceMode);
   const accent = choice(data.accentColour, ACCENT_IDS, defaults.accentColour);
   return {

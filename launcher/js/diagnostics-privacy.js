@@ -198,7 +198,6 @@
       "diagnostics.py",
       "discover.py",
       "dom.js",
-      "fireplace.js",
       "home-mode.js",
       "home-screen.js",
       "home-store.js",

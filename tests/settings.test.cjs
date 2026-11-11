@@ -82,7 +82,7 @@ test("square cards migrate legacy sizes and keep explicit row counts and other p
         assert.equal(saved.homeCardColumns, expected, "migration is saved even with explicit locale settings");
         assert.equal("cardSize" in saved, false);
         assert.equal("homeCardMode" in saved, false);
-        assert.deepEqual(saved.home, legacy.home);
+        assert.deepEqual(saved.home, ["video.app"]);
         assert.equal(saved.background, legacy.background);
         assert.equal(saved.showWeather, false);
         assert.equal(saved.tempUnit, "F");
@@ -155,14 +155,18 @@ test("header visibility survives a restart without changing date or weather pref
 });
 
 test("an empty saved Home stays empty", () => {
-  const { settings } = loadSettings({ "aerotizen.settings.v1": JSON.stringify({ home: [] }) });
-  assert.deepEqual(JSON.parse(JSON.stringify(settings.getSnapshot().home)), []);
+  for (const home of [[], ["__fire"]]) {
+    const { settings, store } = loadSettings({ "aerotizen.settings.v1": JSON.stringify({ home }) });
+    assert.deepEqual(JSON.parse(JSON.stringify(settings.getSnapshot().home)), []);
+    assert.equal(settings.getSnapshot().homeInitialized, true);
+    assert.deepEqual(JSON.parse(store["aerotizen.settings.v1"]).home, []);
+  }
 });
 
 test("settings migrate from an earlier storage key and field name", () => {
   const legacy = { favorites: ["a.app", "__fire"], background: "lava", speed: 2 };
   const { settings } = loadSettings({ "hearth.home.v1": JSON.stringify(legacy) });
-  assert.deepEqual(JSON.parse(JSON.stringify(settings.getSnapshot().home)), ["a.app", "__fire"]);
+  assert.deepEqual(JSON.parse(JSON.stringify(settings.getSnapshot().home)), ["a.app"]);
   assert.equal(settings.getSnapshot().background, "lava");
   assert.equal(settings.getSnapshot().speed, 2);
 });

@@ -140,13 +140,9 @@ export const createHomeController = (
       }
     });
   const homeIds = () => {
-    const saved =
-      state.getSnapshot().draft ||
-      (settings.getSnapshot().homeInitialized ? settings.getSnapshot().home : [runtime.config.FIREPLACE_ID]);
+    const saved = state.getSnapshot().draft || settings.getSnapshot().home;
     // Movement must address the same visible IDs as the grid, not stale saved apps.
-    return saved.filter(
-      (id) => id === runtime.config.FIREPLACE_ID || !inventory.getSnapshot().ready || runtime.apps.byId(id),
-    );
+    return saved.filter((id) => !inventory.getSnapshot().ready || runtime.apps.byId(id));
   };
   const scrollApps = () => settings.getSnapshot().homeAppLayout === "scroll";
   const getScroller = (key: string) => {
@@ -195,7 +191,7 @@ export const createHomeController = (
     const list = rows();
     const old = state.getSnapshot().selected;
     const selected = getSelectedKey(list, old, started);
-    if (list[1]?.length) {
+    if (settings.getSnapshot().homeInitialized && list[1]?.length) {
       started = true;
     }
     if (old !== selected) {
@@ -242,6 +238,7 @@ export const createHomeController = (
     update({ scroll });
   };
   const select = (selected: string) => {
+    started = true;
     if (state.getSnapshot().selected !== selected) {
       cancelPress();
     }
@@ -269,9 +266,7 @@ export const createHomeController = (
     } else if (key.startsWith("app:")) {
       const id = key.slice(4);
       const app = runtime.apps.byId(id);
-      if (id === runtime.config.FIREPLACE_ID) {
-        runtime.apps.playFireplace();
-      } else if (app) {
+      if (app) {
         runtime.apps.launch(app);
       }
     } else if (key.startsWith("continue:")) {
@@ -324,6 +319,7 @@ export const createHomeController = (
         return;
       }
       event.preventDefault();
+      started = true;
       if (current.menu) {
         if (code === K.BACK || code === K.ESC) {
           dismiss();

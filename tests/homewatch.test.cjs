@@ -16,8 +16,7 @@ function harness(options = {}) {
     events = {},
     windowEvents = {},
     scripts = [],
-    logs = [],
-    fireplaces = [];
+    logs = [];
   const timers = new Map();
   let clock = 0,
     serial = 0;
@@ -92,7 +91,6 @@ function harness(options = {}) {
   const window = {
     AeroTizen: A,
     AeroDiagnostics: { record: (event, data) => logs.push({ event, data }), flush() {} },
-    Fireplace: { open: () => fireplaces.push(true) },
     addEventListener: (name, callback) => {
       windowEvents[name] = callback;
     },
@@ -146,7 +144,6 @@ function harness(options = {}) {
     windowEvents,
     scripts,
     logs,
-    fireplaces,
     advance,
     loadWrt,
     timers,
@@ -504,20 +501,13 @@ for (const { name, open } of [
   }
 }
 
-for (const action of ["app", "store", "fireplace"]) {
+for (const action of ["app", "store"]) {
   test("a superseded " + action + " preparation releases its guard without launching a fallback", () => {
     const h = harness({ version: "10.0", native: true, apps: true });
     if (action === "app") h.A.apps.launch({ id: "old.app", name: "Old" });
     if (action === "store") {
       h.A.config.STORE_APP_IDS = ["store.one", "store.two"];
       h.A.apps.openStore();
-    }
-    if (action === "fireplace") {
-      h.A.tizen.application.getAppsInfo = (done) => done([{ id: "youtube.app", name: "YouTube" }]);
-      h.A.config.STORE_PACKAGE = /^$/;
-      h.A.config.HIDDEN_APPS = /service/;
-      h.A.apps.load();
-      h.A.apps.playFireplace();
     }
     h.A.homewatch.openSamsungHome();
     const watched = decodeURIComponent(h.requests[0].url.split("id=")[1]);
@@ -528,7 +518,6 @@ for (const action of ["app", "store", "fireplace"]) {
       ["com.samsung.tv.csfs"],
     );
     assert.deepEqual(h.messages, []);
-    assert.deepEqual(h.fireplaces, []);
     assert.equal(h.requests.length, 2, "cancelled store launch does not try another ID");
     h.A.apps.launch({ id: "next.app", name: "Next" });
     h.requests[2].reply({ watched: "next.app" });

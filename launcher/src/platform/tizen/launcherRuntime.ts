@@ -53,12 +53,5 @@ declare global {
   interface Window {
     AeroTizen: LauncherRuntime;
     Backgrounds: LauncherPlatform["backgrounds"];
-    Fireplace?: {
-      close(): void;
-      isOpen(): boolean;
-      open(): void;
-      volumeDown(): void;
-      volumeUp(): void;
-    };
   }
 }

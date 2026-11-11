@@ -1,4 +1,4 @@
-// Boot and key routing. Each layer gets keys in priority order: text entry, fireplace,
+// Boot and key routing. Each layer gets keys in priority order: text entry,
 // full-screen input, settings, then the home screen.
 (function (A) {
   "use strict";
@@ -17,17 +17,6 @@
       }
       return;
     }
-    if (window.Fireplace.isOpen()) {
-      if (k === KEY.UP) {
-        window.Fireplace.volumeUp();
-      } else if (k === KEY.DOWN) {
-        window.Fireplace.volumeDown();
-      } else if (k === KEY.BACK || k === KEY.ESC || k === KEY.ENTER) {
-        e.preventDefault();
-        window.Fireplace.close();
-      }
-      return;
-    }
     if (A.inputs.getSnapshot().playback !== "idle") {
       if (k === KEY.BACK || k === KEY.ESC || k === KEY.ENTER) {
         e.preventDefault();
@@ -42,7 +31,7 @@
   });
 
   document.addEventListener("keyup", function (e) {
-    if (A.settingsUi.isOpen() || A.inputs.getSnapshot().playback !== "idle" || window.Fireplace.isOpen()) {
+    if (A.settingsUi.isOpen() || A.inputs.getSnapshot().playback !== "idle") {
       return;
     }
     A.homeScreen.keyup(e.keyCode);

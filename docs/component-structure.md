@@ -12,7 +12,7 @@ screens need the same behavior, rather than because they have a similar shape.
 | `HomeOverview`                                                       | Time/date and the selected widget                                              | Shared clock snapshot, visibility and widget preference                      |
 | `ScreenAwakeVideo`                                                   | Transparent local video for foreground Tizen playback                          | Document visibility and embedded input playback                             |
 | `AppGrid`                                                            | Render the keyed favorites grid or horizontal row                              | Ordered IDs, app records and layout settings                                 |
-| `AppCard`, `FireplaceCard`                                           | Launchable Home app and fireplace presentation                                 | Existing app commands through `HomeControl`                                  |
+| `AppCard`                                                           | Launchable Home application presentation                                       | Existing app commands through `HomeControl`                                  |
 | `ContinueWatchingRow`, `ContinueWatchingCard`                        | Feed section and item presentation                                             | Immutable feed items; live launch records stay in the service                |
 | `HorizontalScroller`                                                 | Shared clipping, track movement and offset limits for horizontal app/feed rows | Each row owns its offset; the Home controller reveals the selected card      |
 | `InputDock`, `InputCard`                                             | Input collection and one input's label, artwork and connection state           | Existing input service capabilities and commands                             |
@@ -24,7 +24,7 @@ screens need the same behavior, rather than because they have a similar shape.
 | `SettingsCategory`                                                   | Sidebar rows and update notice                                                 | Explicit row props and translations                                          |
 | `SettingsFocusIndicator`                                             | Measure registered Settings controls and render the focus position             | Sidebar/content container refs                                               |
 | `AppearanceSettings`, `ClockSettings`, `InputSettings`               | Appearance with accent/clock choices, and TV/HDMI controls                     | Section-specific settings and named actions                                  |
-| `HomeAppsSettings`, `AppOption`, `FireplaceOption`, `AppStoreOption` | Application list, favorites and app-store options                              | Selection state; they do not launch Home tiles                               |
+| `HomeAppsSettings`, `AppOption`, `AppStoreOption`                   | Application list, favorites and app-store options                              | Selection state; they do not launch Home tiles                               |
 | `ChoiceGroup`, `ChoiceOption`                                        | A labelled choice group and one selectable option                              | Value, options and selection callback                                        |
 | `SelectionIndicator`                                                 | Decorative check, with badge and inline row layouts                            | Parent control owns selection and `aria-pressed`                             |
 | `SettingsControl`                                                    | Register a Settings control and render focus/activation                        | Settings navigation context                                                  |
@@ -44,8 +44,8 @@ Panel titles share one size; section titles use the smaller variant. The colour 
 gradient dialogs use the same description style and link their instructions with
 `aria-describedby`. `SettingsSection` supplies section spacing and content.
 
-`HomeAppCard` owns the shared app/Fireplace frame, focus and moving state.
-`AppCard` and `FireplaceCard` supply app-specific content and paint.
+`HomeAppCard` owns the shared application frame, focus and moving state.
+`AppCard` supplies app-specific content and paint.
 
 `HomeControl` and `SettingsControl` remain separate because they use different
 navigation contracts. Neither starts platform services. Shared navigation, hooks and
@@ -91,7 +91,7 @@ saved Home list and are selected only after successful discovery, as before.
 `platform/tizen/createAppsPlatform.ts` owns Tizen package queries, metadata and launch
 commands, with the existing Home handoff bridge. It preserves HbbTV routing, the older
 YouTube visibility workaround, Tizen 10 watch preparation, repeated-tap suppression,
-app-store fallback, Fireplace playback and correlated diagnostics. Browser preview IDs
+app-store fallback and correlated diagnostics. Browser preview IDs
 and names remain stable. The service receives this adapter, the catalogue, config and
 storage; it has no DOM or TV API dependency.
 
@@ -224,7 +224,7 @@ Layout changes snap the content ring into place; moves between equally sized con
 the shared focus animation. Measurements are coalesced into a requested frame and stop
 when the layout is idle. Observers and pending frames are released on teardown.
 
-Only `src/index.ts` discovers the Home, Settings, wallpaper, Fireplace and toast mount hosts. Preact renders the
+Only `src/index.ts` discovers the Home, Settings, wallpaper and toast mount hosts. Preact renders the
 toast. Its mount owns the dismissal timer and exposes the existing toast commands. Components register their own
 nodes with refs. Home scroll and carousel offsets are state; Preact renders the
 transforms and scrolled class. Settings enters a category through registered controls
@@ -232,7 +232,7 @@ inside that pane, rather than a document/CSS query. Native focus, geometry reads
 Settings scroll-container movement remain explicit layout operations.
 
 Modules use local classes such as `digits`, `horizontal` and `temperature`.
-Background artwork, weather photos, Fireplace, toast and interface icons also use
+Background artwork, weather photos, toast and interface icons also use
 local module classes. The background mount keeps its fixed canvas geometry in
 `base.css`, alongside page sizing and native visibility.
 Version/model names are absent from active view styles.
@@ -258,9 +258,8 @@ input names and current-schema preferences remain compatible.
 | `home/components/HomeHeader/HomeHeader.module.css`                         | Top-right Settings placement and focus                                      |
 | `status/Clock/Clock.module.css`                                            | Compact, vertical, horizontal, minimal and bold time/date layouts           |
 | `home/components/AppGrid/AppGrid.module.css`                               | App heights, columns and spacing                                            |
-| `home/components/HomeAppCard/HomeAppCard.module.css`                       | Shared app/Fireplace frame and focus/moving states                          |
+| `home/components/HomeAppCard/HomeAppCard.module.css`                       | Shared application frame and focus/moving states                           |
 | `home/components/AppArtwork/AppArtwork.module.css`                         | App image geometry                                                          |
-| `home/components/FireplaceCard/FireplaceCard.module.css`                   | Fireplace card artwork                                                      |
 | `home/components/HomeControl/HomeControl.module.css`                       | Home control focus reset                                                    |
 | `home/components/HomeSectionHeading/HomeSectionHeading.module.css`         | Shared Home section headings                                                |
 | `home/components/ContinueWatchingRow/ContinueWatchingRow.module.css`       | Continue Watching track spacing                                             |
@@ -271,7 +270,6 @@ input names and current-schema preferences remain compatible.
 | `home/components/AppActionsMenu/AppActionsMenu.module.css`                 | App actions and menu selection                                              |
 | `home/components/ReorderControls/ReorderControls.module.css`               | Reorder arrows and local motion                                             |
 | `shared/icons/Icon/Icon.module.css`                                        | Shared interface icon sizing                                                |
-| `fireplace/FireplaceView/FireplaceView.module.css`                         | Fireplace frame, canvas, hearth and volume notice                           |
 | `app/Toast/Toast.module.css`                                               | Transient message layout and stacking                                       |
 
 Module paths in this table are relative to `launcher/src/`; global sheets are in
@@ -342,8 +340,3 @@ and weather photos remain available.
 
 Background tests use `data-background-wave`, `data-background-blob` and
 `data-weather-photo`. Icon direction is an explicit `mirrorInRtl` prop.
-
-The Fireplace view renders the overlay and volume notice from a shared state
-snapshot. Its canvas ref starts the TypeScript animation when the overlay opens.
-The Fireplace bridge starts audio on launch and stops it on close. Native YouTube
-launch and remote key routing use the same bridge as before.

@@ -35,9 +35,6 @@ AeroTizen.config = {
   HBBTV_APP_ID: "org.tizen.hbbtv",
   HBBTV_LINK_METADATA: "http://samsung.com/tv/metadata/hbbtv.link",
 
-  FIREPLACE_ID: "__fire",
-  FIREPLACE_VIDEO: "WuHSBSLK3_A",
-
   LONG_PRESS_MS: 600,
   SPEED: { MIN: 0.25, MAX: 3, STEP: 0.25 },
 };

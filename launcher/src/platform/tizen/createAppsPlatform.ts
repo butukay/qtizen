@@ -28,7 +28,6 @@ interface AppsHost {
     toast(message: string): void;
     translate: Translate;
   };
-  Fireplace?: { open(): void };
 }
 
 const cancelled = (error: unknown) =>
@@ -41,7 +40,6 @@ export const createAppsPlatform = (host: AppsHost): AppsPlatform => {
   const application = tizen?.application;
   let disposed = false;
   let handoffPending = false;
-  const openFireplace = () => host.Fireplace?.open();
   const notify: Translate = (key, values) => {
     const message = runtime.translate(key, values);
     runtime.toast(message);
@@ -266,35 +264,6 @@ export const createAppsPlatform = (host: AppsHost): AppsPlatform => {
         );
       };
       next();
-    },
-    playFireplace(apps) {
-      if (disposed) {
-        return;
-      }
-      const youtube = apps.find((app) => /^youtube$/i.test(app.name));
-      if (!application || !youtube) {
-        openFireplace();
-        return;
-      }
-      const fallback = () => {
-        if (!disposed) {
-          openFireplace();
-        }
-      };
-      prepareWatch(
-        youtube.id,
-        () => {
-          try {
-            const request = control("http://tizen.org/appcontrol/operation/view", [
-              { key: "PAYLOAD", values: [JSON.stringify({ values: "v=" + config.FIREPLACE_VIDEO })] },
-            ]);
-            application.launchAppControl(request, youtube.id, null, fallback);
-          } catch {
-            fallback();
-          }
-        },
-        fallback,
-      );
     },
     dispose() {
       disposed = true;

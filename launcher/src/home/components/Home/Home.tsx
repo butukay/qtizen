@@ -20,10 +20,8 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
   const draft = useStoreSelector(env.state, (state) => state.draft);
   const scroll = useStoreSelector(env.state, (state) => state.scroll);
   const { apps, inputs, items, ready } = useStore(env.inventory);
-  const home = draft || (settings.homeInitialized ? settings.home : [env.runtime.config.FIREPLACE_ID]);
-  const visibleHome = home.filter(
-    (id) => id === env.runtime.config.FIREPLACE_ID || !ready || apps.some((app) => app.id === id),
-  );
+  const home = draft || settings.home;
+  const visibleHome = home.filter((id) => !ready || apps.some((app) => app.id === id));
   const showContinueWatching = settings.continueWatching && items.length > 0;
   const columns = env.columns(settings);
   const dockInputs =

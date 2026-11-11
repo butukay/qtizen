@@ -19,8 +19,6 @@ export interface AppsSnapshot {
 
 export interface AppsConfig {
   readonly DEFAULT_HOME_APPS: readonly string[];
-  readonly FIREPLACE_ID: string;
-  readonly FIREPLACE_VIDEO: string;
   readonly HBBTV_APP_ID: string;
   readonly HBBTV_LINK_METADATA: string;
   readonly HIDDEN_APPS: RegExp;
@@ -41,7 +39,6 @@ export interface AppsPlatform {
   dispose(): void;
   launch(app: InstalledApp, refresh: () => void): void;
   openStore(): void;
-  playFireplace(apps: readonly InstalledApp[]): void;
   readonly preview: boolean;
   readInstalled(done: (records: unknown) => void): () => void;
 }
@@ -53,7 +50,6 @@ export interface AppsService extends Store<AppsSnapshot> {
   launch(app: InstalledApp): void;
   load(done?: (success: boolean) => void): void;
   openStore(): void;
-  playFireplace(): void;
   restore(): void;
   subscribeDiscovery(listener: () => void): () => void;
 }

@@ -6,8 +6,6 @@ const { createAppsPlatform } = loadTypeScript("launcher/src/platform/tizen/creat
 
 const config = {
   DEFAULT_HOME_APPS: ["youtube", "video"],
-  FIREPLACE_ID: "__fire",
-  FIREPLACE_VIDEO: "fire-video",
   HBBTV_APP_ID: "hbbtv.host",
   HBBTV_LINK_METADATA: "hbbtv.link",
   HIDDEN_APPS: /service|launcher/i,
@@ -21,7 +19,7 @@ function harness(options = {}) {
   const data = new Map(Object.entries(options.cache === undefined ? {} : { "aerotizen.apps.v1": options.cache }));
   const requests = [];
   const launches = [];
-  const calls = { dispose: 0, store: 0, fireplace: [] };
+  const calls = { dispose: 0, store: 0 };
   const platform = {
     preview: !!options.preview,
     readInstalled(done) {
@@ -33,7 +31,6 @@ function harness(options = {}) {
     },
     launch: (app, refresh) => launches.push({ app, refresh }),
     openStore: () => calls.store++,
-    playFireplace: (apps) => calls.fireplace.push(apps),
     dispose: () => calls.dispose++,
   };
   const service = createAppsService({
@@ -90,7 +87,7 @@ test("discovery keeps hidden provider records, resolves watcher IDs and saves on
   );
   assert.deepEqual(snapshot.realIds, ["youtube", "video", "hbbtv.host", "12345"]);
   assert.equal(snapshot.inventory.length, 6, "provider metadata retains hidden companions");
-  assert.deepEqual(h.service.defaultHome(), ["__fire", "youtube", "video"]);
+  assert.deepEqual(h.service.defaultHome(), ["youtube", "video"]);
   assert.deepEqual(JSON.parse(h.data.get("aerotizen.apps.v1")), snapshot.all);
   assert.equal(h.service.byId("missing"), null);
   records[0].name = "Changed outside the service";
@@ -169,7 +166,6 @@ test("disposal cancels discovery and blocks callbacks, cache writes and commands
   h.service.load();
   h.service.launch(first);
   h.service.openStore();
-  h.service.playFireplace();
   assert.deepEqual(replies, [false]);
   assert.equal(h.service.getSnapshot(), snapshot);
   assert.equal(h.data.size, 0);
@@ -177,7 +173,6 @@ test("disposal cancels discovery and blocks callbacks, cache writes and commands
   assert.equal(h.requests.length, 1);
   assert.equal(h.launches.length, 0);
   assert.equal(h.calls.store, 0);
-  assert.deepEqual(h.calls.fireplace, []);
 });
 
 test("preview IDs and sorted labels remain stable without native discovery", () => {
@@ -233,28 +228,6 @@ test("disposing the TV adapter suppresses delayed handoff, native launch failure
   failed();
   platform.launch(second, () => {});
   platform.openStore();
-  platform.playFireplace([]);
   platform.readInstalled(() => {});
   assert.deepEqual(calls, ["launch"]);
-});
-
-test("Fireplace keeps its local fallback when the TV application API is unavailable", () => {
-  let opened = 0;
-  const platform = createAppsPlatform({
-    AeroTizen: {
-      config,
-      translate: (key) => key,
-      toast() {},
-      tiles: { shortName: (name) => name },
-      homewatch: {
-        watch() {
-          throw new Error("No native handoff without application support");
-        },
-      },
-      tizen: {},
-    },
-    Fireplace: { open: () => opened++ },
-  });
-  platform.playFireplace([{ id: "youtube", name: "YouTube" }]);
-  assert.equal(opened, 1);
 });

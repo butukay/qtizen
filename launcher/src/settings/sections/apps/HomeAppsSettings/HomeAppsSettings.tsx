@@ -4,7 +4,6 @@ import { SettingsSection } from "../../../components/SettingsSection/SettingsSec
 import type { SettingsActions, SettingsServices } from "../../../types";
 import { AppOption } from "../AppOption/AppOption";
 import { AppStoreOption } from "../AppStoreOption/AppStoreOption";
-import { FireplaceOption } from "../FireplaceOption/FireplaceOption";
 
 import styles from "./HomeAppsSettings.module.css";
 
@@ -13,21 +12,15 @@ interface Props {
   active: boolean;
   apps: readonly InstalledApp[];
   describeApp: SettingsServices["describeApp"];
-  fireplaceId: string;
   home: readonly string[];
 }
 
-export const HomeAppsSettings = ({ home, apps, actions, describeApp, fireplaceId, active }: Props) => {
+export const HomeAppsSettings = ({ home, apps, actions, describeApp, active }: Props) => {
   const { t } = useTranslation();
   return (
     <SettingsSection title={t("apps.show")} description={t("apps.hint")}>
       <div id="all-apps" class={styles.list}>
         <AppStoreOption onSelect={actions.openStore} />
-        <FireplaceOption
-          id={fireplaceId}
-          selected={home.includes(fireplaceId)}
-          onSelect={() => actions.toggleApp(fireplaceId)}
-        />
         {apps.map((app) => (
           <AppOption
             key={app.id}
