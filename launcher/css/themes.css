@@ -1,16 +1,12 @@
-/* Default: the fork's single interface. Components own geometry and state. */
+/* One layout, six palettes. Components own geometry and state. */
 :root {
   --bg: #000000;
-  --fg: #cad2dc;
-  --muted: #8592a3;
+  --rice-selected: var(--rice-card-selected);
   --home-text: var(--fg);
   --home-muted: var(--muted);
-  --card: #0c1118;
-  --focus: #83a6ba;
   --update-notice: #ffd34f;
   --toast-surface: var(--card);
   --fireplace-notice-surface: rgba(0, 0, 0, 0.55);
-  --surface-control: #121b26;
   --border-control: var(--rice-border);
   --settings-text: var(--fg);
   --settings-muted: var(--muted);
@@ -29,7 +25,6 @@
   --wallpaper-label-text: #fff;
   --wallpaper-label-surface: rgba(0, 0, 0, 0.72);
   --wallpaper-label-shadow: 0 1px 4px #000;
-  --settings-overlay: rgba(22, 27, 35, 0.65);
   --settings-focused-surface: var(--rice-selected);
   --home-card-focus-shadow: none;
   --home-card-move-shadow: 0 0 0 1px var(--focus);
@@ -79,11 +74,85 @@
   --solar-neutral: #78838c;
   --solar-warm: #9a8d77;
   --solar-cool: #74909b;
+}
+
+:root,
+[data-palette="ice"] {
+  --fg: #cad2dc;
+  --muted: #8592a3;
+  --card: #0c1118;
+  --focus: #83a6ba;
+  --surface-control: #121b26;
+  --settings-overlay: rgba(22, 27, 35, 0.65);
   --rice-card-surface: #070a0e;
   --rice-card-selected: #101820;
   --rice-border: #17212b;
   --rice-surface: #070b10;
-  --rice-selected: #101820;
+}
+
+[data-palette="blue"] {
+  --fg: #dae5fa;
+  --muted: #97abc9;
+  --card: #101c30;
+  --focus: #8faee0;
+  --surface-control: #182a46;
+  --settings-overlay: rgba(15, 25, 43, 0.65);
+  --rice-card-surface: #0b1424;
+  --rice-card-selected: #1a2d49;
+  --rice-border: #243855;
+  --rice-surface: #0e192b;
+}
+
+[data-palette="violet"] {
+  --fg: #eadff8;
+  --muted: #a99abb;
+  --card: #20162d;
+  --focus: #b6a0df;
+  --surface-control: #302140;
+  --settings-overlay: rgba(32, 21, 47, 0.65);
+  --rice-card-surface: #140d20;
+  --rice-card-selected: #342447;
+  --rice-border: #412e55;
+  --rice-surface: #190f26;
+}
+
+[data-palette="rose"] {
+  --fg: #f3e0e7;
+  --muted: #bd97a7;
+  --card: #291720;
+  --focus: #d59aaf;
+  --surface-control: #3d2230;
+  --settings-overlay: rgba(42, 22, 33, 0.65);
+  --rice-card-surface: #1c0e17;
+  --rice-card-selected: #442435;
+  --rice-border: #522c41;
+  --rice-surface: #22121c;
+}
+
+[data-palette="amber"] {
+  --fg: #f3e8d4;
+  --muted: #b7a386;
+  --card: #281e13;
+  --focus: #d5bb85;
+  --surface-control: #392d1e;
+  --settings-overlay: rgba(39, 29, 16, 0.65);
+  --rice-card-surface: #1b140c;
+  --rice-card-selected: #44341f;
+  --rice-border: #51402a;
+  --rice-surface: #21180f;
+}
+
+[data-palette="mint"] {
+  --fg: #d9efe6;
+  --muted: #8fad9f;
+  --card: #13231e;
+  --focus: #94c5ac;
+  --surface-control: #1c322a;
+  --settings-overlay: rgba(18, 35, 29, 0.65);
+  --rice-card-surface: #0b1914;
+  --rice-card-selected: #203c31;
+  --rice-border: #2a473b;
+  --rice-surface: #102019;
 }
 
 :root[data-light-background="true"] {

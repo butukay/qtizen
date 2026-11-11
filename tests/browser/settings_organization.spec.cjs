@@ -45,12 +45,15 @@ for (const [build, url] of [
       await expect(page.getByRole("button", { name: "Solid colors", exact: true })).toBeVisible();
     });
 
-    test("Appearance contains the clock controls and applies and persists accent colours", async ({ page }) => {
+    test("Appearance contains the clock controls and applies and persists full colour palettes", async ({ page }) => {
       await openCategory(page, "appearance");
       await expect(page.locator('[data-section-pane="appearance"] #time-formats')).toHaveCount(1);
       await expect(page.locator('[data-section-pane="appearance"] #date-formats')).toHaveCount(1);
       await expect(page.locator('#accent-colours [role="button"]')).toHaveCount(6);
       await page.locator('[data-key="accent:violet"]').click();
+      await expect(page.locator('[data-settings-drawer="frame"]')).toHaveCSS("background-color", "rgb(32, 22, 45)");
+      await expect(page.locator('[data-settings-drawer="main"]')).toHaveCSS("background-color", "rgb(25, 15, 38)");
+      await expect(page.locator('[data-key="home-card-columns:5"]')).toHaveCSS("color", "rgb(234, 223, 248)");
       await expect(page.locator('[data-key="accent:violet"]')).toHaveAttribute("aria-pressed", "true");
       expect(await page.locator("html").evaluate((n) => getComputedStyle(n).getPropertyValue("--focus").trim())).toBe(
         "#b6a0df",
@@ -58,14 +61,46 @@ for (const [build, url] of [
       await page.locator('[data-key="time:none"]').click();
       await page.locator('[data-key="date:none"]').click();
       await closeSettings(page);
+      await expect(page.locator('#grid > [data-id="demo0"]')).toHaveCSS("background-color", "rgb(52, 36, 71)");
+      await expect(page.locator("#inputs > [data-input-card]").first()).toHaveCSS(
+        "background-color",
+        "rgb(25, 15, 38)",
+      );
+      await expect(page.locator("html")).toHaveCSS("background-color", "rgb(0, 0, 0)");
       await expect(page.locator('[data-clock-part="time"]')).toBeHidden();
       await expect(page.locator('[data-clock-part="date"]')).toBeHidden();
       await page.reload();
       expect(await page.evaluate(() => AeroTizen.settings.getSnapshot().accentColour)).toBe("violet");
+      await expect(page.locator("html")).toHaveAttribute("data-palette", "violet");
       await openSettings(page);
       await openCategory(page, "appearance");
       await expect(page.locator('[data-key="accent:violet"]')).toHaveAttribute("aria-pressed", "true");
     });
+
+    for (const { language, inward, outward } of [
+      { language: "en", inward: "ArrowRight", outward: "ArrowLeft" },
+      { language: "ar", inward: "ArrowLeft", outward: "ArrowRight" },
+    ]) {
+      test(`Weather exits towards the sidebar from offset controls (${language})`, async ({ page }) => {
+        await page.evaluate((language) => AeroTizen.settings.update({ language }), language);
+        await expect(page.locator("html")).toHaveAttribute("dir", language === "ar" ? "rtl" : "ltr");
+        await openCategory(page, "weather");
+        const first = page.locator('[data-key="weather-display:true"]');
+        const second = page.locator('[data-key="weather-display:false"]');
+        const sidebar = page.locator('[data-key="section:weather"]');
+        await first.focus();
+        await page.keyboard.press(inward);
+        await expect(second).toBeFocused();
+        await page.keyboard.press(outward);
+        await expect(first).toBeFocused();
+        await page.keyboard.press(outward);
+        await expect(sidebar).toBeFocused();
+        await openCategory(page, "weather");
+        await page.locator('[data-key="weather:change"]').focus();
+        await page.keyboard.press(outward);
+        await expect(sidebar).toBeFocused();
+      });
+    }
 
     test("Applications uses one column of readable rows with remote favorite toggles", async ({ page }) => {
       await openCategory(page, "apps");

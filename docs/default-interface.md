@@ -49,8 +49,13 @@ Install updates with the existing signing profile and keep the `DclHome001.Home`
 identity so the TV's Home and startup assignments remain valid.
 
 Settings uses this order: Appearance, Backgrounds, Applications, Weather, Inputs,
-Language and About. Appearance includes app layout, six accent colours, time/date
+Language and About. Appearance includes app layout, six colour palettes, time/date
 controls and Performance mode. Background choices start with Solid colors and end
 with Weather photos. Applications and Continue Watching providers use full-width
 rows with compact logos and inline selection marks. The sidebar footer has no
 remote-button help. Existing app IDs, saved favorites and input names are unchanged.
+
+Each palette colours the application cards, input rows, Settings surfaces, text and
+focus marks. The black canvas, selected wallpaper and solar media keep their own
+appearance. Press towards the Settings sidebar to leave any row that has no further
+choice in that direction, including the controls in Weather.

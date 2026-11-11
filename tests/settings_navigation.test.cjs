@@ -37,13 +37,13 @@ test("navigation publishes a focus key and follows registered visual rows withou
   nav.reset("b");
   assert.equal(nav.focus(), b);
   assert.equal(nav.getSnapshot(), "b");
-  nav.move("down");
+  assert.equal(nav.move("down"), true);
   assert.equal(nav.current(), c);
   nav.move("down");
   nav.move("down");
   assert.equal(nav.current(), d);
-  nav.move("right");
-  nav.move("left");
+  assert.equal(nav.move("right"), false);
+  assert.equal(nav.move("left"), false);
   assert.equal(nav.current(), d);
   assert.equal(reads, 1, "arrows use cached geometry");
   assert.deepEqual(states, ["b", "c", "d"], "unchanged focus does not publish");

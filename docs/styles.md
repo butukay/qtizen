@@ -11,7 +11,7 @@ without companion files can stay flat. Apply this structure as components are
 migrated; imports name the component file directly, without a barrel per folder.
 
 Keep theme paint in
-`launcher/css/themes.css`, which defines the single Default palette. Prefer role names such as `--settings-surface`,
+`launcher/css/themes.css`, which defines the Default layout’s six palettes. Prefer role names such as `--settings-surface`,
 `--header-focus-surface` and `--menu-border` over new colour literals for shared
 surfaces, text, borders, focus and shadows. Component-specific artwork and input
 state palettes stay with their component.
@@ -224,8 +224,9 @@ The browser comparison helper serves the unchanged `tests/fixtures/legacy-dom.js
 at the legacy page's shared DOM-script URL. This retains the old focus behaviour
 without shipping it in the production widget or changing the frozen renderer.
 
-The shared accent catalogue in `shared/appearance.ts` defines six named colours.
-`AccentSettings` renders their choices; preferences validate and persist the ID.
-The Home shell applies the colour through the root `--focus` token before measuring,
-and restores the previous inline value on teardown. Clock details, focus borders
-and selection marks read that same token. It does not recolour the solar video.
+The shared catalogue in `shared/appearance.ts` defines the saved palette IDs and
+names. `PaletteSettings` renders their swatches using the palette tokens from
+`themes.css`. Home applies `data-palette` to the root before measurement and removes
+it on teardown. Primary and muted text, app/input surfaces, Settings panels and
+focus all use the same palette. The black canvas, wallpaper and solar artwork
+remain independent of palette selection.

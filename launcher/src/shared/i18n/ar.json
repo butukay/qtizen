@@ -275,7 +275,7 @@
   "weather.useAutomatic": "تحديد الموقع تلقائيًا",
   "weather.automaticHint": "استخدام موقع تقريبي بناءً على عنوان الإنترنت الخاص بك.",
   "weather.searchHelp": "ابحث عن بلدة أو مدينة أو رمز بريدي، ثم اختر نتيجة.",
-  "appearance.accent": "لون التمييز",
+  "appearance.accent": "نسق الألوان",
   "accent.ice": "جليدي",
   "accent.blue": "أزرق",
   "accent.violet": "بنفسجي",

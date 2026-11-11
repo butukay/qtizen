@@ -8,7 +8,7 @@ export interface Navigation extends Store<string | undefined> {
   firstKey(container?: HTMLElement): string | undefined;
   focus(): HTMLElement | undefined;
   invalidate(): void;
-  move(direction: Direction): void;
+  move(direction: Direction): boolean;
   register(key: string, node: HTMLElement | null): void;
   reset(key: string): void;
   select(key: string | undefined): void;
@@ -137,11 +137,11 @@ export const createNavigation = (onFocus: (element: HTMLElement) => void): Navig
       rows = undefined;
     },
     move: (direction) => {
-      currentTarget();
+      const previous = currentTarget()?.node;
       selected = undefined;
       const offset = DIRECTION_OFFSETS[direction];
       position = { row: position.row + offset.row, column: position.column + offset.column };
-      focus();
+      return focus() !== previous;
     },
   };
 };

@@ -4,8 +4,8 @@ import { ChoiceGroup } from "../components/ChoiceGroup";
 import { SettingsSection } from "../components/SettingsSection/SettingsSection";
 import type { SettingsSectionProps } from "../types";
 
-import { AccentSettings } from "./AccentSettings/AccentSettings";
 import { ClockSettings } from "./ClockSettings";
+import { PaletteSettings } from "./PaletteSettings/PaletteSettings";
 
 const HOME_CARD_COLUMNS_OPTIONS = [
   { value: "5", labelKey: "appearance.small" },
@@ -49,7 +49,7 @@ export const AppearanceSettings = ({ settings, actions, clock, openedAt }: Props
           onSelect={actions.setHomeAppLayout}
         />
       </SettingsSection>
-      <AccentSettings settings={settings} actions={actions} />
+      <PaletteSettings settings={settings} actions={actions} />
       <ClockSettings settings={settings} actions={actions} clock={clock} openedAt={openedAt} />
       <SettingsSection title={t("appearance.performanceMode")} description={t("appearance.performanceHint")}>
         <ChoiceGroup

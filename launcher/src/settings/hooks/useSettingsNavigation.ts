@@ -196,15 +196,8 @@ export const useSettingsNavigation = (
           }
           return;
         }
-        const pane = categoryContent.current?.getBoundingClientRect();
-        const atSidebarEdge = (box: DOMRect) =>
-          rtl ? box.right >= (pane?.right || 0) - 64 : box.left <= (pane?.left || 0) + 64;
-        const leavesPane =
-          code === out &&
-          current &&
-          (atSidebarEdge(current.getBoundingClientRect()) ||
-            (current.dataset.key === "settings-close" && !navigation.firstKey(panes.get(currentDrawer.category))));
-        if ((code === K.BACK || code === K.ESC || leavesPane) && !view.getSnapshot().adjusting) {
+        const back = code === K.BACK || code === K.ESC;
+        if (back && !view.getSnapshot().adjusting) {
           event.preventDefault();
           flushSync(() => drawer.set({ ...currentDrawer, expanded: false }));
           return;
@@ -218,15 +211,10 @@ export const useSettingsNavigation = (
           }
           setAdjusting(false);
           // OK and Back only leave the slider; Up and Down leave it and move on.
-          if (code === K.ENTER || code === K.BACK || code === K.ESC) {
+          if (code === K.ENTER || back) {
             event.preventDefault();
             return;
           }
-        }
-        if (code === K.BACK || code === K.ESC) {
-          event.preventDefault();
-          bridge.close();
-          return;
         }
         if (code === K.ENTER || (code === SPACE_KEY && current?.getAttribute("role") === "button")) {
           event.preventDefault();
@@ -236,7 +224,12 @@ export const useSettingsNavigation = (
         const direction = directions[code];
         if (direction) {
           event.preventDefault();
-          flushSync(() => navigation.move(direction));
+          flushSync(() => {
+            // A row can start anywhere in the pane (for example beside a Weather label).
+            if (!navigation.move(direction) && code === out) {
+              drawer.set({ ...currentDrawer, expanded: false });
+            }
+          });
         }
       },
     });

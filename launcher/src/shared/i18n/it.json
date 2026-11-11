@@ -275,7 +275,7 @@
   "weather.useAutomatic": "Località automatica",
   "weather.automaticHint": "Usa una località approssimativa ricavata dal tuo indirizzo Internet.",
   "weather.searchHelp": "Cerca una città o un codice postale, poi seleziona un risultato.",
-  "appearance.accent": "Colore accento",
+  "appearance.accent": "Tema cromatico",
   "accent.ice": "Ghiaccio",
   "accent.blue": "Blu",
   "accent.violet": "Viola",
