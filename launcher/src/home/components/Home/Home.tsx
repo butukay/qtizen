@@ -65,7 +65,7 @@ export const Home = ({ env }: { env: HomeEnvironment }) => {
                 data-docked={String(dockInputs)}
                 data-scroll-columns={settings.homeAppLayout === "scroll" ? columns : undefined}
               >
-                <HomeOverview env={env} />
+                <HomeOverview env={env} active={active} />
                 <div class={styles.favorites} data-favorites-section>
                   <HomeSectionHeading title={t("home.homeApps")} />
                   <AppGrid

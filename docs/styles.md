@@ -185,7 +185,9 @@ use the cascade without `!important`.
 during native playback, Settings and wallpaper previews.
 Default keeps component geometry in its owners and shared paint in
 `themes.css`. `HomeOverview` owns the clock/date composition and the widget slot.
-The static Solar System and Moon phase drawings own their SVG markup. Home sets
+Solar System and Moon phase drawings own their SVG markup. The Solar System owns
+its CSS orbit animation, with pauses for inactive Home, reduced motion and
+Performance mode. Home sets
 `html[data-theme="default"]`. `ScreenAwakeVideo` owns the invisible Tizen video
 element and its playback follows document visibility and embedded input playback.
 

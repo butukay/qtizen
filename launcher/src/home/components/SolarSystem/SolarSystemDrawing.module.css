@@ -25,3 +25,50 @@
   stroke: var(--solar-warm);
   stroke-width: 0.8;
 }
+
+.orbiter,
+.upright {
+  transform-origin: 0 0;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.orbiter {
+  animation-name: orbit;
+}
+
+.upright {
+  animation-name: counterOrbit;
+}
+
+.drawing[data-running="false"] {
+  .orbiter,
+  .upright {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbiter,
+  .upright {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes counterOrbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}

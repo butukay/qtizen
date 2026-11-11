@@ -23,8 +23,10 @@ survive migration. Old theme and clock-layout preferences are discarded once;
 old theme profiles start on black without weather photos. New wallpaper choices
 continue to use the shared wallpaper service.
 
-Widgets offers Solar System, Moon phase and Off. The Solar System is a static
-schematic with eight muted planet dots and thin orbits. Moon phase uses the
+Widgets offers Solar System, Moon phase and Off. The Solar System animates eight
+muted planet dots along thin orbits with CSS transforms. Its motion pauses in
+Settings, while Home is hidden, with reduced motion and in Performance mode.
+Moon phase uses the
 [US Naval Observatory's reference new moon](https://aa.usno.navy.mil/api/moon/phases/year?year=2026)
 and a mean lunar cycle to estimate the illuminated shape from the TV clock.
 

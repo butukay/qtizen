@@ -179,8 +179,19 @@ test("Widgets switches the Home decoration and remembers Off after reload", asyn
   await expect(page.locator("[data-solar-system]")).toBeVisible();
   await expect(page.locator("[data-solar-planet]")).toHaveCount(8);
   await expect(page.locator("[data-screen-awake-video]")).toHaveCount(0);
+  const mercury = page.locator('[data-solar-planet="mercury"]');
+  await expect(mercury).toHaveCSS("animation-play-state", "paused");
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await expect(mercury).toHaveCSS("animation-play-state", "running");
+  const transform = await mercury.evaluate((node) => getComputedStyle(node).transform);
+  await expect.poll(() => mercury.evaluate((node) => getComputedStyle(node).transform)).not.toBe(transform);
+  await page.evaluate(() => AeroTizen.settings.update({ performanceMode: true }));
+  await expect(mercury).toHaveCSS("animation-play-state", "paused");
+  await page.evaluate(() => AeroTizen.settings.update({ performanceMode: false }));
+  await expect(mercury).toHaveCSS("animation-play-state", "running");
 
   await openSettings(page);
+  await expect(mercury).toHaveCSS("animation-play-state", "paused");
   await openCategory(page, "widgets");
   await expect(page.getByRole("button", { name: "Solar System", exact: true })).toHaveAttribute("aria-pressed", "true");
   await page.keyboard.press("ArrowRight");

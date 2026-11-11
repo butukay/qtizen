@@ -6,7 +6,7 @@ import { SolarSystemDrawing } from "../SolarSystem/SolarSystemDrawing";
 
 import styles from "./HomeOverview.module.css";
 
-export const HomeOverview = ({ env }: { env: HomeEnvironment }) => {
+export const HomeOverview = ({ env, active }: { env: HomeEnvironment; active: boolean }) => {
   const settings = useStore(env.settings);
   const value = useClock(env.status.time, env.runtime.clock, settings);
   return (
@@ -26,7 +26,11 @@ export const HomeOverview = ({ env }: { env: HomeEnvironment }) => {
       </div>
       {settings.homeWidget !== "off" && (
         <div class={styles.widget} data-home-widget={settings.homeWidget} data-home-decoration>
-          {settings.homeWidget === "solar" ? <SolarSystemDrawing /> : <MoonPhase timestamp={value.timestamp} />}
+          {settings.homeWidget === "solar" ? (
+            <SolarSystemDrawing running={active && !settings.performanceMode} />
+          ) : (
+            <MoonPhase timestamp={value.timestamp} />
+          )}
         </div>
       )}
     </section>
