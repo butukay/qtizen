@@ -252,7 +252,7 @@ test("accent colours default, validate and persist without changing favorites", 
   const key = "aerotizen.settings.v1";
   const { settings, store } = loadSettings({ [key]: JSON.stringify({ home: ["video.app"] }) });
   assert.equal(settings.getSnapshot().accentColour, "ice");
-  for (const colour of ["ice", "blue", "violet", "rose", "amber", "mint"]) {
+  for (const colour of ["ice", "blue", "violet", "rose", "amber", "mint", "white"]) {
     settings.update({ accentColour: colour });
     assert.equal(loadSettings(store).settings.getSnapshot().accentColour, colour);
     assert.deepEqual(settings.getSnapshot().home, ["video.app"]);

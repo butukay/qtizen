@@ -49,7 +49,12 @@ for (const [build, url] of [
       await openCategory(page, "appearance");
       await expect(page.locator('[data-section-pane="appearance"] #time-formats')).toHaveCount(1);
       await expect(page.locator('[data-section-pane="appearance"] #date-formats')).toHaveCount(1);
-      await expect(page.locator('#accent-colours [role="button"]')).toHaveCount(6);
+      await expect(page.locator('#accent-colours [role="button"]')).toHaveCount(7);
+      await page.getByRole("button", { name: "White", exact: true }).click();
+      await expect(page.locator("html")).toHaveAttribute("data-palette", "white");
+      await expect(page.locator('[data-settings-drawer="frame"]')).toHaveCSS("background-color", "rgb(255, 255, 255)");
+      await expect(page.locator('[data-settings-drawer="frame"]')).toHaveCSS("color", "rgb(33, 37, 43)");
+      await expect(page.locator('[data-clock-part="time"]')).toHaveCSS("color", "rgb(243, 244, 246)");
       await page.locator('[data-key="accent:violet"]').click();
       await expect(page.locator('[data-settings-drawer="frame"]')).toHaveCSS("background-color", "rgb(32, 22, 45)");
       await expect(page.locator('[data-settings-drawer="main"]')).toHaveCSS("background-color", "rgb(25, 15, 38)");

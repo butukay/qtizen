@@ -1,4 +1,4 @@
-/* One layout, six palettes. Components own geometry and state. */
+/* One layout, seven palettes. Components own geometry and state. */
 :root {
   --bg: #000000;
   --rice-selected: var(--rice-card-selected);
@@ -74,6 +74,11 @@
   --solar-neutral: #78838c;
   --solar-warm: #9a8d77;
   --solar-cool: #74909b;
+}
+
+[data-palette] {
+  --palette-swatch: var(--focus);
+  --palette-swatch-border: transparent;
 }
 
 :root,
@@ -153,6 +158,24 @@
   --rice-card-selected: #203c31;
   --rice-border: #2a473b;
   --rice-surface: #102019;
+}
+
+[data-palette="white"] {
+  --fg: #21252b;
+  --muted: #4f5966;
+  --card: #ffffff;
+  --focus: #4c5d73;
+  --surface-control: #f0f2f5;
+  --settings-overlay: rgba(12, 16, 23, 0.52);
+  --rice-card-surface: #f6f7f9;
+  --rice-card-selected: #e0e6ee;
+  --rice-border: #aeb7c4;
+  --rice-surface: #f7f8fa;
+  --home-text: #f3f4f6;
+  --home-muted: #c1c6ce;
+  --selection-text: #ffffff;
+  --palette-swatch: #ffffff;
+  --palette-swatch-border: var(--rice-border);
 }
 
 :root[data-light-background="true"] {

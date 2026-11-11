@@ -11,7 +11,7 @@ without companion files can stay flat. Apply this structure as components are
 migrated; imports name the component file directly, without a barrel per folder.
 
 Keep theme paint in
-`launcher/css/themes.css`, which defines the Default layout’s six palettes. Prefer role names such as `--settings-surface`,
+`launcher/css/themes.css`, which defines the Default layout’s palettes. Prefer role names such as `--settings-surface`,
 `--header-focus-surface` and `--menu-border` over new colour literals for shared
 surfaces, text, borders, focus and shadows. Component-specific artwork and input
 state palettes stay with their component.

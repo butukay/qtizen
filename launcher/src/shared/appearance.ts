@@ -6,4 +6,5 @@ export const APPEARANCE_PALETTES = [
   { value: "rose", labelKey: "accent.rose" },
   { value: "amber", labelKey: "accent.amber" },
   { value: "mint", labelKey: "accent.mint" },
+  { value: "white", labelKey: "accent.white" },
 ] as const;
