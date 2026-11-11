@@ -151,10 +151,7 @@ export const createInputsPlatform = (host: InputsHost): InputsPlatform => {
                 [...sources.values()]
                   .map(({ source }) => source)
                   .sort(
-                    (a, b) =>
-                      Number(a.type === "TV") - Number(b.type === "TV") ||
-                      Number(b.connected) - Number(a.connected) ||
-                      (a.number || 0) - (b.number || 0),
+                    (a, b) => Number(a.type === "TV") - Number(b.type === "TV") || (a.number || 0) - (b.number || 0),
                   ),
               );
             },

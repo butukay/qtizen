@@ -364,3 +364,34 @@ test("an HDMI device that never produces video times out and restores Home", () 
   assert.equal(h.native.at(-1), "hide");
   assert.equal(h.toasts.length, 1);
 });
+
+test("HDMI ports keep numeric order across connection changes and device names", () => {
+  const h = harness({ hideDisconnectedHdmi: false });
+  h.state.report = {
+    connected: [
+      { type: "HDMI", number: 3 },
+      { type: "HDMI", number: 2, editName: "Xbox" },
+      { type: "TV", number: 1 },
+    ],
+    disconnected: [
+      { type: "HDMI", number: 4 },
+      { type: "HDMI", number: 1, editName: "Apple TV" },
+    ],
+  };
+  const order = () => h.service.getSnapshot().visibleSources.map(({ type, number }) => type + number);
+  h.service.load();
+  assert.deepEqual(order(), ["HDMI1", "HDMI2", "HDMI3", "HDMI4", "TV1"]);
+  h.state.report = {
+    connected: [
+      { type: "HDMI", number: 4 },
+      { type: "HDMI", number: 1, editName: "Apple TV" },
+    ],
+    disconnected: [
+      { type: "HDMI", number: 3 },
+      { type: "HDMI", number: 2, editName: "Xbox" },
+      { type: "TV", number: 1 },
+    ],
+  };
+  h.service.load();
+  assert.deepEqual(order(), ["HDMI1", "HDMI2", "HDMI3", "HDMI4", "TV1"]);
+});
