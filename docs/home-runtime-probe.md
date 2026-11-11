@@ -37,7 +37,7 @@ alternative runtime execution, key-rule changes and restore testing are separate
 work. The reporter's model can be supplied separately with the report; the probe
 does not query the TV's HTTP identity endpoint.
 
-## Test the PR code from source
+## Run from source
 
 The probe needs Python 3.10 or newer on the computer. For a source install, it also
 needs Git and Python's `venv` module. Use a separate environment so the installed
@@ -46,7 +46,7 @@ release stays available:
 ```sh
 python3 -m venv .venv-home-probe
 .venv-home-probe/bin/python -m pip install \
-  'git+https://github.com/metacurb/qtizen.git@feat/native-home-read-only-probe-84'
+  'git+https://github.com/butukay/qtizen.git'
 .venv-home-probe/bin/qtizen --tv TV_IP home probe --output home-probe.json
 ```
 

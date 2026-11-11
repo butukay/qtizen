@@ -80,6 +80,8 @@ The helper's package ID changes from `org.aerotizen.roothelper` to
 3. Install the local launcher with the same signing certificates. The `DclHome001`
    package ID stays stable so the TV updates the existing launcher and preserves
    its Home assignments. Saved interface settings are copied to `qtizen.*` keys.
+   Restart the TV or restart the Watcher service afterward: a package update can
+   leave the previous Watcher process running until it is stopped.
 4. If you use root features, follow [root setup](root-cli.md#user-flow) to install
    `org.qtizen.roothelper` and pair it with the new CLI. Complete the restart check
    before treating automatic root acquisition as verified.

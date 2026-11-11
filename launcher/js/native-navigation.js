@@ -84,29 +84,41 @@
       }
       finish(confirmed);
     }
-    try {
-      tz.filesystem.resolve(
-        "wgt-private/qtizen-home-routing-v1.json",
-        function (file) {
-          if (settled) {
-            return;
-          }
-          try {
-            if (file.fileSize > 0 && file.fileSize <= 4096) {
-              file.readAsText(read, unavailable, "UTF-8");
+    function lookup(path, failed) {
+      if (settled) {
+        return;
+      }
+      try {
+        tz.filesystem.resolve(
+          path,
+          function (file) {
+            if (settled) {
               return;
             }
-          } catch (ignored) {
-            /* Use the existing handoff if the file cannot be read. */
-          }
-          unavailable();
-        },
-        unavailable,
-        "r"
-      );
-    } catch (ignored) {
-      unavailable();
+            try {
+              if (file.fileSize > 0 && file.fileSize <= 4096) {
+                file.readAsText(read, unavailable, "UTF-8");
+                return;
+              }
+            } catch (ignored) {
+              /* Use the existing handoff if the file cannot be read. */
+            }
+            unavailable();
+          },
+          failed,
+          "r"
+        );
+      } catch (ignored) {
+        unavailable();
+      }
     }
+    lookup("wgt-private/qtizen-home-routing-v1.json", function (error) {
+      if (error && error.name === "NotFoundError") {
+        lookup("wgt-private/aerotizen-home-routing-v1.json", unavailable);
+      } else {
+        unavailable();
+      }
+    });
   }
 
   function leaveBeforeLaunch(onReady, onFailure) {

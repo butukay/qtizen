@@ -216,6 +216,10 @@ function routingStorage() {
     reads,
     filesystem: {
       resolve(filePath, success, failure, mode) {
+        if (filePath === "wgt-private/aerotizen-home-routing-v1.json") {
+          failure({ name: "NotFoundError" });
+          return;
+        }
         assert.equal(filePath, "wgt-private/qtizen-home-routing-v1.json");
         assert.equal(mode, "r");
         reads.push((routing) => {
@@ -843,4 +847,26 @@ test("a delayed HDMI refresh cannot open a video window after the launcher hides
   complete({ connected: [{ type: "HDMI", number: 1 }] });
   assert.deepEqual(h.inputs, []);
   assert.equal(h.A.inputs.getSnapshot().playback !== "idle", false);
+});
+
+test("Spotify can launch while the pre-rename Watcher still owns the old routing file", () => {
+  const paths = [];
+  const h = harness({
+    filesystem: {
+      resolve(path, done, failed) {
+        paths.push(path);
+        if (path.includes("/qtizen-")) {
+          failed({ name: "NotFoundError" });
+        } else {
+          const text = JSON.stringify(nativeRouting);
+          done({ fileSize: text.length, readAsText: (read) => read(text) });
+        }
+      },
+    },
+  });
+  h.A.apps.launch({ id: "spotify.app", name: "Spotify" });
+  assert.deepEqual(paths, ["wgt-private/qtizen-home-routing-v1.json", "wgt-private/aerotizen-home-routing-v1.json"]);
+  assert.deepEqual(h.launches, [{ id: "spotify.app", method: "launch" }]);
+  assert.deepEqual(h.watch, []);
+  assert.deepEqual(h.toasts, []);
 });
