@@ -1,8 +1,5 @@
 # qtizen
 
-[![CI](https://github.com/butukay/qtizen/actions/workflows/ci.yml/badge.svg)](https://github.com/butukay/qtizen/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
 **A minimal, customizable home screen for Samsung Tizen TVs.**
 
 qtizen brings your applications and HDMI sources together on one screen. It runs
