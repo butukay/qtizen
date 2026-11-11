@@ -6,6 +6,8 @@ import type { Store } from "../../../shared/state/createStore";
 
 import styles from "./ScreenAwakeVideo.module.css";
 
+const PLAYBACK_RETRY_MS = 800;
+
 export const ScreenAwakeVideo = ({ inputs }: { inputs: Store<InputsSnapshot> }) => {
   const inputInUse = useStoreSelector(inputs, (snapshot) => snapshot.playback !== "idle");
   const ref = useRef<HTMLVideoElement>(null);
@@ -15,16 +17,35 @@ export const ScreenAwakeVideo = ({ inputs }: { inputs: Store<InputsSnapshot> }) 
       return;
     }
     const document = video.ownerDocument;
+    let generation = 0;
+    let retryTimer: number | undefined;
+    const play = async (request: number, retry: boolean) => {
+      try {
+        if (video.error) {
+          video.load();
+        }
+        await video.play();
+      } catch {
+        // The TV can still be releasing the decoder from the previous app or input.
+        if (retry && request === generation) {
+          retryTimer = window.setTimeout(() => void play(request, false), PLAYBACK_RETRY_MS);
+        }
+      }
+    };
     const sync = () => {
+      const request = ++generation;
+      window.clearTimeout(retryTimer);
       if (document.hidden || inputInUse) {
         video.pause();
       } else {
-        void video.play()?.catch(() => undefined);
+        void play(request, true);
       }
     };
     document.addEventListener("visibilitychange", sync);
     sync();
     return () => {
+      generation++;
+      window.clearTimeout(retryTimer);
       document.removeEventListener("visibilitychange", sync);
       video.pause();
     };

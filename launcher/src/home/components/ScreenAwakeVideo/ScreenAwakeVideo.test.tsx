@@ -6,7 +6,10 @@ import { createStore } from "../../../shared/state/createStore";
 
 import { ScreenAwakeVideo } from "./ScreenAwakeVideo";
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+});
 
 test("the local loop plays only while the launcher is visible and no embedded input is using video", async () => {
   const visibility = vi.spyOn(document, "hidden", "get").mockReturnValue(false);
@@ -37,4 +40,20 @@ test("the local loop plays only while the launcher is visible and no embedded in
   expect(pause).toHaveBeenCalledTimes(1);
   changeVisibility(false);
   expect(play).toHaveBeenCalledTimes(3);
+});
+
+test("a temporary decoder failure is retried once", async () => {
+  vi.useFakeTimers();
+  vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+  vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => undefined);
+  const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockRejectedValue(new Error("Decoder busy"));
+  const inputs = createStore<InputsSnapshot>({ playback: "idle", sources: [], visibleSources: [] });
+  const view = render(<ScreenAwakeVideo inputs={inputs} />);
+  expect(play).toHaveBeenCalledTimes(1);
+
+  await vi.advanceTimersByTimeAsync(1000);
+  expect(play).toHaveBeenCalledTimes(2);
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(play).toHaveBeenCalledTimes(2);
+  view.unmount();
 });
